@@ -6,6 +6,6 @@ export const getOauthUrl = async (platform: string) => {
     const res = await axios.get(SERVER_URI + "social?type=" + platform);
     return res.data.data;
   } catch (err) {
-    console.error(err);
+    console.error(err, "에러!!");
   }
 };

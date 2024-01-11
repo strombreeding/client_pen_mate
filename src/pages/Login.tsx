@@ -58,6 +58,7 @@ const Login = () => {
   const onClick =
     (platform: "kakao" | "google" | "facebook" | "apple") => async () => {
       const res = await getOauthUrl(platform);
+      console.log(res);
       window.location.href = res;
       // navigation(res);
     };
