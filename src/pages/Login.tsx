@@ -1,42 +1,21 @@
 import React, { memo } from "react";
 import styled, { keyframes } from "styled-components";
 import { imgSrc } from "../assets/img";
-import { Text, colors } from "../styles";
+import { Container, EmptyBox, FadeIn, Text, colors } from "../styles";
+import { getOauthUrl } from "../apis/login/read";
+import {
+  unstable_HistoryRouter,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 
 /* Styled-Components */
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  max-width: 360px;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
 
-const FadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-const FadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to{
-    opacity: 0;
-  }
-`;
 const Title = styled.img<{ img?: string }>`
   margin-top: 256px;
   width: calc(100% * 0.722);
   font-size: 60px;
   font-weight: 900;
-  /* color: red; */
-  /* opacity: 0; */
   animation: ${FadeIn} 0.7s ease-in-out;
 `;
 
@@ -72,22 +51,24 @@ const BtnIcon = styled.img`
   aspect-ratio: 1;
   margin-right: 10px;
 `;
-const EmptyBox = styled.div<{ height?: number; width?: number }>`
-  height: ${(props) => props.height}px;
-  width: ${(props) => props.width}px;
-`;
 
 /* Compoent */
 const Login = () => {
-  const onClick = async () => {};
+  const navigation = useNavigate();
+  const onClick =
+    (platform: "kakao" | "google" | "facebook" | "apple") => async () => {
+      const res = await getOauthUrl(platform);
+      window.location.href = res;
+      // navigation(res);
+    };
   return (
     <Container>
       <Title src={imgSrc.penMate} />
       <EmptyBox height={115} />
       <Section>
-        <SocialLoginBtn bgColor="#FEE500">
+        <SocialLoginBtn bgColor="#FEE500" onClick={onClick("kakao")}>
           <BtnIcon src={imgSrc.kakao} />
-          <Text.Headline>카카오로 로그인</Text.Headline>
+          <Text.Headline color="#391B1B">카카오로 로그인</Text.Headline>
         </SocialLoginBtn>
 
         <SocialLoginBtn>

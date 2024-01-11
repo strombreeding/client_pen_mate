@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Text, colors } from "../../styles";
-import React, { memo } from "react";
-type BtnStatus = "default" | "pressed" | "disabled";
+import React, { memo, useEffect, useState } from "react";
+import { type BtnStatus } from "../../types";
 const LayOut = styled.div<{ bgColor?: any; status: BtnStatus }>`
   background-color: ${colors.White};
   border: ${(props) => {
@@ -22,17 +22,33 @@ const LayOut = styled.div<{ bgColor?: any; status: BtnStatus }>`
   border-radius: 100px;
   align-items: center;
   justify-content: center;
-  width: calc(100% * 0.8333);
+  width: calc(100% * 0.88888);
   color: ${(props) => (props.color == null ? "black" : props.color)};
   padding: 14px 30px 14px 30px;
 `;
 
 const SecondaryBtn: React.FC<{
-  status: BtnStatus;
+  state: BtnStatus;
   text: string;
-}> = ({ status, text }) => {
+  onClick?: (event?: any) => void;
+}> = ({ state, text, onClick }) => {
+  const [status, setStatus] = useState<BtnStatus>("disabled");
+  useEffect(() => {
+    setStatus(state);
+  }, [state]);
   return (
-    <LayOut status={status}>
+    <LayOut
+      onMouseDown={() => {
+        if (status !== "disabled") setStatus("pressed");
+      }}
+      onMouseUp={() => {
+        if (status !== "disabled") setStatus("default");
+        if (onClick) {
+          onClick();
+        }
+      }}
+      status={status}
+    >
       <Text.Headline>{text}</Text.Headline>
     </LayOut>
   );

@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
 // import { Pretendard } from "./assets/fonts/fontFamilys";
 // import Pretendard from "./assets/fonts/pretendard.css"
 
@@ -187,59 +187,99 @@ const PretendardSemiBold = styled.span`
   font-display: swap;
 `;
 export const Text = {
-  LargeTitle: styled(PretendardRegular)<{ color?: string }>`
+  LargeTitle: styled(PretendardRegular)<{
+    color?: string;
+    textAlign?: "string";
+  }>`
     font-size: 34px;
     line-height: 41px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Title1: styled(PretendardRegular)<{ color?: string }>`
+  Title1: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 28px;
     line-height: 34px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Title2: styled(PretendardRegular)<{ color?: string }>`
+  Title2: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 22px;
     line-height: 28px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Title3: styled(PretendardRegular)<{ color?: string }>`
-    font-size: 22px;
-    line-height: 28px;
-    color: ${(props) => (props.color == null ? colors.Black : props.color)};
-  `,
-  Headline: styled(PretendardSemiBold)<{ color?: string }>`
+  Title3: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 20px;
     line-height: 25px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Body: styled(PretendardRegular)<{ color?: string }>`
+  Headline: styled(PretendardSemiBold)<{
+    color?: string;
+    textAlign?: "string";
+  }>`
     font-size: 17px;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Callout: styled(PretendardRegular)<{ color?: string }>`
+  Body: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+    font-size: 17px;
+    line-height: 22px;
+    color: ${(props) => (props.color == null ? colors.Black : props.color)};
+  `,
+  Callout: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 16px;
     line-height: 21px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Subhead: styled(PretendardRegular)<{ color?: string }>`
+  Subhead: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 15px;
     line-height: 20px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Footnote: styled(PretendardRegular)<{ color?: string }>`
+  Footnote: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 13px;
     line-height: 18px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Caption1: styled(PretendardRegular)<{ color?: string }>`
+  Caption1: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 12px;
     line-height: 16px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
-  Caption2: styled(PretendardRegular)<{ color?: string }>`
+  Caption2: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
     font-size: 11px;
     line-height: 13px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
   `,
 };
+
+export const FadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+export const FadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to{
+    opacity: 0;
+  }
+`;
+
+export const Container = styled.div<{ bgColor?: string }>`
+  width: 100%;
+  height: 100%;
+  max-width: 360px;
+  background-color: ${(props) =>
+    props.bgColor == null ? "#fff" : props.bgColor};
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  display: flex;
+`;
+
+export const EmptyBox = styled.div<{ height?: number; width?: number }>`
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
+`;
