@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import React, { Fragment, useEffect, useState } from "react";
+import useCountryFromLocation from "./hooks/getCountry";
+import Routers from "./Router";
+import { BrowserView, MobileOnlyView, isMobile } from "react-device-detect";
+import { GlobalStyle, Background } from "./styles";
 
 function App() {
+  const [isBrowser] = useState(!isMobile);
+  console.log(isBrowser);
+  useEffect(() => {}, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <GlobalStyle />
+      <Background>
+        {isBrowser ? (
+          // <BrowserView>
+          <Routers isMobile={false} />
+        ) : (
+          // </BrowserView>
+          // {/* <MobileOnlyView> */}
+          <Routers isMobile={true} />
+          // </MobileOnlyView>
+        )}
+      </Background>
+    </Fragment>
   );
 }
 
