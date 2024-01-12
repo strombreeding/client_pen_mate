@@ -4,8 +4,10 @@ import Login from "./pages/Login";
 import SocialTerminel from "./components/SocialTerminel";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
+import useDisablePinchZoom from "./hooks/disabledPinchZoom";
 
 const Routers: React.FC<{ isMobile: boolean }> = ({ isMobile }) => {
+  useDisablePinchZoom();
   return (
     <BrowserRouter>
       <Routes>

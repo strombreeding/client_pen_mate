@@ -37,17 +37,20 @@ const SecondaryBtn: React.FC<{
   useEffect(() => {
     setStatus(state);
   }, [state]);
+
+  const setPressed = () => {
+    if (status !== "disabled") setStatus("pressed");
+  };
+  const setEnd = () => {
+    if (status !== "disabled") setStatus("default");
+  };
   return (
     <LayOut
-      onMouseDown={() => {
-        if (status !== "disabled") setStatus("pressed");
-      }}
-      onMouseUp={() => {
-        if (status !== "disabled") setStatus("default");
-        if (onClick) {
-          onClick();
-        }
-      }}
+      onClick={onClick}
+      onTouchStart={setPressed}
+      onTouchEnd={setEnd}
+      onMouseDown={setPressed}
+      onMouseUp={setEnd}
       status={status}
     >
       <Text.Headline>{text}</Text.Headline>

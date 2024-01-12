@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import useCountryFromLocation from "./hooks/getCountry";
 import Routers from "./Router";
 import { BrowserView, MobileOnlyView, isMobile } from "react-device-detect";
@@ -8,8 +8,39 @@ import { CLIENT_URI, SERVER_URI } from "./configs/server";
 
 function App() {
   const [isBrowser] = useState(!isMobile);
+  const containerRef = useRef<HTMLDivElement>(null);
   console.log(isBrowser);
   console.log(SERVER_URI);
+  useEffect(() => {
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length >= 2) {
+        event.preventDefault();
+      }
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (event.touches.length >= 2) {
+        event.preventDefault();
+      }
+    };
+    const containerElement = containerRef.current;
+
+    if (containerElement) {
+      containerElement.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      containerElement.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+    }
+
+    return () => {
+      if (containerElement) {
+        containerElement.removeEventListener("touchstart", handleTouchStart);
+        containerElement.removeEventListener("touchmove", handleTouchMove);
+      }
+    };
+  }, []);
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://developers.kakao.com/sdk/js/kakao.js";
@@ -51,7 +82,6 @@ function App() {
     <Fragment>
       <GlobalStyle />
       <Background>
-        <button onClick={shareToKakao}>ㅋㅋ</button>
         {isBrowser ? (
           // <BrowserView>
           <Routers isMobile={false} />

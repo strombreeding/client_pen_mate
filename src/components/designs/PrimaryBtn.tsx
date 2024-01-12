@@ -25,25 +25,28 @@ const LayOut = styled.div<{ status: BtnStatus }>`
 `;
 
 const PrimaryBtn: React.FC<{
-  bgColor?: string;
   text: string;
   state: BtnStatus;
   onClick?: (event: any) => void;
-}> = ({ bgColor, text, state, onClick }) => {
+}> = ({ text, state, onClick }) => {
   const [status, setStatus] = useState<BtnStatus>("disabled");
   useEffect(() => {
     setStatus(state);
   }, [state]);
 
+  const setPressed = () => {
+    if (status !== "disabled") setStatus("pressed");
+  };
+  const setEnd = () => {
+    if (status !== "disabled") setStatus("default");
+  };
   return (
     <LayOut
       onClick={onClick}
-      onMouseDown={() => {
-        if (status !== "disabled") setStatus("pressed");
-      }}
-      onMouseUp={() => {
-        if (status !== "disabled") setStatus("default");
-      }}
+      onTouchStart={setPressed}
+      onTouchEnd={setEnd}
+      onMouseDown={setPressed}
+      onMouseUp={setEnd}
       status={status}
     >
       <Text.Headline color="white">{text}</Text.Headline>
