@@ -3,15 +3,19 @@ import {
   Fragment,
   KeyboardEvent,
   SetStateAction,
+  useContext,
+  useEffect,
   useState,
 } from "react";
-import { Pressable, Section, TextInput } from "../../pages/SignUp";
+import { SignUpContext } from "../../pages/SignUp";
 import { EmptyBox, Text } from "../../styles";
 import React from "react";
-import PrimaryBtn from "../styles/PrimaryBtn";
+import PrimaryBtn from "../designs/PrimaryBtn";
 import { SignInFormData } from "../../types";
-
-const placeText = "노래하는감자고양이";
+import X_14 from "../designs/X_14";
+import Input from "../designs/Input";
+import { FadeInSection } from "../../pages/Login";
+import { useShowAnimation } from "../../hooks/getShowAnimation";
 
 interface IFirstStepProps {
   step: number;
@@ -23,56 +27,45 @@ const FirstStep: React.FC<IFirstStepProps> = ({
   setStep,
   setFormData,
 }) => {
-  const [placeHolder, setPlaceHolder] = useState(placeText);
-  const [text, setText] = useState("");
-
-  const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.currentTarget.value);
-  };
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      goNext();
-    }
+  const context = useContext(SignUpContext);
+  const showAnimation = useShowAnimation("FirstStep");
+  const receiveText = (text: string) => {
+    setFormData((prev) => ({ ...prev, nickname: text }));
   };
   const goNext = () => {
-    setFormData((prev) => ({ ...prev, nickname: text }));
+    if (context.formData.nickname.length === 0) {
+      return;
+    }
     setStep(1);
   };
+
+  console.log("하이하이");
   if (step !== 0) return <Fragment></Fragment>;
   return (
     <Fragment>
-      <Section>
+      <FadeInSection
+        show={showAnimation}
+        style={{ padding: "50px 30px 0px 30px" }}
+      >
         <Text.Title3>뭐라고 불러드리면 될까요?</Text.Title3>
         <EmptyBox height={40} />
-        <Pressable>
-          <TextInput
-            type="text"
-            placeholder={placeHolder}
-            maxLength={14}
-            onFocus={() => {
-              console.log("포커스!!");
-              setPlaceHolder("");
-            }}
-            defaultValue={text}
-            onBlur={(e) => {
-              if (e.currentTarget.value.length === 0) {
-                setPlaceHolder(placeText);
-              }
-              onChangeText(e);
-            }}
-            onChange={onChangeText}
-            onKeyDown={handleKeyDown}
-          />
-        </Pressable>
-      </Section>
+        <Input
+          maxLength={12}
+          receiveText={receiveText}
+          placeHolder={"냥냥펀치"}
+        />
+      </FadeInSection>
       <EmptyBox height={90} />
-      <Section btn={true}>
+      <FadeInSection show={showAnimation}>
         <PrimaryBtn
           onClick={goNext}
-          state={text.length < 1 ? "disabled" : "default"}
+          state={
+            context.formData.nickname.length === 0 ? "disabled" : "default"
+          }
+          // state={"default"}
           text={"다음"}
         />
-      </Section>
+      </FadeInSection>
     </Fragment>
   );
 };

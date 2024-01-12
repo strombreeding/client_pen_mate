@@ -114,6 +114,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+  overflow: hidden;
 }
 ol, ul {
 	list-style: none;
@@ -167,9 +168,10 @@ export const colors = {
   Grey1000: "#363638",
   Grey1100: "#242426",
   Black: "#000000",
-  Red50: "#FF99A5",
-  Red80: "#FF5C6F",
-  Red100: "#FF334B",
+  Red30: "#FFC7C4",
+  Red50: "#FFA29C",
+  Red100: "#FF453A",
+  Red200: "#D70015",
   Blue400: "#96B2FF",
   Blue500: "#638DFF",
   Blue600: "#4D73FF",
@@ -263,7 +265,7 @@ export const FadeOut = keyframes`
     opacity: 1;
   }
   to{
-    opacity: 0;
+    opacity: 1;
   }
 `;
 

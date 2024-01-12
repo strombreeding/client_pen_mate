@@ -6,16 +6,14 @@ import {
   useContext,
   useState,
 } from "react";
-import {
-  Pressable,
-  Section,
-  SignUpContext,
-  TextInput,
-} from "../../pages/SignUp";
+import { SignUpContext } from "../../pages/SignUp";
 import { EmptyBox, Text } from "../../styles";
 import React from "react";
-import PrimaryBtn from "../styles/PrimaryBtn";
+import PrimaryBtn from "../designs/PrimaryBtn";
 import { SignInFormData } from "../../types";
+import Input from "../designs/Input";
+import { FadeInSection } from "../../pages/Login";
+import { useShowAnimation } from "../../hooks/getShowAnimation";
 
 const placeText = "성별입력? 셀렉터? 버튼?";
 
@@ -32,6 +30,7 @@ const SecondStep: React.FC<ISecondStepProps> = ({
   const [placeHolder, setPlaceHolder] = useState(placeText);
   const [text, setText] = useState("");
   const context = useContext(SignUpContext);
+  const showAnimation = useShowAnimation("SecondStep");
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.currentTarget.value);
   };
@@ -48,41 +47,21 @@ const SecondStep: React.FC<ISecondStepProps> = ({
   if (step !== 1) return <Fragment></Fragment>;
   return (
     <Fragment>
-      <Section>
+      <FadeInSection show={showAnimation}>
         <Text.Title3>
           {context?.formData.nickname}님의
           {"\n"}성별을 선택해주세요.
         </Text.Title3>
         <EmptyBox height={40} />
-        <Pressable>
-          <TextInput
-            type="text"
-            placeholder={placeHolder}
-            maxLength={14}
-            onFocus={() => {
-              console.log("포커스!!");
-              setPlaceHolder("");
-            }}
-            defaultValue={text}
-            onBlur={(e) => {
-              if (e.currentTarget.value.length === 0) {
-                setPlaceHolder(placeText);
-              }
-              onChangeText(e);
-            }}
-            onChange={onChangeText}
-            onKeyDown={handleKeyDown}
-          />
-        </Pressable>
-      </Section>
+      </FadeInSection>
       <EmptyBox height={90} />
-      <Section btn={true}>
+      <FadeInSection show={showAnimation}>
         <PrimaryBtn
           onClick={goNext}
           state={text.length < 1 ? "disabled" : "default"}
           text={"다음"}
         />
-      </Section>
+      </FadeInSection>
     </Fragment>
   );
 };

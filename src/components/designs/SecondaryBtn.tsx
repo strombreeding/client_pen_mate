@@ -25,6 +25,7 @@ const LayOut = styled.div<{ bgColor?: any; status: BtnStatus }>`
   width: calc(100% * 0.88888);
   color: ${(props) => (props.color == null ? "black" : props.color)};
   padding: 14px 30px 14px 30px;
+  cursor: pointer;
 `;
 
 const SecondaryBtn: React.FC<{

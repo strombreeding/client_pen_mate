@@ -21,6 +21,7 @@ const LayOut = styled.div<{ status: BtnStatus }>`
   justify-content: center;
   width: calc(100% * 0.88888);
   color: ${colors.White};
+  cursor: pointer;
 `;
 
 const PrimaryBtn: React.FC<{

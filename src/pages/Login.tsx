@@ -1,22 +1,24 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { imgSrc } from "../assets/img";
-import { Container, EmptyBox, FadeIn, Text, colors } from "../styles";
+import { Container, EmptyBox, FadeIn, FadeOut, Text, colors } from "../styles";
 import { getOauthUrl } from "../apis/login/read";
 import {
   unstable_HistoryRouter,
   useNavigate,
   useNavigation,
 } from "react-router-dom";
+import { useShowAnimation } from "../hooks/getShowAnimation";
 
 /* Styled-Components */
 
-const Title = styled.img<{ img?: string }>`
+const Title = styled.img<{ show: boolean }>`
   margin-top: 256px;
   width: calc(100% * 0.722);
   font-size: 60px;
   font-weight: 900;
-  animation: ${FadeIn} 0.7s ease-in-out;
+  /* animation: ${FadeIn} 1s ease-in-out; */
+  animation: ${(props) => (!props.show ? {} : FadeIn)} 1s ease-in-out;
 `;
 
 const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
@@ -36,14 +38,14 @@ const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
   display: flex;
 `;
 
-const Section = styled.section`
+export const FadeInSection = styled.section<{ show: boolean }>`
   display: flex;
   width: 100%;
   text-align: center;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: ${FadeIn} 1s ease-in-out;
+  animation: ${(props) => (!props.show ? {} : FadeIn)} 1s ease-in-out;
 `;
 
 const BtnIcon = styled.img`
@@ -55,18 +57,21 @@ const BtnIcon = styled.img`
 /* Compoent */
 const Login = () => {
   const navigation = useNavigate();
+  const showAnimation = useShowAnimation("Login");
+  console.log(showAnimation, "LOGIN");
   const onClick =
     (platform: "kakao" | "google" | "facebook" | "apple") => async () => {
       const res = await getOauthUrl(platform);
-      console.log(res);
       window.location.href = res;
+      window.sessionStorage.setItem("Login", "1");
       // navigation(res);
     };
+
   return (
     <Container>
-      <Title src={imgSrc.penMate} />
+      <Title show={showAnimation} src={imgSrc.penMate} />
       <EmptyBox height={115} />
-      <Section>
+      <FadeInSection show={showAnimation}>
         <SocialLoginBtn bgColor="#FEE500" onClick={onClick("kakao")}>
           <BtnIcon src={imgSrc.kakao} />
           <Text.Headline color="#391B1B">카카오로 로그인</Text.Headline>
@@ -84,7 +89,7 @@ const Login = () => {
 
         <EmptyBox height={17} />
         <Text.Subhead color={colors.Grey700}>도움이 필요하신가요?</Text.Subhead>
-      </Section>
+      </FadeInSection>
     </Container>
   );
 };
