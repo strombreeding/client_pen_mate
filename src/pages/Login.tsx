@@ -9,16 +9,13 @@ import {
   useNavigation,
 } from "react-router-dom";
 import { useShowAnimation } from "../hooks/getShowAnimation";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 /* Styled-Components */
 
-const Title = styled.img<{ show: boolean }>`
-  margin-top: 256px;
-  width: calc(100% * 0.722);
-  font-size: 60px;
-  font-weight: 900;
-  /* animation: ${FadeIn} 1s ease-in-out; */
-  animation: ${(props) => (!props.show ? {} : FadeIn)} 1s ease-in-out;
+const Title = styled.div<{ isVisited: boolean }>`
+  animation: ${(props) => (props.isVisited ? {} : FadeIn)} 1s ease-in-out;
 `;
 
 const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
@@ -28,6 +25,7 @@ const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
   border: ${(props) => props.bgColor == null && "solid 1px #EFEFEF"};
   border-radius: 100px;
   width: calc(100% * 0.8333);
+  max-width: 450px;
   align-items: center;
   justify-content: center;
   color: ${(props) => (props.color == null ? "black" : props.color)};
@@ -38,14 +36,14 @@ const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
   display: flex;
 `;
 
-export const FadeInSection = styled.section<{ show: boolean }>`
+export const FadeInSection = styled.section<{ isVisited: boolean }>`
   display: flex;
   width: 100%;
   text-align: center;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: ${(props) => (!props.show ? {} : FadeIn)} 1s ease-in-out;
+  animation: ${(props) => (props.isVisited ? {} : FadeIn)} 1s ease-in-out;
 `;
 
 const BtnIcon = styled.img`
@@ -58,7 +56,6 @@ const BtnIcon = styled.img`
 const Login = () => {
   const navigation = useNavigate();
   const showAnimation = useShowAnimation("Login");
-  console.log(showAnimation, "LOGIN");
   const onClick =
     (platform: "kakao" | "google" | "facebook" | "apple") => async () => {
       const res = await getOauthUrl(platform);
@@ -69,9 +66,14 @@ const Login = () => {
 
   return (
     <Container>
-      <Title show={showAnimation} src={imgSrc.penMate} />
-      <EmptyBox height={115} />
-      <FadeInSection show={showAnimation}>
+      <EmptyBox height={231} />
+      <Title isVisited={showAnimation}>
+        <Text.ChangwonDangamAsac color={colors.Red200}>
+          Pen Mate
+        </Text.ChangwonDangamAsac>
+      </Title>
+      <EmptyBox height={109} />
+      <FadeInSection isVisited={showAnimation}>
         <SocialLoginBtn bgColor="#FEE500" onClick={onClick("kakao")}>
           <BtnIcon src={imgSrc.kakao} />
           <Text.Headline color="#391B1B">카카오로 로그인</Text.Headline>

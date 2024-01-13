@@ -3,8 +3,19 @@ import styled, { createGlobalStyle, keyframes } from "styled-components";
 // import Pretendard from "./assets/fonts/pretendard.css"
 
 export const GlobalStyle = createGlobalStyle`
-
-
+/* @font-face {
+  font-family: "ChangwonDangamAsac";
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 60px;
+  src: url(./assets/fonts/ChangwonDangamAsac-Bold_0712.ttf) format("ttf");
+} */
+@font-face {
+    font-family: 'ChangwonDangamAsac';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/CWDangamAsac-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 @font-face {
 	font-family: 'Pretendard Black';
 	font-weight: 900;
@@ -187,68 +198,95 @@ const PretendardSemiBold = styled.span`
   font-family: "Pretendard SemiBold";
   font-weight: 600;
   font-display: swap;
+  cursor: default;
+  user-select: none;
+`;
+const PretendardBold = styled.span`
+  font-family: "Pretendard Bold";
+  font-weight: 700;
+  font-display: swap;
+  cursor: default;
+  user-select: none;
+`;
+const ChangwonDangamAsac = styled.span`
+  font-family: "ChangwonDangamAsac";
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 60px;
+  cursor: default;
+  user-select: none;
 `;
 export const Text = {
-  LargeTitle: styled(PretendardRegular)<{
+  LargeTitle: styled(PretendardSemiBold)<{
     color?: string;
-    textAlign?: "string";
   }>`
     font-size: 34px;
     line-height: 41px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Title1: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Title1: styled(PretendardBold)<{ color?: string }>`
     font-size: 28px;
     line-height: 34px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Title2: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Title2: styled(PretendardBold)<{ color?: string }>`
     font-size: 22px;
     line-height: 28px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Title3: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Title3: styled(PretendardBold)<{ color?: string }>`
     font-size: 20px;
     line-height: 25px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Headline: styled(PretendardSemiBold)<{
-    color?: string;
-    textAlign?: "string";
-  }>`
+  Headline: styled(PretendardSemiBold)<{ color?: string }>`
     font-size: 17px;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Body: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Body: styled(PretendardRegular)<{ color?: string }>`
     font-size: 17px;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Callout: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Callout: styled(PretendardRegular)<{ color?: string }>`
     font-size: 16px;
     line-height: 21px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Subhead: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Subhead: styled(PretendardRegular)<{ color?: string }>`
     font-size: 15px;
     line-height: 20px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Footnote: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Footnote: styled(PretendardRegular)<{ color?: string }>`
     font-size: 13px;
     line-height: 18px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Caption1: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Caption1: styled(PretendardRegular)<{ color?: string }>`
     font-size: 12px;
     line-height: 16px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
   `,
-  Caption2: styled(PretendardRegular)<{ color?: string; textAlign?: "string" }>`
+  Caption2: styled(PretendardRegular)<{ color?: string }>`
     font-size: 11px;
     line-height: 13px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    white-space: pre-line;
+  `,
+  ChangwonDangamAsac: styled(ChangwonDangamAsac)<{ color?: string }>`
+    color: ${(props) => props.color};
   `,
 };
 
@@ -272,13 +310,14 @@ export const FadeOut = keyframes`
 export const Container = styled.div<{ bgColor?: string }>`
   width: 100%;
   height: 100%;
-  max-width: 360px;
+  /* max-width: 360px; */
   background-color: ${(props) =>
     props.bgColor == null ? "#fff" : props.bgColor};
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
+  justify-content: start;
   display: flex;
+  position: relative;
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`

@@ -31,6 +31,7 @@ const PrimaryBtn: React.FC<{
 }> = ({ text, state, onClick }) => {
   const [status, setStatus] = useState<BtnStatus>("disabled");
   useEffect(() => {
+    console.log(state);
     setStatus(state);
   }, [state]);
 

@@ -5,6 +5,7 @@ import SocialTerminel from "./components/SocialTerminel";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import useDisablePinchZoom from "./hooks/disabledPinchZoom";
+import EditAvatar from "./components/EditAvatar";
 
 const Routers: React.FC<{ isMobile: boolean }> = ({ isMobile }) => {
   useDisablePinchZoom();
@@ -15,6 +16,7 @@ const Routers: React.FC<{ isMobile: boolean }> = ({ isMobile }) => {
         <Route path="/" element={<Login />} />
         <Route path="/social/kakao" element={<SocialTerminel />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/edit-avatar" element={<EditAvatar />} />
         {/* 로그인이 필요한것들, 매칭-AI서비스 */}
         <Route></Route>
 

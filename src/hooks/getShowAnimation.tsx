@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../store/store";
+import visitedPage, { visit } from "../store/slices/visitedPage";
 
 export const useShowAnimation = (page: string) => {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    console.log(page, "마운트", window.sessionStorage.getItem(page));
-    const isVisitPage =
-      window.sessionStorage.getItem(page) == undefined ? false : true;
-    setShow(!isVisitPage);
-
-    return () => {
-      window.sessionStorage.setItem(page, "1");
-    };
-  }, []);
-
-  return show;
+  const isVistedPage = window.sessionStorage.getItem(page) != null; // 방문했으면 true
+  if (!isVistedPage) {
+    console.log("첫 방문~");
+    window.sessionStorage.setItem(page, "v");
+    return false;
+  }
+  if (isVistedPage) {
+    console.log("이미 방문함~");
+    return true;
+  }
+  console.log("방문여부 알 수 없음");
+  return true;
 };

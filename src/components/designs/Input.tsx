@@ -26,14 +26,23 @@ export const TextInput = styled.input`
   }
 `;
 const Input: React.FC<{
+  text: string;
   placeHolder: string;
   maxLength: number;
   receiveText: (text: string) => void;
   nextFunction?: (e?: any) => any;
-}> = ({ placeHolder, maxLength, receiveText, nextFunction }) => {
-  const [text, setText] = useState("");
+  autoFocus?: boolean;
+}> = ({
+  text,
+  placeHolder,
+  maxLength,
+  receiveText,
+  nextFunction,
+  autoFocus,
+}) => {
+  // const [text, setText] = useState("");
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.currentTarget.value);
+    // setText(e.currentTarget.value);
     receiveText(e.currentTarget.value);
   };
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -43,11 +52,13 @@ const Input: React.FC<{
   };
 
   const actionX = () => {
-    setText("");
+    // setText("");
+    receiveText("");
   };
   return (
     <Pressable state={text.length > maxLength ? "wrong" : "default"}>
       <TextInput
+        autoFocus={autoFocus}
         type="text"
         placeholder={placeHolder}
         aria-placeholder="center"
@@ -55,7 +66,8 @@ const Input: React.FC<{
           console.log("포커스!!");
           // setPlaceHolder("");
         }}
-        defaultValue={text}
+        // defaultValue={text}
+        value={text}
         onBlur={(e) => {
           if (e.currentTarget.value.length === 0) {
             // setPlaceHolder(placeText);

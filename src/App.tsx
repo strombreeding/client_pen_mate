@@ -5,6 +5,9 @@ import Routers from "./Router";
 import { BrowserView, MobileOnlyView, isMobile } from "react-device-detect";
 import { GlobalStyle, Background } from "./styles";
 import { CLIENT_URI, SERVER_URI } from "./configs/server";
+import { Provider } from "react-redux";
+import store from "./store/store";
+import { legacy_createStore } from "redux";
 
 function App() {
   const [isBrowser] = useState(!isMobile);
@@ -78,8 +81,9 @@ function App() {
       ],
     });
   };
+
   return (
-    <Fragment>
+    <Provider store={store}>
       <GlobalStyle />
       <Background>
         {isBrowser ? (
@@ -92,7 +96,7 @@ function App() {
           // </MobileOnlyView>
         )}
       </Background>
-    </Fragment>
+    </Provider>
   );
 }
 

@@ -15,4 +15,5 @@ export const Img = styled.img<{
   width: ${(props) => props.px}px;
   height: ${(props) => props.px}px;
   color: ${(props) => (props.color == null ? "none" : props.color)};
+  cursor: pointer;
 `;

@@ -4,50 +4,40 @@ import React, {
   createContext,
   useState,
 } from "react";
-import styled from "styled-components";
-import { Container, FadeIn } from "../styles";
+import { Container } from "../styles";
 import { SignInFormData } from "../types";
-import { useNavigate } from "react-router-dom";
 import FirstStep from "../components/sign-up/FirstStep";
 import SecondStep from "../components/sign-up/SecondStep";
-import { useShowAnimation } from "../hooks/getShowAnimation";
+import ThirdStep from "../components/sign-up/ThirdStep";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { editSignUpData } from "../store/slices/signUp";
 
 /* Styled Components */
 
-/* Context */
-interface ISignUpContext {
-  formData: SignInFormData;
-  setFormData: Dispatch<SetStateAction<SignInFormData>>;
-}
-export const SignUpContext = createContext<ISignUpContext>({
-  formData: {} as SignInFormData,
-  setFormData: () => {},
-});
-
 /* Component */
 const SignUp: React.FC = () => {
-  const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({
-    nickname: "",
-    agreement: false,
-    avatar: "",
-    gender: "E",
-    country: "",
-    interested: [""],
-    language: "",
-  } as SignInFormData);
+  const step = useSelector((state: RootState) => state.sighUp.step);
+
+  // const [formData, setFormData] = useState({
+  //   nickname: "",
+  //   agreement: false,
+  //   avatar: "",
+  //   gender: "기타",
+  //   country: "",
+  //   interested: [""],
+  //   language: "",
+  // } as SignInFormData);
   // const show = useShowAnimation("SignUp");
-  const navigate = useNavigate();
 
   return (
-    <SignUpContext.Provider value={{ formData, setFormData }}>
-      <Container>
-        {step === 0 && (
-          <FirstStep step={step} setStep={setStep} setFormData={setFormData} />
-        )}
-        <SecondStep step={step} setStep={setStep} setFormData={setFormData} />
-      </Container>
-    </SignUpContext.Provider>
+    // <SignUpContext.Provider value={{ formData, setFormData }}>
+    <Container>
+      {step === 0 && <FirstStep step={step} />}
+      {step === 1 && <SecondStep step={step} />}
+      {step === 2 && <ThirdStep step={step} />}
+    </Container>
+    // </SignUpContext.Provider>
   );
 };
 
