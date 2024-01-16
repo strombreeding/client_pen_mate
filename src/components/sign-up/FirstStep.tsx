@@ -24,7 +24,7 @@ const EmptySpace = styled.div<{ height: number }>`
       height: ${(props) => props.height};
     }
   }
-  animation: smmoth ease-in-out;
+  animation: smooth ease-in-out 2s;
 `;
 interface IFirstStepProps {
   step: number;

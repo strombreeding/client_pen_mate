@@ -147,7 +147,7 @@ table {
   box-sizing: border-box;
 }
 body {
-  font-family: "esamanru";
+  /* font-family: "esamanru"; */
   /* transition: all 0.4s ease-in-out; */
 }
 a {
