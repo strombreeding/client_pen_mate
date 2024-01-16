@@ -32,7 +32,7 @@ interface IFirstStepProps {
   step: number;
 }
 const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
-  const [viewportHeight, setViewportHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(SCREEN_HEIGHT);
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("FirstStep");
