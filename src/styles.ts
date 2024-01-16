@@ -335,7 +335,24 @@ export const FadeOut = keyframes`
     opacity: 1;
   }
   to{
-    opacity: 1;
+    opacity: 0;
+  }
+`;
+export const FadeInPopup = keyframes`
+ from {
+    opacity: 0;
+  }
+  to{
+    opacity: 0.5;
+  }
+`;
+export const FadeOutPopup = keyframes`
+ from {
+    opacity: 0.5;
+  }
+  to{
+    opacity: 0;
+    display: none;
   }
 `;
 

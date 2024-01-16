@@ -1,18 +1,34 @@
-import axios from "axios";
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import useCountryFromLocation from "./hooks/getCountry";
+import { Fragment, useEffect, useRef } from "react";
 import Routers from "./Router";
-import { BrowserView, MobileOnlyView, isMobile } from "react-device-detect";
-import { GlobalStyle, Background } from "./styles";
-import { CLIENT_URI, SERVER_URI } from "./configs/server";
-import { Provider } from "react-redux";
-import store from "./store/store";
-import { legacy_createStore } from "redux";
+import { GlobalStyle, Background, FadeInPopup, FadeOutPopup } from "./styles";
+import { SERVER_URI } from "./configs/server";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./store/store";
+import styled from "styled-components";
+import { showPopup } from "./store/slices/appState";
+
+const BG = styled.div<{ show: boolean }>`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: 0.5;
+  z-index: 1;
+  cursor: pointer;
+  animation: ${(props) => (props.show ? FadeInPopup : FadeOutPopup)} ease-in-out
+    0.3s;
+`;
 
 function App() {
+  const popupState = useSelector((state: RootState) => state.appState.popup);
   const containerRef = useRef<HTMLDivElement>(null);
   console.log(SERVER_URI);
   console.log(window.innerHeight);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const unShowPopup = () => {
+    dispatch(showPopup(false));
+  };
   useEffect(() => {
     const handleTouchStart = (event: TouchEvent) => {
       if (event.touches.length >= 2) {
@@ -43,51 +59,15 @@ function App() {
       }
     };
   }, []);
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://developers.kakao.com/sdk/js/kakao.js";
-    script.async = true;
-    document.body.appendChild(script);
-    // return () => document.body.removeChild(script);
-
-    return () => window.sessionStorage.setItem("App", "1");
-  }, []);
-  const shareToKakao = () => {
-    //@ts-ignore
-    const kakao = window.Kakao;
-    if (!kakao.isInitialized()) {
-      kakao.init(process.env.REACT_APP_JS_KEY);
-    }
-
-    kakao.Link.sendDefault({
-      objectType: "feed",
-      content: {
-        title: "***님이 편지를 전송했어요",
-        describe: "***님의 정성을 확인해보러 가실까요?",
-        imageUrl:
-          "https://mblogthumb-phinf.pstatic.net/MjAyMDA4MTZfOTQg/MDAxNTk3NTM2MzM1ODE2.SUFLHsAUlgQWdBLs1bFkYx8d6gTojXA7RBk3swoSq74g.vWy_0TFOcixv9M-672xFCqe4ZzypQZauiGLxcesliVQg.PNG.munjatime/%EC%8A%AC%EB%9D%BC%EC%9D%B4%EB%93%9C2.PNG?type=w800",
-        link: {
-          mobileWebUrl: CLIENT_URI,
-        },
-      },
-      buttons: [
-        {
-          title: "확인하러 가기",
-          link: {
-            mobileWebUrl: CLIENT_URI,
-          },
-        },
-      ],
-    });
-  };
 
   return (
-    <Provider store={store}>
+    <Fragment>
       <GlobalStyle />
+      {popupState && <BG onClick={unShowPopup} show={popupState} />}
       <Background>
         <Routers />
       </Background>
-    </Provider>
+    </Fragment>
   );
 }
 

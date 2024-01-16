@@ -24,8 +24,9 @@ const LayOut = styled.div<{
   }};
   border-radius: 100px;
   align-items: center;
+  text-align: center;
   justify-content: center;
-  width: ${(props) => (props.exception == undefined ? "320px" : "100%")};
+  width: ${(props) => (props.exception == undefined ? "300px" : "100%")};
   color: ${(props) => (props.color == null ? "black" : props.color)};
   padding: 14px 30px 14px 30px;
   cursor: pointer;
@@ -36,7 +37,8 @@ const SecondaryBtn: React.FC<{
   text: string;
   onClick?: (event?: any) => void;
   exception?: boolean;
-}> = ({ state, text, onClick, exception }) => {
+  style?: React.CSSProperties;
+}> = ({ state, text, onClick, exception, style }) => {
   const [status, setStatus] = useState<BtnStatus>("disabled");
   useEffect(() => {
     setStatus(state);
@@ -50,6 +52,7 @@ const SecondaryBtn: React.FC<{
   };
   return (
     <LayOut
+      style={style}
       exception={exception}
       onClick={onClick}
       onTouchStart={setPressed}

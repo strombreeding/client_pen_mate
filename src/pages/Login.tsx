@@ -6,6 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { useShowAnimation } from "../hooks/getShowAnimation";
 import { devicePadding } from "../utils/getDevicePadding";
 import { MOBILE, SCREEN_HEIGHT } from "../configs/device";
+import Popup from "../components/designs/Popup";
+import { SetStateAction, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { showPopup } from "../store/slices/appState";
 
 /* Styled-Components */
 
@@ -50,10 +55,13 @@ const BtnIcon = styled.img`
 
 /* Compoent */
 const Login = () => {
-  const navigation = useNavigate();
+  const popupState = useSelector((state: RootState) => state.appState.popup);
+  const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("Login");
   const onClick =
     (platform: "kakao" | "google" | "facebook" | "apple") => async () => {
+      // dispatch(showPopup(true));
+      // return;
       const res = await getOauthUrl(platform);
       window.location.href = res;
       window.sessionStorage.setItem("Login", "1");
@@ -101,6 +109,18 @@ const Login = () => {
         </FadeInSection>
         <EmptyBox height={52} width={100} />
       </Wrap>
+      {popupState && (
+        <Popup
+          title={"아바타 수정 나가기"}
+          content={`수정하던 내용이 저장되지 않습니다.
+          정말 나가시겠어요?`}
+          leftText={"취소"}
+          rightText={"나가기"}
+          rightBtnAction={() => {
+            alert("완료로직");
+          }}
+        />
+      )}
     </Container>
   );
 };

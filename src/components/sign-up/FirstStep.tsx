@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { EmptyBox, Text, Wrap, colors } from "../../styles";
 import React from "react";
 import PrimaryBtn from "../designs/PrimaryBtn";
@@ -12,15 +12,46 @@ import { AppDispatch, RootState } from "../../store/store";
 import { editSignUpData, setStep } from "../../store/slices/signUp";
 import StepIndicator from "../designs/StepIndicator";
 import { devicePadding } from "../../utils/getDevicePadding";
-import { MOBILE } from "../../configs/device";
-
+import { MOBILE, SCREEN_HEIGHT } from "../../configs/device";
+import styled from "styled-components";
+const EmptySpace = styled.div<{ height: number }>`
+  height: ${(props) => props.height} px;
+  @keyframes smooth {
+    from {
+      height: 0px;
+    }
+    to {
+      height: ${(props) => props.height};
+    }
+  }
+  animation: smmoth ease-in-out;
+`;
 interface IFirstStepProps {
   step: number;
 }
 const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
+  const [viewportHeight, setViewportHeight] = useState(SCREEN_HEIGHT);
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("FirstStep");
+  useEffect(() => {
+    const handleResize = () => {
+      if (!MOBILE || !window.visualViewport) return;
+      // 뷰포트 높이에서 창 높이를 뺀 값이 키보드의 높이일 수 있습니다.
+      const newKeyboardHeight =
+        window.innerHeight - window.visualViewport.height;
+
+      // 키보드의 높이가 음수이면 키보드가 닫혔다는 것입니다.
+      setViewportHeight(Math.max(0, newKeyboardHeight));
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // 컴포넌트가 언마운트될 때 이벤트 핸들러를 해제합니다.
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const receiveText = (text: string) => {
     dispatch(editSignUpData({ ...formData, nickname: text }));
@@ -38,6 +69,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
   if (step !== 0) return <Fragment></Fragment>;
   return (
     <Wrap style={{ justifyContent: "space-between" }}>
+      <div>{viewportHeight}</div>
       <FadeInSection isVisited={showAnimation}>
         <Wrap style={{ justifyContent: "start" }}>
           <StepIndicator items={[0, 0, 0]} index={step} />
@@ -73,6 +105,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
           // state={"default"}
           text={"다음"}
         />
+        <EmptySpace height={viewportHeight} />
       </FadeInSection>
     </Wrap>
   );
