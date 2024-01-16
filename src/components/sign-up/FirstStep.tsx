@@ -15,31 +15,32 @@ import { devicePadding } from "../../utils/getDevicePadding";
 import { MOBILE, SCREEN_HEIGHT } from "../../configs/device";
 import styled from "styled-components";
 const EmptySpace = styled.div<{ height: number }>`
-  height: ${(props) => props.height} px;
+  height: ${(props) => props.height}px;
+  background-color: grey;
+  width: 100px;
   @keyframes smooth {
     from {
       height: 0px;
     }
     to {
-      height: ${(props) => props.height};
+      height: ${(props) => props.height}px;
     }
   }
-  animation: smooth ease-in-out 2s;
+  animation: smooth linear 2s forwards;
 `;
 interface IFirstStepProps {
   step: number;
 }
 const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
-  const [viewportHeight, setViewportHeight] = useState(SCREEN_HEIGHT);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("FirstStep");
   useEffect(() => {
     const handleResize = () => {
-      if (!MOBILE || !window.visualViewport) return;
+      // if (!MOBILE || !window.visualViewport) return;
       // 뷰포트 높이에서 창 높이를 뺀 값이 키보드의 높이일 수 있습니다.
-      const newKeyboardHeight =
-        window.innerHeight - window.visualViewport.height;
+      const newKeyboardHeight = SCREEN_HEIGHT - window.visualViewport!.height;
 
       // 키보드의 높이가 음수이면 키보드가 닫혔다는 것입니다.
       setViewportHeight(Math.max(0, newKeyboardHeight));
