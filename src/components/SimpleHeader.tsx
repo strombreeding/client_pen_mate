@@ -7,30 +7,25 @@ import { NavigateFunction } from "react-router-dom";
 const RowView = styled.div`
   display: flex;
   width: 100%;
-  position: sticky;
+  height: 56px;
+  position: relative;
   top: 0;
   justify-content: space-between;
   padding: 0px 30px 0px 30px;
-  height: 60px;
+  /* height: 60px; */
   align-items: center;
-  background-color: white;
 `;
 
 const SimpleHeader: React.FC<{
   title?: string;
-  nowPage: number;
   goBack?: NavigateFunction;
-  setScreen?: Dispatch<SetStateAction<number>>;
-}> = ({ title, goBack, nowPage, setScreen }) => {
+}> = ({ title, goBack }) => {
   return (
     <RowView>
       <ArrowLetf26
         onClick={() => {
           if (goBack) {
             goBack(-1);
-          }
-          if (setScreen) {
-            setScreen(nowPage - 1);
           }
         }}
       />

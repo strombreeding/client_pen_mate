@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import SocialTerminel from "./components/SocialTerminel";
@@ -6,9 +6,11 @@ import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import useDisablePinchZoom from "./hooks/disabledPinchZoom";
 import EditAvatar from "./components/EditAvatar";
+import { isMobile } from "react-device-detect";
 
-const Routers: React.FC<{ isMobile: boolean }> = ({ isMobile }) => {
+const Routers: React.FC = () => {
   useDisablePinchZoom();
+
   return (
     <BrowserRouter>
       <Routes>

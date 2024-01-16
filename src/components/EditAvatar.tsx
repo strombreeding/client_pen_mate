@@ -9,7 +9,7 @@ const EditAvatar = () => {
 
   return (
     <Container>
-      <SimpleHeader nowPage={0} goBack={navigate} />
+      <SimpleHeader goBack={navigate} />
       <div>하이</div>
     </Container>
   );

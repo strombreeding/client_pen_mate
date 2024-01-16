@@ -1,8 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../store/store";
-import visitedPage, { visit } from "../store/slices/visitedPage";
-
 export const useShowAnimation = (page: string) => {
   const isVistedPage = window.sessionStorage.getItem(page) != null; // 방문했으면 true
   if (!isVistedPage) {

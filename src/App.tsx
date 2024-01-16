@@ -10,10 +10,9 @@ import store from "./store/store";
 import { legacy_createStore } from "redux";
 
 function App() {
-  const [isBrowser] = useState(!isMobile);
   const containerRef = useRef<HTMLDivElement>(null);
-  console.log(isBrowser);
   console.log(SERVER_URI);
+  console.log(window.innerHeight);
   useEffect(() => {
     const handleTouchStart = (event: TouchEvent) => {
       if (event.touches.length >= 2) {
@@ -86,15 +85,7 @@ function App() {
     <Provider store={store}>
       <GlobalStyle />
       <Background>
-        {isBrowser ? (
-          // <BrowserView>
-          <Routers isMobile={false} />
-        ) : (
-          // </BrowserView>
-          // {/* <MobileOnlyView> */}
-          <Routers isMobile={true} />
-          // </MobileOnlyView>
-        )}
+        <Routers />
       </Background>
     </Provider>
   );

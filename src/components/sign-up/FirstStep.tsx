@@ -1,5 +1,5 @@
 import { Dispatch, Fragment, SetStateAction } from "react";
-import { EmptyBox, Text, colors } from "../../styles";
+import { EmptyBox, Text, Wrap, colors } from "../../styles";
 import React from "react";
 import PrimaryBtn from "../designs/PrimaryBtn";
 import Input from "../designs/Input";
@@ -10,6 +10,9 @@ import SimpleHeader from "../SimpleHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { editSignUpData, setStep } from "../../store/slices/signUp";
+import StepIndicator from "../designs/StepIndicator";
+import { devicePadding } from "../../utils/getDevicePadding";
+import { MOBILE } from "../../configs/device";
 
 interface IFirstStepProps {
   step: number;
@@ -18,7 +21,6 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("FirstStep");
-  const navigate = useNavigate();
 
   const receiveText = (text: string) => {
     dispatch(editSignUpData({ ...formData, nickname: text }));
@@ -32,37 +34,35 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
     }
     dispatch(setStep(1));
   };
-  const goBack = () => {
-    navigate(-1);
-  };
+
   if (step !== 0) return <Fragment></Fragment>;
   return (
-    <Fragment>
-      <SimpleHeader nowPage={step} goBack={goBack} />
-      <EmptyBox height={50} />
-      <FadeInSection
-        isVisited={showAnimation}
-        style={{ padding: "0px 30px 0px 30px" }}
-      >
-        <Text.Title3>뭐라고 불러드리면 될까요?</Text.Title3>
-        <EmptyBox height={50} />
-        <Input
-          text={formData.nickname}
-          autoFocus={true}
-          maxLength={12}
-          receiveText={receiveText}
-          placeHolder={"냥냥펀치"}
-          nextFunction={goNext}
-        />
-        <EmptyBox height={10} />
-        {formData.nickname.length > 12 && (
-          <Text.Footnote color={colors.Red100}>
+    <Wrap style={{ justifyContent: "space-between" }}>
+      <FadeInSection isVisited={showAnimation}>
+        <Wrap style={{ justifyContent: "start" }}>
+          <StepIndicator items={[0, 0, 0]} index={step} />
+          <EmptyBox height={30} />
+          <Text.Title3>뭐라고 불러드리면 될까요?</Text.Title3>
+          <EmptyBox height={42} />
+          <Input
+            text={formData.nickname}
+            autoFocus={true}
+            maxLength={12}
+            receiveText={receiveText}
+            placeHolder={"냥냥펀치"}
+            nextFunction={goNext}
+          />
+          <EmptyBox height={10} />
+          <Text.Footnote
+            color={
+              formData.nickname.length > 12 ? colors.Red100 : colors.Grey600
+            }
+          >
             닉네임은 한글, 영어, 숫자 12자로만 입력가능해요.
           </Text.Footnote>
-        )}
-      </FadeInSection>
-      <EmptyBox height={60} />
-      <FadeInSection isVisited={showAnimation}>
+        </Wrap>
+        {!MOBILE && <EmptyBox height={100} />}
+
         <PrimaryBtn
           onClick={goNext}
           state={
@@ -74,7 +74,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
           text={"다음"}
         />
       </FadeInSection>
-    </Fragment>
+    </Wrap>
   );
 };
 

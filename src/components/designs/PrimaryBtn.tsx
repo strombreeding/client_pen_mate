@@ -2,7 +2,10 @@ import styled from "styled-components";
 import { Text, colors } from "../../styles";
 import React, { useEffect, useState } from "react";
 import { BtnStatus } from "../../types";
-const LayOut = styled.div<{ status: BtnStatus }>`
+const LayOut = styled.div<{
+  status: BtnStatus;
+  exception: boolean | undefined;
+}>`
   background-color: ${(props) => {
     switch (props.status) {
       case "default":
@@ -19,7 +22,7 @@ const LayOut = styled.div<{ status: BtnStatus }>`
   align-items: center;
   text-align: center;
   justify-content: center;
-  width: calc(100% * 0.88888);
+  width: ${(props) => (props.exception == undefined ? "320px" : "100%")};
   color: ${colors.White};
   cursor: pointer;
 `;
@@ -28,7 +31,8 @@ const PrimaryBtn: React.FC<{
   text: string;
   state: BtnStatus;
   onClick?: (event: any) => void;
-}> = ({ text, state, onClick }) => {
+  exception?: true;
+}> = ({ text, state, onClick, exception }) => {
   const [status, setStatus] = useState<BtnStatus>("disabled");
   useEffect(() => {
     console.log(state);
@@ -43,6 +47,7 @@ const PrimaryBtn: React.FC<{
   };
   return (
     <LayOut
+      exception={exception}
       onClick={onClick}
       onTouchStart={setPressed}
       onTouchEnd={setEnd}

@@ -2,7 +2,10 @@ import styled from "styled-components";
 import { Text, colors } from "../../styles";
 import React, { memo, useEffect, useState } from "react";
 import { type BtnStatus } from "../../types";
-const LayOut = styled.div<{ bgColor?: any; status: BtnStatus }>`
+const LayOut = styled.div<{
+  status: BtnStatus;
+  exception: boolean | undefined;
+}>`
   background-color: ${colors.White};
   border: ${(props) => {
     let result = "solid 1px ";
@@ -22,7 +25,7 @@ const LayOut = styled.div<{ bgColor?: any; status: BtnStatus }>`
   border-radius: 100px;
   align-items: center;
   justify-content: center;
-  width: calc(100% * 0.88888);
+  width: ${(props) => (props.exception == undefined ? "320px" : "100%")};
   color: ${(props) => (props.color == null ? "black" : props.color)};
   padding: 14px 30px 14px 30px;
   cursor: pointer;
@@ -32,7 +35,8 @@ const SecondaryBtn: React.FC<{
   state: BtnStatus;
   text: string;
   onClick?: (event?: any) => void;
-}> = ({ state, text, onClick }) => {
+  exception?: boolean;
+}> = ({ state, text, onClick, exception }) => {
   const [status, setStatus] = useState<BtnStatus>("disabled");
   useEffect(() => {
     setStatus(state);
@@ -46,6 +50,7 @@ const SecondaryBtn: React.FC<{
   };
   return (
     <LayOut
+      exception={exception}
       onClick={onClick}
       onTouchStart={setPressed}
       onTouchEnd={setEnd}

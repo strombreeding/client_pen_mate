@@ -1,5 +1,5 @@
 import { Dispatch, Fragment, SetStateAction } from "react";
-import { EmptyBox, Text, colors } from "../../styles";
+import { EmptyBox, Text, Wrap, colors } from "../../styles";
 import React from "react";
 import PrimaryBtn from "../designs/PrimaryBtn";
 import { FadeInSection } from "../../pages/Login";
@@ -10,6 +10,8 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { setStep } from "../../store/slices/signUp";
+import StepIndicator from "../designs/StepIndicator";
+import { MOBILE } from "../../configs/device";
 
 const GenderView = styled.div`
   padding: 0px 20px 0px 20px;
@@ -39,35 +41,40 @@ const ThirdStep: React.FC<IThirdStepProps> = ({ step }) => {
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const showAnimation = useShowAnimation("ThirdStep");
   const goNext = () => {
-    navigate("/edit-avatar");
-    alert("이 다음엔 다음스탭으로~");
+    alert("모달창 띄우기");
   };
   const goBack = () => {
     dispatch(setStep(step - 1));
   };
   if (step !== 2) return <Fragment></Fragment>;
   return (
-    <Fragment>
-      <SimpleHeader nowPage={step} goBack={goBack} />
-      <EmptyBox height={70} />
+    <Wrap style={{ justifyContent: "space-between" }}>
       <FadeInSection isVisited={showAnimation}>
-        <Text.Title2>
-          {formData.nickname}님의
-          <br />
-          아바타를 꾸며주세요.
-        </Text.Title2>
-        <EmptyBox height={62} />
-        <GenderView>
-          <GenderItem onClick={() => {}} select={true}>
-            <Text.Callout color={colors.Grey600}>img</Text.Callout>
-          </GenderItem>
-        </GenderView>
-      </FadeInSection>
-      <EmptyBox height={90} />
-      <FadeInSection isVisited={showAnimation}>
+        <Wrap style={{ justifyContent: "start" }}>
+          <StepIndicator items={[0, 0, 0]} index={step} />
+          <EmptyBox height={30} />
+          <Text.Title2>
+            {formData.nickname}님의
+            <br />
+            아바타를 꾸며주세요.
+          </Text.Title2>
+          <EmptyBox height={62} />
+          <GenderView>
+            <GenderItem
+              onClick={() => {
+                navigate("/edit-avatar");
+              }}
+              select={false}
+            >
+              <Text.Callout color={colors.Grey600}>img</Text.Callout>
+            </GenderItem>
+          </GenderView>
+        </Wrap>
+        {!MOBILE && <EmptyBox height={100} />}
+
         <PrimaryBtn onClick={goNext} state={"default"} text={"다음에 할게요"} />
       </FadeInSection>
-    </Fragment>
+    </Wrap>
   );
 };
 

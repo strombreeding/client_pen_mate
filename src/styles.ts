@@ -1,4 +1,5 @@
 import styled, { createGlobalStyle, keyframes } from "styled-components";
+import { MOBILE } from "./configs/device";
 // import { Pretendard } from "./assets/fonts/fontFamilys";
 // import Pretendard from "./assets/fonts/pretendard.css"
 
@@ -161,8 +162,16 @@ export const Background = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: skyblue;
+  /* background-color: skyblue; */
   margin: 0;
+`;
+export const Wrap = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: ${MOBILE ? "start" : "center"};
 `;
 
 export const colors = {
@@ -194,18 +203,18 @@ const PretendardRegular = styled.span`
   font-weight: 400;
   font-display: swap;
 `;
-const PretendardSemiBold = styled.span`
+const PretendardSemiBold = styled.span<{ cursor?: string }>`
   font-family: "Pretendard SemiBold";
   font-weight: 600;
   font-display: swap;
-  cursor: default;
+  cursor: auto;
   user-select: none;
 `;
 const PretendardBold = styled.span`
   font-family: "Pretendard Bold";
   font-weight: 700;
   font-display: swap;
-  cursor: default;
+  cursor: auto;
   user-select: none;
 `;
 const ChangwonDangamAsac = styled.span`
@@ -213,77 +222,100 @@ const ChangwonDangamAsac = styled.span`
   font-weight: 700;
   font-size: 50px;
   line-height: 60px;
-  cursor: default;
+  cursor: auto;
   user-select: none;
 `;
 export const Text = {
   LargeTitle: styled(PretendardSemiBold)<{
     color?: string;
+    cursor?: string;
   }>`
     font-size: 34px;
     line-height: 41px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Title1: styled(PretendardBold)<{ color?: string }>`
+  Title1: styled(PretendardBold)<{ cursor?: string; color?: string }>`
     font-size: 28px;
     line-height: 34px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Title2: styled(PretendardBold)<{ color?: string }>`
+  Title2: styled(PretendardBold)<{ cursor?: string; color?: string }>`
     font-size: 22px;
     line-height: 28px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Title3: styled(PretendardBold)<{ color?: string }>`
+  Title3: styled(PretendardBold)<{ cursor?: string; color?: string }>`
     font-size: 20px;
     line-height: 25px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Headline: styled(PretendardSemiBold)<{ color?: string }>`
+  Headline: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
     font-size: 17px;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Body: styled(PretendardRegular)<{ color?: string }>`
+  Body: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 17px;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Callout: styled(PretendardRegular)<{ color?: string }>`
+  Callout: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 16px;
     line-height: 21px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Subhead: styled(PretendardRegular)<{ color?: string }>`
+  Subhead: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 15px;
     line-height: 20px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Footnote: styled(PretendardRegular)<{ color?: string }>`
+  Footnote: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 13px;
     line-height: 18px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Caption1: styled(PretendardRegular)<{ color?: string }>`
+  Caption1: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 12px;
     line-height: 16px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
-  Caption2: styled(PretendardRegular)<{ color?: string }>`
+  Caption2: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 11px;
     line-height: 13px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     white-space: pre-line;
+    user-select: none;
+    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
   `,
   ChangwonDangamAsac: styled(ChangwonDangamAsac)<{ color?: string }>`
     color: ${(props) => props.color};
@@ -307,20 +339,18 @@ export const FadeOut = keyframes`
   }
 `;
 
-export const Container = styled.div<{ bgColor?: string }>`
+export const Container = styled.div`
   width: 100%;
   height: 100%;
-  /* max-width: 360px; */
-  background-color: ${(props) =>
-    props.bgColor == null ? "#fff" : props.bgColor};
   flex-direction: column;
   align-items: center;
-  justify-content: start;
   display: flex;
-  position: relative;
+  background-color: white;
+  /* position: relative; */
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`
-  height: ${(props) => props.height}px;
+  /* height: ${(props) => props.height}px; */
+  padding-top: ${(props) => props.height}px;
   width: ${(props) => props.width}px;
 `;

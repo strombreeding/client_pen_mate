@@ -5,6 +5,7 @@ import {
   PayloadActionCreator,
 } from "@reduxjs/toolkit";
 import { SignInFormData } from "../../types";
+import { Dispatch, SetStateAction } from "react";
 
 interface SignUpState {
   formData: SignInFormData;
@@ -16,7 +17,7 @@ const initialState: SignUpState = {
     nickname: "",
     agreement: false,
     avatar: "",
-    gender: "기타",
+    gender: "",
     country: "",
     interested: [""],
     language: "",
