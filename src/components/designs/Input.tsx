@@ -115,7 +115,7 @@ const Input: React.FC<{
   useEffect(() => {
     setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.focus();
+        inputRef.current.click();
       }
     }, 1000);
   }, []); // 빈 배열을 전달하여 컴포넌트가 처음
@@ -128,7 +128,7 @@ const Input: React.FC<{
       <TextInput
         style={{ minWidth }}
         ref={inputRef}
-        autoFocus
+        // autoFocus
         type="text"
         onFocus={() => handleVisualViewPortResize(true)}
         onBlur={(e) => {
