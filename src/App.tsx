@@ -80,7 +80,7 @@ function App() {
     const readDataFromReactNative = (event: MessageEvent<string>) => {
       if (receiveRef.current) return;
       if (event.data) {
-        console.log(event.data);
+        if (typeof event.data === "object") return;
         const receivedData = event.data.split(",");
         dispatch(
           setSafeArea([Number(receivedData[0]), Number(receivedData[1])])

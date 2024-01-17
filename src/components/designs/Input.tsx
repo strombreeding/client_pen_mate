@@ -112,58 +112,67 @@ const Input: React.FC<{
     }, 150);
   };
 
-  useEffect(() => {
+  const zz = () => {
+    alert("앙 클릭띠");
     setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.click();
+        inputRef.current.focus();
       }
-    }, 1000);
-  }, []); // 빈 배열을 전달하여 컴포넌트가 처음
+    }, 500);
+  };
 
+  const btnRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    setTimeout(() => {
+      if (btnRef.current) {
+        btnRef.current.click();
+      }
+    }, 300);
+  }, []);
   return (
-    <Pressable
-      exception={exception}
-      state={text.length > maxLength ? "wrong" : "default"}
-    >
-      <TextInput
-        style={{ minWidth }}
-        ref={inputRef}
-        // autoFocus
-        type="text"
-        onFocus={() => handleVisualViewPortResize(true)}
-        onBlur={(e) => {
-          if (e.currentTarget.value === "") {
-            receiveText(placeHolder);
-          }
-          handleVisualViewPortResize(false);
-        }}
-        // placeholder={zz.toString()}
-        placeholder={focus ? "" : placeHolder}
-        value={text}
-        onChange={onChangeText}
-        onKeyDown={handleKeyDown}
-      />
-      <div
-        style={{
-          backgroundColor: "red",
-        }}
+    <>
+      <Pressable
+        exception={exception}
+        state={text.length > maxLength ? "wrong" : "default"}
       >
-        {text.length > 0 && (
-          <X_14
-            onClick={actionX}
-            style={{
-              // position: "relative",
-              position: "absolute",
-              zIndex: 1,
-              right: 17,
-              top: 17,
-              bottom: 17,
-              cursor: "pointer",
-            }}
-          />
-        )}
-      </div>
-    </Pressable>
+        <TextInput
+          style={{ minWidth }}
+          ref={inputRef}
+          // autoFocus
+          type="text"
+          onFocus={() => handleVisualViewPortResize(true)}
+          onBlur={() => handleVisualViewPortResize(false)}
+          // placeholder={zz.toString()}
+          placeholder={focus ? "" : placeHolder}
+          value={text}
+          onChange={onChangeText}
+          onKeyDown={handleKeyDown}
+        />
+        <div
+          style={{
+            backgroundColor: "red",
+          }}
+        >
+          {text.length > 0 && (
+            <X_14
+              onClick={actionX}
+              style={{
+                // position: "relative",
+                position: "absolute",
+                zIndex: 1,
+                right: 17,
+                top: 17,
+                bottom: 17,
+                cursor: "pointer",
+              }}
+            />
+          )}
+        </div>
+      </Pressable>
+      <button ref={btnRef} id="zz" onClick={zz}>
+        gd
+      </button>
+    </>
   );
 };
 
