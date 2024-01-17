@@ -5,6 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { isMobile } from "react-device-detect";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import "./index.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

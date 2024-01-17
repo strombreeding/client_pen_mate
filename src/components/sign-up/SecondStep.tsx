@@ -17,18 +17,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { editSignUpData, setStep } from "../../store/slices/signUp";
 import StepIndicator from "../designs/StepIndicator";
-import { MOBILE } from "../../configs/device";
+import { IOS, MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../../configs/device";
 
 const GenderView = styled.div`
-  padding: 0px 20px 0px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 `;
 const GenderItem = styled.div<{ select: boolean }>`
-  width: 100px;
-  height: 100px;
+  width: ${SCREEN_WIDTH * 0.22222278}px;
+  height: ${SCREEN_WIDTH * 0.22222278}px;
+  max-width: 100px;
+  max-height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,41 +61,46 @@ const SecondStep: React.FC<ISecondStepProps> = ({ step }) => {
   };
   if (step !== 1) return <Fragment></Fragment>;
   return (
-    <Wrap style={{ justifyContent: "space-between" }}>
+    <Wrap style={{ padding: "0px 20px 0px 20px" }}>
       <FadeInSection isVisited={showAnimation}>
-        <Wrap style={{ justifyContent: "start" }}>
-          <StepIndicator items={[0, 0, 0]} index={step} />
-          <EmptyBox height={30} />
-          <Text.Title2>
-            {formData.nickname}님의
-            <br />
-            성별을 선택해주세요.
-          </Text.Title2>
-          <EmptyBox height={44} />
-          <GenderView>
-            {genderTypes.map((item, index) => {
-              return (
-                <GenderItem
-                  onClick={() => {
-                    setSelect(item);
-                    dispatch(editSignUpData({ ...formData, gender: item }));
-                  }}
-                  key={index}
-                  select={select === item}
-                  style={{ margin: index === 1 ? "0px 10px 0px 10px" : "" }}
-                >
-                  <div
-                    style={{ width: 38, height: 38, backgroundColor: "grey" }}
-                  />
-                  <Text.Footnote>{item}</Text.Footnote>
-                </GenderItem>
-              );
-            })}
-          </GenderView>
-        </Wrap>
+        <StepIndicator items={[0, 0, 0]} index={step} />
+
+        <EmptyBox height={30} />
+
+        <Text.Title2>
+          {formData.nickname}님의
+          <br />
+          성별을 선택해주세요.
+        </Text.Title2>
+
+        <EmptyBox height={44} />
+
+        <GenderView>
+          {genderTypes.map((item, index) => {
+            return (
+              <GenderItem
+                onClick={() => {
+                  setSelect(item);
+                  dispatch(editSignUpData({ ...formData, gender: item }));
+                }}
+                key={index}
+                select={select === item}
+                style={{ margin: index === 1 ? "0px 10px 0px 10px" : "" }}
+              >
+                <div
+                  style={{ width: 38, height: 38, backgroundColor: "grey" }}
+                />
+                <Text.Footnote>{item}</Text.Footnote>
+              </GenderItem>
+            );
+          })}
+        </GenderView>
+
         {!MOBILE && <EmptyBox height={100} />}
 
         <PrimaryBtn
+          exception={!MOBILE && true}
+          style={{ bottom: MOBILE && IOS ? 40 : 20 }}
           onClick={goNext}
           state={select.length < 1 ? "disabled" : "default"}
           text={"다음"}

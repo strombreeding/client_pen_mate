@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Wrap } from "../styles";
+import { Container, EmptyBox, Wrap } from "../styles";
 import FirstStep from "../components/sign-up/FirstStep";
 import SecondStep from "../components/sign-up/SecondStep";
 import ThirdStep from "../components/sign-up/ThirdStep";
@@ -22,16 +22,14 @@ const SignUp: React.FC = () => {
       navigate(-1);
     }
   };
-  const padding = devicePadding([40, 40], [250, 300]);
+  // const padding = devicePadding([40, 40], [250, 300]);
 
   return (
     <Container>
       <SimpleHeader goBack={goBack} />
-      <Wrap style={{ padding }}>
-        {step === 0 && <FirstStep step={step} />}
-        {step === 1 && <SecondStep step={step} />}
-        {step === 2 && <ThirdStep step={step} />}
-      </Wrap>
+      {step === 0 && <FirstStep step={step} />}
+      {step === 1 && <SecondStep step={step} />}
+      {step === 2 && <ThirdStep step={step} />}
     </Container>
   );
 };

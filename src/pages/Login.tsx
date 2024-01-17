@@ -1,6 +1,15 @@
 import styled from "styled-components";
 import { imgSrc } from "../assets/img";
-import { Container, EmptyBox, FadeIn, Text, Wrap, colors } from "../styles";
+import {
+  Container,
+  EmptyBox,
+  FadeIn,
+  FadeInPopup,
+  FadeOutPopup,
+  Text,
+  Wrap,
+  colors,
+} from "../styles";
 import { getOauthUrl } from "../apis/login/read";
 import { useNavigate } from "react-router-dom";
 import { useShowAnimation } from "../hooks/getShowAnimation";
@@ -10,7 +19,8 @@ import Popup from "../components/designs/Popup";
 import { SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { showPopup } from "../store/slices/appState";
+import { showModal, showPopup } from "../store/slices/appState";
+import Modal from "../components/designs/Modal";
 
 /* Styled-Components */
 
@@ -40,11 +50,22 @@ const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
 export const FadeInSection = styled.section<{ isVisited: boolean }>`
   display: flex;
   width: 100%;
-  height: 100%;
   text-align: center;
   flex-direction: column;
   align-items: center;
   animation: ${(props) => (props.isVisited ? {} : FadeIn)} 1s ease-in-out;
+`;
+
+const BG = styled.div<{ show: boolean }>`
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+  z-index: 1;
+  cursor: pointer;
+  animation: ${(props) => (props.show ? FadeInPopup : FadeOutPopup)} ease-in-out
+    0.3s;
 `;
 
 const BtnIcon = styled.img`
@@ -55,7 +76,8 @@ const BtnIcon = styled.img`
 
 /* Compoent */
 const Login = () => {
-  const popupState = useSelector((state: RootState) => state.appState.popup);
+  const modalState = useSelector((state: RootState) => state.appState.modal);
+
   const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("Login");
   const onClick =
@@ -67,12 +89,21 @@ const Login = () => {
       window.sessionStorage.setItem("Login", "1");
       // navigation(res);
     };
-  const padding = devicePadding([226, 52], [287, 257], true);
-
+  // const unShowPopup = () => {
+  //   setTimeout(() => {
+  //     dispatch(showModal(false));
+  //   }, 300);
+  // };
+  const padding = devicePadding([226, 0], [40, 0]);
   return (
     // <Container>
     <Container>
-      <Wrap style={{ padding }}>
+      <Wrap
+        style={{
+          height: SCREEN_HEIGHT,
+          padding,
+        }}
+      >
         <Title isVisited={showAnimation}>
           <Text.ChangwonDangamAsac
             style={{ textAlign: "center" }}
@@ -103,13 +134,22 @@ const Login = () => {
           </SocialLoginBtn>
 
           <EmptyBox height={5} />
-          <Text.Subhead color={colors.Grey700}>
-            도움이 필요하신가요?
-          </Text.Subhead>
+          <div
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              dispatch(showModal(true));
+            }}
+          >
+            <Text.Subhead color={colors.Grey700}>
+              도움이 필요하신가요?
+            </Text.Subhead>
+          </div>
         </FadeInSection>
         <EmptyBox height={52} width={100} />
       </Wrap>
-      {popupState && (
+      {/* {popupState && (
         <Popup
           title={"아바타 수정 나가기"}
           content={`수정하던 내용이 저장되지 않습니다.
@@ -118,6 +158,18 @@ const Login = () => {
           rightText={"나가기"}
           rightBtnAction={() => {
             alert("완료로직");
+          }}
+        />
+      )} */}
+      {modalState && (
+        <Modal
+          title={"로그인에 어려움이 있으신가요?"}
+          content={"문제가 있으시다면\n하단 버튼을 눌러 문의를 남겨주세요."}
+          leftText={""}
+          rightText={"문의를 남길래요"}
+          rightBtnAction={() => {
+            dispatch(showModal(false));
+            window.location.href = "https://naver.com";
           }}
         />
       )}

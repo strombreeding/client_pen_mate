@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Text, colors } from "../../styles";
 import React, { useEffect, useState } from "react";
 import { BtnStatus } from "../../types";
+import { MOBILE } from "../../configs/device";
 const LayOut = styled.div<{
   status: BtnStatus;
   exception: boolean | undefined;
@@ -16,21 +17,34 @@ const LayOut = styled.div<{
         return colors.Grey300;
     }
   }};
+  display: flex;
   padding: 14px 30px 14px 30px;
   border-radius: 100px;
   align-items: center;
   text-align: center;
   justify-content: center;
-  width: ${(props) => (props.exception == undefined ? "300px" : "100%")};
+  width: 100%;
+  max-width: ${MOBILE ? "100%" : "320px"};
+  min-width: ${MOBILE ? "" : "320px"};
   color: ${colors.White};
   cursor: pointer;
+  position: relative;
+  right: 0;
+`;
+
+const BtnContainer = styled.div`
+  display: flex;
+  position: fixed;
+  right: 20px;
+  left: 20px;
+  align-items: center;
 `;
 
 const PrimaryBtn: React.FC<{
   text: string;
   state: BtnStatus;
   onClick?: (event: any) => void;
-  exception?: true;
+  exception?: boolean;
   style?: React.CSSProperties;
 }> = ({ text, state, onClick, exception, style }) => {
   const [status, setStatus] = useState<BtnStatus>("disabled");
@@ -45,19 +59,38 @@ const PrimaryBtn: React.FC<{
   const setEnd = () => {
     if (status !== "disabled") setStatus("default");
   };
+
   return (
-    <LayOut
-      style={style}
-      exception={exception}
-      onClick={onClick}
-      onTouchStart={setPressed}
-      onTouchEnd={setEnd}
-      onMouseDown={setPressed}
-      onMouseUp={setEnd}
-      status={status}
-    >
-      <Text.Headline color="white">{text}</Text.Headline>
-    </LayOut>
+    <>
+      {!exception ? (
+        <BtnContainer style={style}>
+          <LayOut
+            exception={exception}
+            onClick={onClick}
+            onTouchStart={setPressed}
+            onTouchEnd={setEnd}
+            onMouseDown={setPressed}
+            onMouseUp={setEnd}
+            status={status}
+          >
+            <Text.Headline color="white">{text}</Text.Headline>
+          </LayOut>
+        </BtnContainer>
+      ) : (
+        <LayOut
+          style={style}
+          exception={exception}
+          onClick={onClick}
+          onTouchStart={setPressed}
+          onTouchEnd={setEnd}
+          onMouseDown={setPressed}
+          onMouseUp={setEnd}
+          status={status}
+        >
+          <Text.Headline color="white">{text}</Text.Headline>
+        </LayOut>
+      )}
+    </>
   );
 };
 

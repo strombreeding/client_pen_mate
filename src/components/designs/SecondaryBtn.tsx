@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Text, colors } from "../../styles";
 import React, { memo, useEffect, useState } from "react";
 import { type BtnStatus } from "../../types";
+import { MOBILE } from "../../configs/device";
 const LayOut = styled.div<{
   status: BtnStatus;
   exception: boolean | undefined;
@@ -22,16 +23,25 @@ const LayOut = styled.div<{
     }
     return result;
   }};
+  padding: 14px 30px 14px 30px;
   border-radius: 100px;
   align-items: center;
   text-align: center;
   justify-content: center;
-  width: ${(props) => (props.exception == undefined ? "300px" : "100%")};
-  color: ${(props) => (props.color == null ? "black" : props.color)};
-  padding: 14px 30px 14px 30px;
+  width: 100%;
+  max-width: ${MOBILE ? "100%" : "320px"};
+  min-width: ${MOBILE ? "" : "320px"};
+  display: flex;
   cursor: pointer;
+  position: relative;
 `;
-
+const BtnContainer = styled.div`
+  display: flex;
+  position: fixed;
+  right: 20px;
+  left: 20px;
+  align-items: center;
+`;
 const SecondaryBtn: React.FC<{
   state: BtnStatus;
   text: string;
@@ -50,19 +60,39 @@ const SecondaryBtn: React.FC<{
   const setEnd = () => {
     if (status !== "disabled") setStatus("default");
   };
+
   return (
-    <LayOut
-      style={style}
-      exception={exception}
-      onClick={onClick}
-      onTouchStart={setPressed}
-      onTouchEnd={setEnd}
-      onMouseDown={setPressed}
-      onMouseUp={setEnd}
-      status={status}
-    >
-      <Text.Headline>{text}</Text.Headline>
-    </LayOut>
+    <>
+      {!exception ? (
+        <BtnContainer>
+          <LayOut
+            style={style}
+            exception={exception}
+            onClick={onClick}
+            onTouchStart={setPressed}
+            onTouchEnd={setEnd}
+            onMouseDown={setPressed}
+            onMouseUp={setEnd}
+            status={status}
+          >
+            <Text.Headline color={colors.Grey1100}>{text}</Text.Headline>
+          </LayOut>
+        </BtnContainer>
+      ) : (
+        <LayOut
+          style={style}
+          exception={exception}
+          onClick={onClick}
+          onTouchStart={setPressed}
+          onTouchEnd={setEnd}
+          onMouseDown={setPressed}
+          onMouseUp={setEnd}
+          status={status}
+        >
+          <Text.Headline color={colors.Grey1100}>{text}</Text.Headline>
+        </LayOut>
+      )}
+    </>
   );
 };
 

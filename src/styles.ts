@@ -1,102 +1,9 @@
 import styled, { createGlobalStyle, keyframes } from "styled-components";
-import { MOBILE } from "./configs/device";
-// import { Pretendard } from "./assets/fonts/fontFamilys";
-// import Pretendard from "./assets/fonts/pretendard.css"
+import { MOBILE, SCREEN_HEIGHT } from "./configs/device";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
 
-export const GlobalStyle = createGlobalStyle`
-/* @font-face {
-  font-family: "ChangwonDangamAsac";
-  font-weight: 700;
-  font-size: 50px;
-  line-height: 60px;
-  src: url(./assets/fonts/ChangwonDangamAsac-Bold_0712.ttf) format("ttf");
-} */
-@font-face {
-    font-family: 'ChangwonDangamAsac';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/CWDangamAsac-Bold.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-	font-family: 'Pretendard Black';
-	font-weight: 900;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-Black.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-Black.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard ExtraBold';
-	font-weight: 800;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-ExtraBold.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-ExtraBold.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard Bold';
-	font-weight: 700;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-Bold.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-Bold.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard SemiBold';
-	font-weight: 600;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-SemiBold.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-SemiBold.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard Medium';
-	font-weight: 500;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-Medium.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-Medium.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard Regular';
-	font-weight: 400;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-Regular.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-Regular.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard Light';
-	font-weight: 300;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-Light.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-Light.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard ExtraLight';
-	font-weight: 200;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-ExtraLight.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-ExtraLight.woff) format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard Thin';
-	font-weight: 100;
-	font-display: swap;
-	src:
-		url(./assets/fonts/woff2/Pretendard-Thin.woff2) format('woff2'), 
-		url(./assets/fonts/woff/Pretendard-Thin.woff) format('woff');
-}
+export const GlobalStyle = createGlobalStyle<{ canScroll: boolean }>`
 
 
 html, body, div, span, applet, object, iframe,
@@ -125,9 +32,10 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
-	line-height: 1;
-  overflow: hidden;
+	/* line-height: 1; */
+  /* overflow-y: hidden; */
 }
+
 ol, ul {
 	list-style: none;
 }
@@ -144,12 +52,15 @@ table {
 	border-spacing: 0;
 }
 * {
+  /* overflow: hidden; */
+  overflow: ${(props) => (props.canScroll ? "unset" : "hidden")};
   box-sizing: border-box;
+  -webkit-user-select: none; /* iOS와 일부 브라우저를 위한 접두사 */
+  -moz-user-select: none; /* Firefox를 위한 접두사 */
+  -ms-user-select: none; /* Internet Explorer를 위한 접두사 */
+  user-select: none; /* 표준 속성 */
 }
-body {
-  /* font-family: "esamanru"; */
-  /* transition: all 0.4s ease-in-out; */
-}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -158,7 +69,7 @@ a {
 
 export const Background = styled.div`
   width: 100vw;
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,10 +78,10 @@ export const Background = styled.div`
 `;
 export const Wrap = styled.div`
   display: flex;
-  height: 100%;
   width: 100%;
   flex-direction: column;
   align-items: center;
+  height: ${MOBILE ? "auto" : SCREEN_HEIGHT - 56 + "px"};
   justify-content: ${MOBILE ? "start" : "center"};
 `;
 
@@ -198,33 +109,36 @@ export const colors = {
   Blue700: "#2F59CC",
 };
 
-const PretendardRegular = styled.span`
-  font-family: "Pretendard Regular";
+const PretendardRegular = styled.div`
+  font-family: "Pretendard";
   font-weight: 400;
-  font-display: swap;
+  cursor: pointer;
+  white-space: pre-wrap;
 `;
-const PretendardSemiBold = styled.span<{ cursor?: string }>`
-  font-family: "Pretendard SemiBold";
+const PretendardSemiBold = styled.div<{ cursor?: string }>`
+  font-family: "Pretendard";
   font-weight: 600;
-  font-display: swap;
-  cursor: auto;
-  user-select: none;
+  cursor: pointer;
+  white-space: pre-wrap;
 `;
-const PretendardBold = styled.span`
-  font-family: "Pretendard Bold";
+const PretendardBold = styled.div`
+  font-family: "Pretendard";
   font-weight: 700;
-  font-display: swap;
-  cursor: auto;
-  user-select: none;
+  cursor: pointer;
+  white-space: pre-wrap;
 `;
-const ChangwonDangamAsac = styled.span`
+const ChangwonDangamAsac = styled.div`
   font-family: "ChangwonDangamAsac";
   font-weight: 700;
-  font-size: 50px;
-  line-height: 60px;
-  cursor: auto;
-  user-select: none;
+  white-space: pre-wrap;
 `;
+
+export const ScrollView = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 export const Text = {
   LargeTitle: styled(PretendardSemiBold)<{
     color?: string;
@@ -233,99 +147,78 @@ export const Text = {
     font-size: 34px;
     line-height: 41px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title1: styled(PretendardBold)<{ cursor?: string; color?: string }>`
     font-size: 28px;
     line-height: 34px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title2: styled(PretendardBold)<{ cursor?: string; color?: string }>`
     font-size: 22px;
     line-height: 28px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title3: styled(PretendardBold)<{ cursor?: string; color?: string }>`
     font-size: 20px;
     line-height: 25px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Headline: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
     font-size: 17px;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Body: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 17px;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Callout: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 16px;
     line-height: 21px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Subhead: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 15px;
     line-height: 20px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Footnote: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 13px;
     line-height: 18px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption1: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 12px;
     line-height: 16px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption2: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
     font-size: 11px;
     line-height: 13px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
-    white-space: pre-line;
-    user-select: none;
-    cursor: ${(props) => (props.cursor == null ? "default" : props.cursor)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   ChangwonDangamAsac: styled(ChangwonDangamAsac)<{ color?: string }>`
+    font-size: 50px;
+    line-height: 60px;
     color: ${(props) => props.color};
   `,
 };
 
 export const FadeIn = keyframes`
   from {
-    opacity: 0;
-  }
+    opacity: 0;  }
   to {
     opacity: 1;
   }
@@ -358,12 +251,10 @@ export const FadeOutPopup = keyframes`
 
 export const Container = styled.div`
   width: 100%;
-  height: 100%;
   flex-direction: column;
   align-items: center;
   display: flex;
-  background-color: white;
-  /* position: relative; */
+  overflow: unset;
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`

@@ -8,11 +8,12 @@ const RowView = styled.div`
   display: flex;
   width: 100%;
   height: 56px;
-  position: relative;
-  top: 0;
+  position: sticky;
+  top: 0px;
   justify-content: space-between;
   padding: 0px 30px 0px 30px;
   /* height: 60px; */
+  background-color: white;
   align-items: center;
 `;
 

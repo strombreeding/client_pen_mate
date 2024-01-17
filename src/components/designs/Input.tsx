@@ -1,22 +1,18 @@
 import styled from "styled-components";
-import { Text, colors } from "../../styles";
-import {
-  Dispatch,
-  KeyboardEvent,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { colors } from "../../styles";
+import { KeyboardEvent, useRef, useState } from "react";
 import X_14 from "./X_14";
 import { getTextWidth } from "../../utils/getFontWidth";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { editKeyboardHeight } from "../../store/slices/appState";
+import { MOBILE } from "../../configs/device";
 
 export const Pressable = styled.div<{
   state: "wrong" | "default";
   exception: boolean | undefined;
 }>`
-  max-width: 300px;
-  width: ${(props) => (props.exception == undefined ? "300px" : "100%")};
+  width: ${MOBILE ? "100%" : "320px"};
   padding: 14px 30px 14px 30px;
   border: 1px solid
     ${(props) => (props.state === "default" ? colors.Grey200 : colors.Red30)};
@@ -36,7 +32,7 @@ export const TextInput = styled.input`
   white-space: pre-line;
   display: flex;
   border: 0px;
-  text-align: start;
+  text-align: center;
   width: auto;
   outline: none;
   &::placeholder {
@@ -51,6 +47,7 @@ const Input: React.FC<{
   nextFunction?: (e?: any) => any;
   autoFocus?: boolean;
   exception?: boolean;
+  divRef?: React.MutableRefObject<HTMLDivElement | null>;
 }> = ({
   text,
   placeHolder,
@@ -59,9 +56,14 @@ const Input: React.FC<{
   nextFunction,
   autoFocus,
   exception,
+  divRef,
 }) => {
   placeHolder = "냥냥펀치이이이";
-  const minWidth = getTextWidth(placeHolder, 15, "Pretendard Regular") + 5;
+  const keyboardHeight = useSelector(
+    (state: RootState) => state.appState.keyboardHeight
+  );
+  const [focus, setFocus] = useState(false);
+  const minWidth = getTextWidth(placeHolder, 15, "Pretendard Regular") + 20;
   // const maxWidth = getTextWidth("A", 15, "Pretendard Regular");
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -70,16 +72,16 @@ const Input: React.FC<{
     // setText(e.currentTarget.value);
     const inputText = e.currentTarget.value;
     receiveText(inputText);
+
     // 입력된 텍스트의 너비를 측정하여 input 요소의 너비를 조절
-    if (inputRef.current) {
-      const textWidth = inputRef.current.scrollWidth;
-      console.log(textWidth);
-      if (inputText.length > placeHolder.length) {
-        inputRef.current.style.width = `${textWidth}px`;
-      } else {
-        inputRef.current.style.width = `${minWidth}px`;
-      }
-    }
+    // if (inputRef.current) {
+    //   const textWidth = inputRef.current.scrollWidth;
+    //   if (inputText.length > placeHolder.length) {
+    //     inputRef.current.style.width = `${textWidth}px`;
+    //   } else {
+    //     inputRef.current.style.width = `${minWidth}px`;
+    //   }
+    // }
   };
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -91,30 +93,59 @@ const Input: React.FC<{
     // setText("");
     receiveText("");
   };
-  console.log(exception, "11");
+
+  const dispatch = useDispatch<AppDispatch>();
+  const handleVisualViewPortResize = () => {
+    setFocus(!focus);
+    if (!MOBILE) return;
+    setTimeout(() => {
+      // alert(` ${window.innerHeight - window.visualViewport!.height}`);
+      if (window.visualViewport && keyboardHeight < 1) {
+        dispatch(
+          editKeyboardHeight(window.innerHeight - window.visualViewport.height)
+        );
+        window.document.body.scrollTo({ top: 100 });
+      } else if (window.visualViewport && keyboardHeight > 0) {
+        dispatch(editKeyboardHeight(0));
+      } else {
+        alert("키보드 오류");
+      }
+    }, 150);
+  };
+
   return (
     <Pressable
       exception={exception}
       state={text.length > maxLength ? "wrong" : "default"}
     >
       <TextInput
-        style={{ minWidth, width: minWidth }}
+        style={{ minWidth }}
         ref={inputRef}
         autoFocus={autoFocus}
         type="text"
-        placeholder={placeHolder}
+        onFocus={handleVisualViewPortResize}
+        onBlur={(e) => {
+          if (e.currentTarget.value === "") {
+            receiveText(placeHolder);
+          }
+          handleVisualViewPortResize();
+        }}
+        // placeholder={zz.toString()}
+        placeholder={focus ? "" : placeHolder}
         value={text}
         onChange={onChangeText}
         onKeyDown={handleKeyDown}
       />
-      <Text.Subhead></Text.Subhead>
       {text.length > 0 && (
         <X_14
           onClick={actionX}
           style={{
+            // position: "relative",
             position: "absolute",
             zIndex: 1,
             right: 17,
+            top: 17,
+            bottom: 17,
             cursor: "pointer",
           }}
         />

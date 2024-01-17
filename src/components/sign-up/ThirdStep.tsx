@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { setStep } from "../../store/slices/signUp";
 import StepIndicator from "../designs/StepIndicator";
-import { MOBILE } from "../../configs/device";
+import { IOS, MOBILE } from "../../configs/device";
 
 const GenderView = styled.div`
   padding: 0px 20px 0px 20px;
@@ -48,31 +48,35 @@ const ThirdStep: React.FC<IThirdStepProps> = ({ step }) => {
   };
   if (step !== 2) return <Fragment></Fragment>;
   return (
-    <Wrap style={{ justifyContent: "space-between" }}>
+    <Wrap>
       <FadeInSection isVisited={showAnimation}>
-        <Wrap style={{ justifyContent: "start" }}>
-          <StepIndicator items={[0, 0, 0]} index={step} />
-          <EmptyBox height={30} />
-          <Text.Title2>
-            {formData.nickname}님의
-            <br />
-            아바타를 꾸며주세요.
-          </Text.Title2>
-          <EmptyBox height={62} />
-          <GenderView>
-            <GenderItem
-              onClick={() => {
-                navigate("/edit-avatar");
-              }}
-              select={false}
-            >
-              <Text.Callout color={colors.Grey600}>img</Text.Callout>
-            </GenderItem>
-          </GenderView>
-        </Wrap>
-        {!MOBILE && <EmptyBox height={100} />}
+        <StepIndicator items={[0, 0, 0]} index={step} />
+        <EmptyBox height={30} />
+        <Text.Title2>
+          {formData.nickname}님의
+          <br />
+          아바타를 꾸며주세요.
+        </Text.Title2>
+        <EmptyBox height={44} />
+        <GenderView>
+          <GenderItem
+            onClick={() => {
+              navigate("/edit-avatar");
+            }}
+            select={false}
+          >
+            <Text.Callout color={colors.Grey600}>img</Text.Callout>
+          </GenderItem>
+        </GenderView>
+        {!MOBILE && <EmptyBox height={46} />}
 
-        <PrimaryBtn onClick={goNext} state={"default"} text={"다음에 할게요"} />
+        <PrimaryBtn
+          exception={!MOBILE && true}
+          style={{ bottom: MOBILE && IOS ? 40 : 20 }}
+          onClick={goNext}
+          state={"default"}
+          text={"다음에 할게요"}
+        />
       </FadeInSection>
     </Wrap>
   );

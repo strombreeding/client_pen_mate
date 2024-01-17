@@ -5,12 +5,12 @@ import { SERVER_URI } from "./configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
-import { showPopup } from "./store/slices/appState";
+import { showModal, showPopup } from "./store/slices/appState";
 
 const BG = styled.div<{ show: boolean }>`
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: black;
   opacity: 0.5;
   z-index: 1;
@@ -21,13 +21,16 @@ const BG = styled.div<{ show: boolean }>`
 
 function App() {
   const popupState = useSelector((state: RootState) => state.appState.popup);
+  const modalState = useSelector((state: RootState) => state.appState.modal);
   const containerRef = useRef<HTMLDivElement>(null);
   console.log(SERVER_URI);
   console.log(window.innerHeight);
 
   const dispatch = useDispatch<AppDispatch>();
   const unShowPopup = () => {
-    dispatch(showPopup(false));
+    setTimeout(() => {
+      dispatch(showModal(false));
+    }, 300);
   };
   useEffect(() => {
     const handleTouchStart = (event: TouchEvent) => {
@@ -59,14 +62,14 @@ function App() {
       }
     };
   }, []);
+  const canScroll = useSelector((state: RootState) => state.appState.overFlow);
 
   return (
     <Fragment>
-      <GlobalStyle />
-      {popupState && <BG onClick={unShowPopup} show={popupState} />}
-      <Background>
-        <Routers />
-      </Background>
+      {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
+      {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
+      <GlobalStyle canScroll={canScroll} />
+      <Routers />
     </Fragment>
   );
 }
