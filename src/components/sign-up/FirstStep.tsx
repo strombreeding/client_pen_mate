@@ -75,7 +75,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
 
         <PrimaryBtn
           exception={!MOBILE && true}
-          style={{ bottom: MOBILE ? keyboardHeight + (IOS ? 40 : 20) : 0 }}
+          style={{ bottom: MOBILE ? keyboardHeight : 0 }}
           onClick={goNext}
           state={
             formData.nickname.length === 0 || formData.nickname.length > 12

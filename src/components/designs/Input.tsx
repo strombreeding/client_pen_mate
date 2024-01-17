@@ -95,8 +95,8 @@ const Input: React.FC<{
   };
 
   const dispatch = useDispatch<AppDispatch>();
-  const handleVisualViewPortResize = (type: boolean) => {
-    setFocus(type);
+  const handleVisualViewPortResize = () => {
+    setFocus(!focus);
     if (!MOBILE) return;
     setTimeout(() => {
       // alert(` ${window.innerHeight - window.visualViewport!.height}`);
@@ -130,10 +130,10 @@ const Input: React.FC<{
         <TextInput
           style={{ minWidth }}
           ref={inputRef}
-          autoFocus={true}
+          autoFocus={IOS ? false : autoFocus}
           type="text"
-          onFocus={() => handleVisualViewPortResize(true)}
-          onBlur={() => handleVisualViewPortResize(false)}
+          onFocus={handleVisualViewPortResize}
+          onBlur={handleVisualViewPortResize}
           // placeholder={zz.toString()}
           placeholder={focus ? "" : placeHolder}
           value={text}
