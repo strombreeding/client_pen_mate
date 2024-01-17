@@ -62,10 +62,9 @@ const Input: React.FC<{
   const keyboardHeight = useSelector(
     (state: RootState) => state.appState.keyboardHeight
   );
-  const [focus, setFocus] = useState(autoFocus);
+  const [focus, setFocus] = useState(false);
   const minWidth = getTextWidth(placeHolder, 15, "Pretendard Regular") + 20;
   // const maxWidth = getTextWidth("A", 15, "Pretendard Regular");
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   // const [text, setText] = useState("");
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,6 +99,7 @@ const Input: React.FC<{
     if (!MOBILE) return;
     setTimeout(() => {
       // alert(` ${window.innerHeight - window.visualViewport!.height}`);
+
       if (window.visualViewport && keyboardHeight < 1) {
         dispatch(
           editKeyboardHeight(window.innerHeight - window.visualViewport.height)
@@ -109,18 +109,12 @@ const Input: React.FC<{
       } else {
         alert("키보드 오류");
       }
+      if (divRef?.current) {
+        divRef.current.scrollTop = 0;
+      }
     }, 150);
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      //@ts-ignore
-      if (window.ReactNativeWebView) {
-        // @ts-ignore
-        window.ReactNativeWebView.postMessage("ShowKeyboard");
-      }
-    }, 300);
-  }, []);
   return (
     <>
       <Pressable
@@ -129,7 +123,6 @@ const Input: React.FC<{
       >
         <TextInput
           style={{ minWidth }}
-          ref={inputRef}
           autoFocus={IOS ? false : autoFocus}
           type="text"
           onFocus={handleVisualViewPortResize}

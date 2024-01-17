@@ -49,7 +49,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
 
   if (step !== 0) return <Fragment></Fragment>;
   return (
-    <Wrap style={{ padding: "0px 30px 0px 30px" }}>
+    <Wrap ref={divRef} style={{ padding: "0px 30px 0px 30px" }}>
       <FadeInSection isVisited={showAnimation}>
         <StepIndicator items={[0, 0, 0]} index={step} />
         <EmptyBox height={30} />
@@ -75,7 +75,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
 
         <PrimaryBtn
           exception={!MOBILE && true}
-          style={{ bottom: MOBILE ? keyboardHeight : 0 }}
+          style={{ bottom: MOBILE ? keyboardHeight + (IOS ? 40 : 20) : 0 }}
           onClick={goNext}
           state={
             formData.nickname.length === 0 || formData.nickname.length > 12
