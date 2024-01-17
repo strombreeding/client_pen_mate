@@ -264,9 +264,10 @@ export const EmptyBox = styled.div<{ height?: number; width?: number }>`
 
 export const SafeArea = styled.div<{ safeArea: number[] }>`
   display: flex;
+  width: 100vw;
   flex-direction: column;
   align-items: center;
-  margin-top: ${(props) => props.safeArea[0]};
-  margin-bottom: ${(props) => props.safeArea[1]};
+  margin-top: ${(props) => props.safeArea[0]}px;
+  margin-bottom: ${(props) => props.safeArea[1]}px;
   background-color: white;
 `;
