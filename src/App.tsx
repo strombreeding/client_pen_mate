@@ -6,6 +6,7 @@ import {
   FadeInPopup,
   FadeOutPopup,
   SafeArea,
+  EmptyBox,
 } from "./styles";
 import { SERVER_URI } from "./configs/server";
 import { useDispatch, useSelector } from "react-redux";
@@ -90,12 +91,22 @@ function App() {
   const canScroll = useSelector((state: RootState) => state.appState.overFlow);
 
   return (
-    <SafeArea safeArea={safeArea}>
+    <Fragment>
+      <EmptyBox
+        height={safeArea[0]}
+        width={100}
+        style={{ backgroundColor: "red" }}
+      />
       {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
       {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
       <GlobalStyle canScroll={canScroll} />
       <Routers />
-    </SafeArea>
+      <EmptyBox
+        height={safeArea[1]}
+        width={100}
+        style={{ backgroundColor: "blue" }}
+      />
+    </Fragment>
   );
 }
 
