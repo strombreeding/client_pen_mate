@@ -6,7 +6,7 @@ import { getTextWidth } from "../../utils/getFontWidth";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { editKeyboardHeight } from "../../store/slices/appState";
-import { MOBILE } from "../../configs/device";
+import { IOS, MOBILE } from "../../configs/device";
 
 export const Pressable = styled.div<{
   state: "wrong" | "default";
@@ -112,20 +112,12 @@ const Input: React.FC<{
     }, 150);
   };
 
-  const zz = () => {
-    alert("앙 클릭띠");
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, 500);
-  };
-
-  const btnRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     setTimeout(() => {
-      if (btnRef.current) {
-        btnRef.current.click();
+      //@ts-ignore
+      if (window.ReactNativeWebView) {
+        // @ts-ignore
+        window.ReactNativeWebView.postMessage("ShowKeyboard");
       }
     }, 300);
   }, []);
@@ -138,7 +130,7 @@ const Input: React.FC<{
         <TextInput
           style={{ minWidth }}
           ref={inputRef}
-          // autoFocus
+          autoFocus={true}
           type="text"
           onFocus={() => handleVisualViewPortResize(true)}
           onBlur={() => handleVisualViewPortResize(false)}
@@ -162,16 +154,13 @@ const Input: React.FC<{
                 zIndex: 1,
                 right: 17,
                 top: 17,
-                bottom: 17,
+                bottom: IOS ? 14 : 17,
                 cursor: "pointer",
               }}
             />
           )}
         </div>
       </Pressable>
-      <button ref={btnRef} id="zz" onClick={zz}>
-        gd
-      </button>
     </>
   );
 };
