@@ -27,9 +27,13 @@ const appState = createSlice({
   reducers: {
     showPopup: (state, action: PayloadAction<boolean>) => {
       state.popup = action.payload;
+      //@ts-ignore
+      window.ReactNativeWebView.postMessage("Popup");
     },
     showModal: (state, action: PayloadAction<boolean>) => {
       state.modal = action.payload;
+      //@ts-ignore
+      window.ReactNativeWebView.postMessage("Modal");
     },
     editKeyboardHeight: (state, action: PayloadAction<number>) => {
       state.keyboardHeight = action.payload;

@@ -62,6 +62,12 @@ function App() {
       }
     };
   }, []);
+
+  // useEffect(() => {
+  //   //@ts-ignore
+  //   window.ReactNativeWebView.postMessage("");
+  // }, []);
+
   const canScroll = useSelector((state: RootState) => state.appState.overFlow);
 
   return (
