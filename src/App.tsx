@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
 import { setSafeArea, showModal, showPopup } from "./store/slices/appState";
+import { IOS } from "./configs/device";
 
 const BG = styled.div<{ show: boolean }>`
   position: absolute;
@@ -81,9 +82,8 @@ function App() {
       dispatch(setSafeArea([Number(receivedData[0]), Number(receivedData[1])]));
       alert(`Data received in WebView: ${receivedData}`);
     };
-    document.addEventListener("DOMContentLoaded", () => {
-      window.addEventListener("message", readDataFromReactNative);
-    });
+
+    window.addEventListener("message", readDataFromReactNative);
 
     return () => window.removeEventListener("message", readDataFromReactNative);
   }, []);
@@ -91,12 +91,12 @@ function App() {
   const canScroll = useSelector((state: RootState) => state.appState.overFlow);
 
   return (
-    <Fragment>
+    <SafeArea safeArea={safeArea}>
       {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
       {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
       <GlobalStyle canScroll={canScroll} />
       <Routers />
-    </Fragment>
+    </SafeArea>
   );
 }
 

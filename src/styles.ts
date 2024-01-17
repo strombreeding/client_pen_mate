@@ -266,7 +266,7 @@ export const SafeArea = styled.div<{ safeArea: number[] }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${(props) => props.safeArea[0]};
-  padding-bottom: ${(props) => props.safeArea[1]};
+  margin-top: ${(props) => props.safeArea[0]};
+  margin-bottom: ${(props) => props.safeArea[1]};
   background-color: white;
 `;
