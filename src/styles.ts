@@ -267,7 +267,7 @@ export const SafeArea = styled.div<{ safeArea: number[] }>`
   width: ${SCREEN_WIDTH};
   flex-direction: column;
   align-items: center;
-  margin-top: ${(props) => props.safeArea[0]}px;
-  margin-bottom: ${(props) => props.safeArea[1]}px;
+  padding-top: ${(props) => props.safeArea[0]}px;
+  padding-bottom: ${(props) => props.safeArea[1]}px;
   background-color: white;
 `;

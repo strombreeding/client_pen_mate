@@ -104,7 +104,6 @@ const Input: React.FC<{
         dispatch(
           editKeyboardHeight(window.innerHeight - window.visualViewport.height)
         );
-        window.document.body.scrollTo({ top: 100 });
       } else if (window.visualViewport && keyboardHeight > 0) {
         dispatch(editKeyboardHeight(0));
       } else {
@@ -113,11 +112,13 @@ const Input: React.FC<{
     }, 150);
   };
 
-  // useEffect(() => {
-  //   if (inputRef.current && autoFocus === true) {
-  //     inputRef.current.focus();
-  //   }
-  // }, []); // 빈 배열을 전달하여 컴포넌트가 처음
+  useEffect(() => {
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 1000);
+  }, []); // 빈 배열을 전달하여 컴포넌트가 처음
 
   return (
     <Pressable
@@ -126,7 +127,8 @@ const Input: React.FC<{
     >
       <TextInput
         style={{ minWidth }}
-        ref={(ref) => ref && ref.focus()}
+        ref={inputRef}
+        autoFocus
         type="text"
         onFocus={() => handleVisualViewPortResize(true)}
         onBlur={(e) => {
