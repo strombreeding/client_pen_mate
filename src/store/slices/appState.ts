@@ -12,6 +12,7 @@ interface AppState {
   modal: boolean;
   overFlow: boolean;
   keyboardHeight: number;
+  safeArea: number[];
 }
 
 const initialState: AppState = {
@@ -19,6 +20,7 @@ const initialState: AppState = {
   modal: false,
   overFlow: false,
   keyboardHeight: 0,
+  safeArea: [0, 0],
 };
 
 const appState = createSlice({
@@ -27,13 +29,9 @@ const appState = createSlice({
   reducers: {
     showPopup: (state, action: PayloadAction<boolean>) => {
       state.popup = action.payload;
-      //@ts-ignore
-      window.ReactNativeWebView.postMessage("Popup");
     },
     showModal: (state, action: PayloadAction<boolean>) => {
       state.modal = action.payload;
-      //@ts-ignore
-      window.ReactNativeWebView.postMessage("Modal");
     },
     editKeyboardHeight: (state, action: PayloadAction<number>) => {
       state.keyboardHeight = action.payload;
@@ -41,10 +39,18 @@ const appState = createSlice({
     setOverFlow: (state, action: PayloadAction<boolean>) => {
       state.overFlow = action.payload;
     },
+    setSafeArea: (state, action: PayloadAction<number[]>) => {
+      state.safeArea = [...action.payload];
+    },
   },
 });
 
-export const { showPopup, showModal, editKeyboardHeight, setOverFlow } =
-  appState.actions;
+export const {
+  showPopup,
+  showModal,
+  editKeyboardHeight,
+  setOverFlow,
+  setSafeArea,
+} = appState.actions;
 
 export default appState.reducer;

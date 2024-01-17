@@ -77,6 +77,7 @@ const BtnIcon = styled.img`
 /* Compoent */
 const Login = () => {
   const modalState = useSelector((state: RootState) => state.appState.modal);
+  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
 
   const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("Login");
@@ -98,6 +99,7 @@ const Login = () => {
   return (
     // <Container>
     <Container>
+      <EmptyBox height={safeArea[0]} />
       <Wrap
         style={{
           height: SCREEN_HEIGHT,
@@ -149,6 +151,7 @@ const Login = () => {
         </FadeInSection>
         <EmptyBox height={52} width={100} />
       </Wrap>
+      <EmptyBox height={safeArea[1]} />
       {/* {popupState && (
         <Popup
           title={"아바타 수정 나가기"}

@@ -7,6 +7,10 @@ import NotFound from "./pages/NotFound";
 import useDisablePinchZoom from "./hooks/disabledPinchZoom";
 import EditAvatar from "./components/EditAvatar";
 import { isMobile } from "react-device-detect";
+import styled from "styled-components";
+import { SCREEN_HEIGHT } from "./configs/device";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
 
 const Routers: React.FC = () => {
   useDisablePinchZoom();

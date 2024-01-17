@@ -236,12 +236,12 @@ export const FadeInPopup = keyframes`
     opacity: 0;
   }
   to{
-    opacity: 0.5;
+    opacity: 0.7;
   }
 `;
 export const FadeOutPopup = keyframes`
  from {
-    opacity: 0.5;
+    opacity: 0.7;
   }
   to{
     opacity: 0;
@@ -261,4 +261,10 @@ export const EmptyBox = styled.div<{ height?: number; width?: number }>`
   /* height: ${(props) => props.height}px; */
   padding-top: ${(props) => props.height}px;
   width: ${(props) => props.width}px;
+`;
+
+export const SafeArea = styled.div<{ safeArea: number[] }>`
+  padding-top: ${(props) => props.safeArea[0]};
+  padding-bottom: ${(props) => props.safeArea[1]};
+  background-color: white;
 `;

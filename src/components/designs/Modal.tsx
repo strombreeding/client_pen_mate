@@ -18,8 +18,8 @@ const BG = styled.div<{ show: boolean }>`
   position: absolute;
   width: 100vw;
   height: 100%;
-  background-color: black;
-  opacity: 0.5;
+  background-color: #000000;
+  opacity: 0.7;
   z-index: 1;
   cursor: pointer;
   animation: ${(props) => (props.show ? FadeInPopup : FadeOutPopup)} ease-in-out

@@ -1,11 +1,17 @@
 import { Fragment, useEffect, useRef } from "react";
 import Routers from "./Router";
-import { GlobalStyle, Background, FadeInPopup, FadeOutPopup } from "./styles";
+import {
+  GlobalStyle,
+  Background,
+  FadeInPopup,
+  FadeOutPopup,
+  SafeArea,
+} from "./styles";
 import { SERVER_URI } from "./configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
-import { showModal, showPopup } from "./store/slices/appState";
+import { setSafeArea, showModal, showPopup } from "./store/slices/appState";
 
 const BG = styled.div<{ show: boolean }>`
   position: absolute;
@@ -22,6 +28,8 @@ const BG = styled.div<{ show: boolean }>`
 function App() {
   const popupState = useSelector((state: RootState) => state.appState.popup);
   const modalState = useSelector((state: RootState) => state.appState.modal);
+  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
+
   const containerRef = useRef<HTMLDivElement>(null);
   console.log(SERVER_URI);
   console.log(window.innerHeight);
@@ -63,20 +71,31 @@ function App() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   //@ts-ignore
-  //   window.ReactNativeWebView.postMessage("");
-  // }, []);
+  useEffect(() => {
+    //@ts-ignore
+    // window.ReactNativeWebView.postMessage("");
+
+    const readDataFromReactNative = (event: MessageEvent<string>) => {
+      const receivedData = event.data.split(",");
+      dispatch(setSafeArea([Number(receivedData[0]), Number(receivedData[1])]));
+      console.log("Data received in WebView:", receivedData);
+    };
+    document.addEventListener("DOMContentLoaded", () => {
+      window.addEventListener("message", readDataFromReactNative);
+    });
+
+    return () => window.removeEventListener("message", readDataFromReactNative);
+  }, []);
 
   const canScroll = useSelector((state: RootState) => state.appState.overFlow);
 
   return (
-    <Fragment>
+    <SafeArea safeArea={safeArea}>
       {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
       {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
       <GlobalStyle canScroll={canScroll} />
       <Routers />
-    </Fragment>
+    </SafeArea>
   );
 }
 
