@@ -99,7 +99,8 @@ const Login = () => {
   return (
     // <Container>
     <Container>
-      <EmptyBox height={safeArea[0]} />
+      <div>{safeArea[0]}</div>
+      <div>{safeArea[1]}</div>
       <Wrap
         style={{
           height: SCREEN_HEIGHT,
@@ -151,7 +152,6 @@ const Login = () => {
         </FadeInSection>
         <EmptyBox height={52} width={100} />
       </Wrap>
-      <EmptyBox height={safeArea[1]} />
       {/* {popupState && (
         <Popup
           title={"아바타 수정 나가기"}

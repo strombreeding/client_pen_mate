@@ -92,20 +92,10 @@ function App() {
 
   return (
     <Fragment>
-      <EmptyBox
-        height={safeArea[0]}
-        width={100}
-        style={{ backgroundColor: "red" }}
-      />
       {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
       {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
       <GlobalStyle canScroll={canScroll} />
       <Routers />
-      <EmptyBox
-        height={safeArea[1]}
-        width={100}
-        style={{ backgroundColor: "blue" }}
-      />
     </Fragment>
   );
 }

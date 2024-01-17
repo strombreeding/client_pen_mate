@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, EmptyBox, Wrap } from "../styles";
+import { Container, EmptyBox, SafeArea, Wrap } from "../styles";
 import FirstStep from "../components/sign-up/FirstStep";
 import SecondStep from "../components/sign-up/SecondStep";
 import ThirdStep from "../components/sign-up/ThirdStep";
@@ -12,6 +12,7 @@ import SimpleHeader from "../components/SimpleHeader";
 
 /* Component */
 const SignUp: React.FC = () => {
+  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
   const step = useSelector((state: RootState) => state.sighUp.step);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -25,12 +26,14 @@ const SignUp: React.FC = () => {
   // const padding = devicePadding([40, 40], [250, 300]);
 
   return (
-    <Container>
-      <SimpleHeader goBack={goBack} />
-      {step === 0 && <FirstStep step={step} />}
-      {step === 1 && <SecondStep step={step} />}
-      {step === 2 && <ThirdStep step={step} />}
-    </Container>
+    <SafeArea safeArea={safeArea}>
+      <Container>
+        <SimpleHeader goBack={goBack} />
+        {step === 0 && <FirstStep step={step} />}
+        {step === 1 && <SecondStep step={step} />}
+        {step === 2 && <ThirdStep step={step} />}
+      </Container>
+    </SafeArea>
   );
 };
 

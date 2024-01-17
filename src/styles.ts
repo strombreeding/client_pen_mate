@@ -254,7 +254,6 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   display: flex;
-  overflow: unset;
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`
