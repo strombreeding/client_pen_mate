@@ -94,7 +94,8 @@ const Input: React.FC<{
   };
 
   const dispatch = useDispatch<AppDispatch>();
-  const handleVisualViewPortResize = () => {
+  const handleVisualViewPortResize = (e: any) => {
+    e.preventDefault();
     setFocus(!focus);
     if (!MOBILE) return;
     setTimeout(() => {
