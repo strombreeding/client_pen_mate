@@ -80,7 +80,7 @@ function App() {
     const readDataFromReactNative = (event: MessageEvent<string>) => {
       const receivedData = event.data.split(",");
       dispatch(setSafeArea([Number(receivedData[0]), Number(receivedData[1])]));
-      alert(`Data received in WebView: ${receivedData}`);
+      // alert(`Data received in WebView: ${receivedData}`);
     };
 
     window.addEventListener("message", readDataFromReactNative);

@@ -26,13 +26,15 @@ const SignUp: React.FC = () => {
   // const padding = devicePadding([40, 40], [250, 300]);
 
   return (
-    <Container>
-      <SimpleHeader goBack={goBack} />
-      <EmptyBox height={40} />
-      {step === 0 && <FirstStep step={step} />}
-      {step === 1 && <SecondStep step={step} />}
-      {step === 2 && <ThirdStep step={step} />}
-    </Container>
+    <SafeArea safeArea={safeArea}>
+      <Container>
+        <SimpleHeader goBack={goBack} />
+        <EmptyBox height={40} />
+        {step === 0 && <FirstStep step={step} />}
+        {step === 1 && <SecondStep step={step} />}
+        {step === 2 && <ThirdStep step={step} />}
+      </Container>
+    </SafeArea>
   );
 };
 

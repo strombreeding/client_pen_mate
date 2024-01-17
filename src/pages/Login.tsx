@@ -6,6 +6,7 @@ import {
   FadeIn,
   FadeInPopup,
   FadeOutPopup,
+  SafeArea,
   Text,
   Wrap,
   colors,
@@ -98,61 +99,62 @@ const Login = () => {
   const padding = devicePadding([226, 0], [40, 0]);
   return (
     // <Container>
-    <Container>
-      <div>{safeArea[0]}</div>
-      <div>{safeArea[1]}</div>
-      <Wrap
-        style={{
-          height: SCREEN_HEIGHT,
-          padding,
-        }}
-      >
-        <Title isVisited={showAnimation}>
-          <Text.ChangwonDangamAsac
-            style={{ textAlign: "center" }}
-            color={colors.Red200}
-          >
-            Pen Mate
-          </Text.ChangwonDangamAsac>
-        </Title>
-        <EmptyBox height={110} />
-        <FadeInSection isVisited={showAnimation}>
-          <SocialLoginBtn bgColor="#FEE500" onClick={onClick("kakao")}>
-            <BtnIcon src={imgSrc.kakao} />
-            <Text.Headline cursor="pointer" color="#391B1B">
-              카카오로 로그인
-            </Text.Headline>
-          </SocialLoginBtn>
+    <SafeArea safeArea={safeArea}>
+      <Container>
+        <div>{safeArea[0]}</div>
+        <div>{safeArea[1]}</div>
+        <Wrap
+          style={{
+            height: SCREEN_HEIGHT,
+            padding,
+          }}
+        >
+          <Title isVisited={showAnimation}>
+            <Text.ChangwonDangamAsac
+              style={{ textAlign: "center" }}
+              color={colors.Red200}
+            >
+              Pen Mate
+            </Text.ChangwonDangamAsac>
+          </Title>
+          <EmptyBox height={110} />
+          <FadeInSection isVisited={showAnimation}>
+            <SocialLoginBtn bgColor="#FEE500" onClick={onClick("kakao")}>
+              <BtnIcon src={imgSrc.kakao} />
+              <Text.Headline cursor="pointer" color="#391B1B">
+                카카오로 로그인
+              </Text.Headline>
+            </SocialLoginBtn>
 
-          <SocialLoginBtn>
-            <BtnIcon src={imgSrc.google} />
-            <Text.Headline cursor="pointer">구글로 로그인</Text.Headline>
-          </SocialLoginBtn>
+            <SocialLoginBtn>
+              <BtnIcon src={imgSrc.google} />
+              <Text.Headline cursor="pointer">구글로 로그인</Text.Headline>
+            </SocialLoginBtn>
 
-          <SocialLoginBtn bgColor="black" color="white">
-            <BtnIcon src={imgSrc.apple} />
-            <Text.Headline cursor="pointer" color={colors.White}>
-              애플로 로그인
-            </Text.Headline>
-          </SocialLoginBtn>
+            <SocialLoginBtn bgColor="black" color="white">
+              <BtnIcon src={imgSrc.apple} />
+              <Text.Headline cursor="pointer" color={colors.White}>
+                애플로 로그인
+              </Text.Headline>
+            </SocialLoginBtn>
 
-          <EmptyBox height={5} />
-          <div
-            style={{
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              dispatch(showModal(true));
-            }}
-          >
-            <Text.Subhead color={colors.Grey700}>
-              도움이 필요하신가요?
-            </Text.Subhead>
-          </div>
-        </FadeInSection>
-        <EmptyBox height={52} width={100} />
-      </Wrap>
-      {/* {popupState && (
+            <EmptyBox height={5} />
+            <div
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                dispatch(showModal(true));
+              }}
+            >
+              <Text.Subhead color={colors.Grey700}>
+                도움이 필요하신가요?
+              </Text.Subhead>
+            </div>
+          </FadeInSection>
+          <EmptyBox height={52} width={100} />
+        </Wrap>
+        {/* {popupState && (
         <Popup
           title={"아바타 수정 나가기"}
           content={`수정하던 내용이 저장되지 않습니다.
@@ -164,19 +166,20 @@ const Login = () => {
           }}
         />
       )} */}
-      {modalState && (
-        <Modal
-          title={"로그인에 어려움이 있으신가요?"}
-          content={"문제가 있으시다면\n하단 버튼을 눌러 문의를 남겨주세요."}
-          leftText={""}
-          rightText={"문의를 남길래요"}
-          rightBtnAction={() => {
-            dispatch(showModal(false));
-            window.location.href = "https://naver.com";
-          }}
-        />
-      )}
-    </Container>
+        {modalState && (
+          <Modal
+            title={"로그인에 어려움이 있으신가요?"}
+            content={"문제가 있으시다면\n하단 버튼을 눌러 문의를 남겨주세요."}
+            leftText={""}
+            rightText={"문의를 남길래요"}
+            rightBtnAction={() => {
+              dispatch(showModal(false));
+              window.location.href = "https://naver.com";
+            }}
+          />
+        )}
+      </Container>
+    </SafeArea>
   );
 };
 
