@@ -9,6 +9,7 @@ import { setStep } from "../store/slices/signUp";
 import { devicePadding } from "../utils/getDevicePadding";
 import { useNavigate } from "react-router";
 import SimpleHeader from "../components/SimpleHeader";
+import { MOBILE } from "../configs/device";
 
 /* Component */
 const SignUp: React.FC = () => {
@@ -28,11 +29,7 @@ const SignUp: React.FC = () => {
   return (
     <Container>
       <SimpleHeader goBack={goBack} />
-      <div>
-        {safeArea[0]}
-        {safeArea[1]}
-      </div>
-      <EmptyBox height={40} />
+      {MOBILE && <EmptyBox height={40} />}
       {step === 0 && <FirstStep step={step} />}
       {step === 1 && <SecondStep step={step} />}
       {step === 2 && <ThirdStep step={step} />}

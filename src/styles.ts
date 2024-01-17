@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle, keyframes } from "styled-components";
-import { MOBILE, SCREEN_HEIGHT } from "./configs/device";
+import { MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 
@@ -264,7 +264,7 @@ export const EmptyBox = styled.div<{ height?: number; width?: number }>`
 
 export const SafeArea = styled.div<{ safeArea: number[] }>`
   display: flex;
-  width: 100vw;
+  width: ${SCREEN_WIDTH};
   flex-direction: column;
   align-items: center;
   margin-top: ${(props) => props.safeArea[0]}px;

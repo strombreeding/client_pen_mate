@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { colors } from "../../styles";
-import { KeyboardEvent, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import X_14 from "./X_14";
 import { getTextWidth } from "../../utils/getFontWidth";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,7 +62,7 @@ const Input: React.FC<{
   const keyboardHeight = useSelector(
     (state: RootState) => state.appState.keyboardHeight
   );
-  const [focus, setFocus] = useState(false);
+  const [focus, setFocus] = useState(autoFocus);
   const minWidth = getTextWidth(placeHolder, 15, "Pretendard Regular") + 20;
   // const maxWidth = getTextWidth("A", 15, "Pretendard Regular");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -95,8 +95,8 @@ const Input: React.FC<{
   };
 
   const dispatch = useDispatch<AppDispatch>();
-  const handleVisualViewPortResize = () => {
-    setFocus(!focus);
+  const handleVisualViewPortResize = (type: boolean) => {
+    setFocus(type);
     if (!MOBILE) return;
     setTimeout(() => {
       // alert(` ${window.innerHeight - window.visualViewport!.height}`);
@@ -113,6 +113,12 @@ const Input: React.FC<{
     }, 150);
   };
 
+  useEffect(() => {
+    if (inputRef.current && autoFocus === true) {
+      inputRef.current.focus();
+    }
+  }, []); // 빈 배열을 전달하여 컴포넌트가 처음
+
   return (
     <Pressable
       exception={exception}
@@ -121,14 +127,13 @@ const Input: React.FC<{
       <TextInput
         style={{ minWidth }}
         ref={inputRef}
-        autoFocus={autoFocus}
         type="text"
-        onFocus={handleVisualViewPortResize}
+        onFocus={() => handleVisualViewPortResize(true)}
         onBlur={(e) => {
           if (e.currentTarget.value === "") {
             receiveText(placeHolder);
           }
-          handleVisualViewPortResize();
+          handleVisualViewPortResize(false);
         }}
         // placeholder={zz.toString()}
         placeholder={focus ? "" : placeHolder}
@@ -136,20 +141,26 @@ const Input: React.FC<{
         onChange={onChangeText}
         onKeyDown={handleKeyDown}
       />
-      {text.length > 0 && (
-        <X_14
-          onClick={actionX}
-          style={{
-            // position: "relative",
-            position: "absolute",
-            zIndex: 1,
-            right: 17,
-            top: 17,
-            bottom: 17,
-            cursor: "pointer",
-          }}
-        />
-      )}
+      <div
+        style={{
+          backgroundColor: "red",
+        }}
+      >
+        {text.length > 0 && (
+          <X_14
+            onClick={actionX}
+            style={{
+              // position: "relative",
+              position: "absolute",
+              zIndex: 1,
+              right: 17,
+              top: 17,
+              bottom: 17,
+              cursor: "pointer",
+            }}
+          />
+        )}
+      </div>
     </Pressable>
   );
 };
