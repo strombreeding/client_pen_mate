@@ -81,10 +81,10 @@ function App() {
       if (receiveRef.current) return;
       if (event.data) {
         console.log(event.data);
-        // const receivedData = event.data.split(",");
-        // dispatch(
-        //   setSafeArea([Number(receivedData[0]), Number(receivedData[1])])
-        // );
+        const receivedData = event.data.split(",");
+        dispatch(
+          setSafeArea([Number(receivedData[0]), Number(receivedData[1])])
+        );
         receiveRef.current = true;
       }
       // alert(`Data received in WebView: ${receivedData}`);

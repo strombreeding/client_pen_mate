@@ -113,11 +113,11 @@ const Input: React.FC<{
     }, 150);
   };
 
-  useEffect(() => {
-    if (inputRef.current && autoFocus === true) {
-      inputRef.current.focus();
-    }
-  }, []); // 빈 배열을 전달하여 컴포넌트가 처음
+  // useEffect(() => {
+  //   if (inputRef.current && autoFocus === true) {
+  //     inputRef.current.focus();
+  //   }
+  // }, []); // 빈 배열을 전달하여 컴포넌트가 처음
 
   return (
     <Pressable
@@ -126,7 +126,7 @@ const Input: React.FC<{
     >
       <TextInput
         style={{ minWidth }}
-        ref={inputRef}
+        ref={(ref) => ref && ref.focus()}
         type="text"
         onFocus={() => handleVisualViewPortResize(true)}
         onBlur={(e) => {
