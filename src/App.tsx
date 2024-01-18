@@ -14,6 +14,7 @@ import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
 import { setSafeArea, showModal, showPopup } from "./store/slices/appState";
 import { IOS } from "./configs/device";
+import { useNavigate } from "react-router-dom";
 
 const BG = styled.div<{ show: boolean }>`
   position: absolute;
@@ -83,25 +84,33 @@ function App() {
     //   e.preventDefault();
     // });
   }, []);
+
+  const [req, setReq] = useState(0);
+
   useEffect(() => {
-    //@ts-ignore
-    // window.ReactNativeWebView.postMessage("");
-
     const readDataFromReactNative = (event: MessageEvent<string>) => {
-      if (receiveRef.current) return;
-      if (event.data) {
-        if (typeof event.data === "object") return;
-        const receivedData = event.data.split(",");
-        dispatch(
-          setSafeArea([Number(receivedData[0]), Number(receivedData[1])])
-        );
-        receiveRef.current = true;
+      if (typeof event.data === "string") {
+        if (event.data.includes("init")) {
+          const receivedData = event.data.split("/")[1].split(",");
+          dispatch(
+            setSafeArea([Number(receivedData[0]), Number(receivedData[1])])
+          );
+        }
       }
-      // alert(`Data received in WebView: ${receivedData}`);
     };
-    window.addEventListener("message", readDataFromReactNative);
 
-    return () => window.removeEventListener("message", readDataFromReactNative);
+    if (IOS) {
+      window.addEventListener("message", readDataFromReactNative);
+    } else if (!IOS) {
+      //@ts-ignore
+      document.addEventListener("message", readDataFromReactNative);
+    }
+
+    return () => {
+      //@ts-ignore
+      document.removeEventListener("message", readDataFromReactNative);
+      window.removeEventListener("message", readDataFromReactNative);
+    };
     // return () =>
   }, []);
 
