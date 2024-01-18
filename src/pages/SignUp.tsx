@@ -13,7 +13,7 @@ import { useParams, useMatch, Route } from "react-router-dom";
 export const getURLParams = (search: string, type?: "string" | "number") => {
   const urlParams = new URLSearchParams(window.location.search);
   const specificParamValue = urlParams.get(search);
-  if (specificParamValue == null) return null;
+  if (specificParamValue == null) return -1;
   if (type === "number") {
     return Number(specificParamValue);
   }
@@ -22,32 +22,18 @@ export const getURLParams = (search: string, type?: "string" | "number") => {
 /* Component */
 const SignUp: React.FC = () => {
   const params = getURLParams("step", "number");
-  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
-  const formData = useSelector((state: RootState) => state.sighUp.formData);
-  const step = useSelector((state: RootState) => state.sighUp.step);
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const goBack = () => {
-    if (step > 0) {
-      dispatch(setStep(step - 1));
-      navigate(-1);
-    } else {
-      navigate(-1);
-    }
+    navigate(-1);
   };
-  useEffect(() => {}, []);
-  // const padding = devicePadding([40, 40], [250, 300]);
   return (
     <Container>
       <SimpleHeader goBack={goBack} />
       {MOBILE && <EmptyBox height={40} />}
 
-      {/* {step == 0 && <FirstStep step={step} />}
-      {step == 1 && <SecondStep step={step} />}
-      {step == 2 && <ThirdStep step={step} />} */}
-      {params == 0 && <FirstStep step={step} />}
-      {params == 1 && <SecondStep step={step} />}
-      {params == 2 && <ThirdStep step={step} />}
+      {params == 0 && <FirstStep step={params} />}
+      {params == 1 && <SecondStep step={params} />}
+      {params == 2 && <ThirdStep step={params} />}
     </Container>
   );
 };

@@ -45,7 +45,6 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
     if (formData.nickname.length > 12) {
       return;
     }
-    dispatch(setStep(1));
     navigate("/sign-up?step=1");
   };
 

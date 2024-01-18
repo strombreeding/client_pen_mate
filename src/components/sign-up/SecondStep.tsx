@@ -54,7 +54,6 @@ const SecondStep: React.FC<ISecondStepProps> = ({ step }) => {
     if (select.length < 1) {
       return;
     }
-    dispatch(setStep(step + 1));
     navigate(`/sign-up?step=2`);
   };
   if (step !== 1) return <Fragment></Fragment>;
