@@ -55,9 +55,7 @@ const SecondStep: React.FC<ISecondStepProps> = ({ step }) => {
       return;
     }
     dispatch(setStep(step + 1));
-  };
-  const goBack = () => {
-    dispatch(setStep(step - 1));
+    navigate(`/sign-up?step=2`);
   };
   if (step !== 1) return <Fragment></Fragment>;
   return (

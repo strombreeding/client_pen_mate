@@ -42,37 +42,47 @@ function App() {
       dispatch(showModal(false));
     }, 300);
   };
-  // useEffect(() => {
-  //   const handleTouchStart = (event: TouchEvent) => {
-  //     if (event.touches.length >= 2) {
-  //       event.preventDefault();
-  //     }
-  //   };
+  useEffect(() => {
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length >= 2) {
+        event.preventDefault();
+      }
+    };
 
-  //   const handleTouchMove = (event: TouchEvent) => {
-  //     if (event.touches.length >= 2) {
-  //       event.preventDefault();
-  //     }
-  //   };
-  //   const containerElement = containerRef.current;
+    const handleTouchMove = (event: TouchEvent) => {
+      if (event.touches.length >= 2) {
+        event.preventDefault();
+      }
+    };
+    const containerElement = containerRef.current;
 
-  //   if (containerElement) {
-  //     containerElement.addEventListener("touchstart", handleTouchStart, {
-  //       passive: false,
-  //     });
-  //     containerElement.addEventListener("touchmove", handleTouchMove, {
-  //       passive: false,
-  //     });
-  //   }
+    if (containerElement) {
+      containerElement.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      containerElement.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+    }
 
-  //   return () => {
-  //     if (containerElement) {
-  //       containerElement.removeEventListener("touchstart", handleTouchStart);
-  //       containerElement.removeEventListener("touchmove", handleTouchMove);
-  //     }
-  //   };
-  // }, []);
-
+    return () => {
+      if (containerElement) {
+        containerElement.removeEventListener("touchstart", handleTouchStart);
+        containerElement.removeEventListener("touchmove", handleTouchMove);
+      }
+    };
+  }, []);
+  useEffect(() => {
+    // window.addEventListener("popstate", (e) => {
+    //   alert("나갈꺼냐?");
+    //   e.preventDefault();
+    // });
+    // window.addEventListener("beforeunload", (e) => {
+    //   // alert("나갈꺼냐?");
+    //   dispatch(showPopup(true));
+    //   e.preventDefault();
+    // });
+  }, []);
   useEffect(() => {
     //@ts-ignore
     // window.ReactNativeWebView.postMessage("");

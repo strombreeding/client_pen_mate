@@ -35,6 +35,7 @@ export const TextInput = styled.input`
   text-align: center;
   width: auto;
   outline: none;
+  padding: 0px;
   &::placeholder {
     text-align: center;
   }
@@ -59,11 +60,12 @@ const Input: React.FC<{
   divRef,
 }) => {
   placeHolder = "냥냥펀치이이이";
-  const keyboardHeight = useSelector(
-    (state: RootState) => state.appState.keyboardHeight
-  );
+  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
+  const isWebView = safeArea[0] + safeArea[1] > 5;
+  const showKeyboardTime = IOS && !isWebView ? 600 : 200;
   const inputRef = useRef<HTMLInputElement>(null);
   const [focus, setFocus] = useState(false);
+  const keyboardRef = useRef(false);
   const minWidth = getTextWidth(placeHolder, 15, "Pretendard Regular") + 20;
   // const maxWidth = getTextWidth("A", 15, "Pretendard Regular");
 
@@ -74,14 +76,14 @@ const Input: React.FC<{
     receiveText(inputText);
 
     // 입력된 텍스트의 너비를 측정하여 input 요소의 너비를 조절
-    // if (inputRef.current) {
-    //   const textWidth = inputRef.current.scrollWidth;
-    //   if (inputText.length > placeHolder.length) {
-    //     inputRef.current.style.width = `${textWidth}px`;
-    //   } else {
-    //     inputRef.current.style.width = `${minWidth}px`;
-    //   }
-    // }
+    if (inputRef.current) {
+      const textWidth = inputRef.current.scrollWidth;
+      if (inputText.length > placeHolder.length) {
+        inputRef.current.style.width = `${textWidth}px`;
+      } else {
+        inputRef.current.style.width = `${minWidth}px`;
+      }
+    }
   };
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -96,17 +98,16 @@ const Input: React.FC<{
 
   const dispatch = useDispatch<AppDispatch>();
   const handleVisualViewPortResize = (e: any) => {
-    e.preventDefault();
     setFocus(!focus);
     if (!MOBILE) return;
     setTimeout(() => {
-      // alert(` ${window.innerHeight - window.visualViewport!.height}`);
-
-      if (window.visualViewport && keyboardHeight < 1) {
+      if (window.visualViewport && !keyboardRef.current) {
+        keyboardRef.current = true;
         dispatch(
           editKeyboardHeight(window.innerHeight - window.visualViewport.height)
         );
-      } else if (window.visualViewport && keyboardHeight > 0) {
+      } else if (window.visualViewport && keyboardRef.current) {
+        keyboardRef.current = false;
         dispatch(editKeyboardHeight(0));
       } else {
         alert("키보드 오류");
@@ -114,9 +115,19 @@ const Input: React.FC<{
       if (divRef?.current) {
         divRef.current.scrollTop = 0;
       }
-    }, 150);
+    }, showKeyboardTime);
   };
 
+  useEffect(() => {
+    window.visualViewport!.addEventListener("resize", () => {
+      if (focus && keyboardRef.current) {
+        if (inputRef.current) {
+          inputRef.current.blur();
+          setFocus(false);
+        }
+      }
+    });
+  }, [focus]);
   return (
     <>
       <Pressable
@@ -125,9 +136,8 @@ const Input: React.FC<{
       >
         <TextInput
           ref={inputRef}
-          style={{ minWidth }}
-          autoFocus={autoFocus}
-          // autoFocus={IOS ? false : autoFocus}
+          style={{ minWidth, width: minWidth }}
+          autoFocus={!isWebView ? false : autoFocus}
           type="text"
           onFocus={handleVisualViewPortResize}
           onBlur={handleVisualViewPortResize}
@@ -136,27 +146,21 @@ const Input: React.FC<{
           value={text}
           onChange={onChangeText}
           onKeyDown={handleKeyDown}
+          onSubmit={(e) => alert("던시벌래마")}
         />
-        <div
-          style={{
-            backgroundColor: "red",
-          }}
-        >
-          {text.length > 0 && (
-            <X_14
-              onClick={actionX}
-              style={{
-                // position: "relative",
-                position: "absolute",
-                zIndex: 1,
-                right: 17,
-                top: 17,
-                bottom: IOS ? 14 : 17,
-                cursor: "pointer",
-              }}
-            />
-          )}
-        </div>
+        {text.length > 0 && (
+          <X_14
+            onClick={actionX}
+            style={{
+              // position: "relative",
+              position: "absolute",
+              zIndex: 1,
+              right: 17,
+              top: 17,
+              cursor: "pointer",
+            }}
+          />
+        )}
       </Pressable>
     </>
   );

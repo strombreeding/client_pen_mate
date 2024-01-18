@@ -14,7 +14,7 @@ const SocialTerminel: React.FC = () => {
     const res = await axios.post(SERVER_URI + "social/oauth", { code });
 
     if (res.data.data === "sign-up") {
-      navigate("/sign-up", { replace: true });
+      navigate("/sign-up?step=0", { replace: true });
     }
   };
   req();

@@ -53,6 +53,7 @@ table {
 }
 * {
   /* overflow: hidden; */
+overscroll-behavior: none;
   overflow: ${(props) => (props.canScroll ? "unset" : "hidden")};
   box-sizing: border-box;
   -webkit-user-select: none; /* iOS와 일부 브라우저를 위한 접두사 */

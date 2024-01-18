@@ -43,9 +43,7 @@ const ThirdStep: React.FC<IThirdStepProps> = ({ step }) => {
   const goNext = () => {
     alert("모달창 띄우기");
   };
-  const goBack = () => {
-    dispatch(setStep(step - 1));
-  };
+
   if (step !== 2) return <Fragment></Fragment>;
   return (
     <Wrap>

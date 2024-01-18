@@ -29,6 +29,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
     (state: RootState) => state.appState.keyboardHeight
   );
 
+  const navigate = useNavigate();
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const dispatch = useDispatch<AppDispatch>();
   const showAnimation = useShowAnimation("FirstStep");
@@ -45,6 +46,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
       return;
     }
     dispatch(setStep(1));
+    navigate("/sign-up?step=1");
   };
 
   if (step !== 0) return <Fragment></Fragment>;
