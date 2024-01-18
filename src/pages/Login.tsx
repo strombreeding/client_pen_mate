@@ -54,7 +54,7 @@ export const FadeInSection = styled.section<{ isVisited: boolean }>`
   text-align: center;
   flex-direction: column;
   align-items: center;
-  animation: ${(props) => (props.isVisited ? {} : FadeIn)} 1s ease-in-out;
+  animation: ${(props) => (props.isVisited ? {} : FadeIn)} 0.2s ease-in-out;
 `;
 
 const BG = styled.div<{ show: boolean }>`

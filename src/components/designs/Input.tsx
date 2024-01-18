@@ -62,6 +62,7 @@ const Input: React.FC<{
   const keyboardHeight = useSelector(
     (state: RootState) => state.appState.keyboardHeight
   );
+  const inputRef = useRef<HTMLInputElement>(null);
   const [focus, setFocus] = useState(false);
   const minWidth = getTextWidth(placeHolder, 15, "Pretendard Regular") + 20;
   // const maxWidth = getTextWidth("A", 15, "Pretendard Regular");
@@ -123,8 +124,10 @@ const Input: React.FC<{
         state={text.length > maxLength ? "wrong" : "default"}
       >
         <TextInput
+          ref={inputRef}
           style={{ minWidth }}
-          autoFocus={IOS ? false : autoFocus}
+          autoFocus={autoFocus}
+          // autoFocus={IOS ? false : autoFocus}
           type="text"
           onFocus={handleVisualViewPortResize}
           onBlur={handleVisualViewPortResize}
