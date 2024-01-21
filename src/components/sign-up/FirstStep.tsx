@@ -54,7 +54,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
       <FadeInSection isVisited={showAnimation}>
         <StepIndicator items={[0, 0, 0]} index={step} />
         <EmptyBox height={30} />
-        <Text.Title3>뭐라고 불러드리면 될까요?</Text.Title3>
+        <Text.Title2>뭐라고 불러드리면 될까요?</Text.Title2>
         <EmptyBox height={42} />
         <Input
           divRef={divRef}
