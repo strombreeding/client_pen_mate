@@ -35,7 +35,7 @@ html {
   font-size: 1px;
 }
 body {
-	/* line-height: 1; */
+	line-height: 1;
 }
 
 ol, ul {
@@ -87,7 +87,7 @@ export const Wrap = styled.div`
   width: 100%;
   flex-direction: column;
   align-items: center;
-  height: ${MOBILE ? "auto" : SCREEN_HEIGHT - 56 + "rem"};
+  height: ${MOBILE ? "auto" : SCREEN_HEIGHT - 56 + "px"};
   justify-content: ${MOBILE ? "start" : "center"};
 `;
 
@@ -152,74 +152,80 @@ export const Text = {
     color?: string;
     cursor?: string;
   }>`
-    font-size: 34rem;
-    line-height: 41rem;
+    font-size: 36px;
+    /* line-height: 41px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title1: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 28rem;
-    line-height: 34rem;
+    font-size: 30px;
+    /* line-height: 34px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title2: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 22rem;
-    line-height: 28rem;
+    font-size: 24px;
+    /* line-height: 28px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title3: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 20rem;
-    line-height: 25rem;
+    font-size: 22px;
+    /* line-height: 25px; */
+    color: ${(props) => (props.color == null ? colors.Black : props.color)};
+    cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
+  `,
+  Title4: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
+    font-size: 15px;
+    /* line-height: 25px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Headline: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
-    font-size: 17rem;
-    line-height: 22rem;
+    font-size: 19px;
+    /* line-height: 22px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Body: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 17rem;
-    line-height: 22rem;
+    font-size: 19px;
+    /* line-height: 22px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Callout: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 16rem;
-    line-height: 21rem;
+    font-size: 18px;
+    /* line-height: 21px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Subhead: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 15rem;
-    line-height: 20rem;
+    font-size: 17px;
+    /* line-height: 20px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Footnote: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 13rem;
-    line-height: 18rem;
+    font-size: 15px;
+    /* line-height: 18px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption1: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 12rem;
-    line-height: 16rem;
+    font-size: 14px;
+    /* line-height: 16px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption2: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 11rem;
-    line-height: 13rem;
+    font-size: 13px;
+    /* line-height: 13px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   ChangwonDangamAsac: styled(ChangwonDangamAsac)<{ color?: string }>`
-    font-size: 50rem;
-    line-height: 60rem;
+    font-size: 50px;
+    /* line-height: 60px; */
     color: ${(props) => props.color};
   `,
 };
@@ -266,9 +272,9 @@ export const Container = styled.div`
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`
-  /* height: ${(props) => props.height}rem; */
-  padding-top: ${(props) => props.height}rem;
-  width: ${(props) => props.width}rem;
+  /* height: ${(props) => props.height}px; */
+  padding-top: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
 `;
 
 export const SafeArea = styled.div<{ safeArea: number[] }>`
@@ -276,7 +282,7 @@ export const SafeArea = styled.div<{ safeArea: number[] }>`
   width: ${SCREEN_WIDTH};
   flex-direction: column;
   align-items: center;
-  padding-top: ${(props) => props.safeArea[0]}rem;
-  padding-bottom: ${(props) => props.safeArea[1]}rem;
+  padding-top: ${(props) => props.safeArea[0]}px;
+  padding-bottom: ${(props) => props.safeArea[1]}px;
   background-color: white;
 `;
