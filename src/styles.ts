@@ -33,6 +33,10 @@ footer, header, hgroup, menu, nav, section {
 }
 html {
   font-size: 1px;
+  -webkit-text-size-adjust:none;
+  -ms-text-size-adjust : none;
+  -moz-text-size-adjust:none;
+  -o-text-size-adjust:none
 }
 body {
 	line-height: 1;
@@ -63,8 +67,8 @@ overscroll-behavior: none;
   -ms-user-select: none; /* Internet Explorer를 위한 접두사 */
   user-select: none; /* 표준 속성 */
   ::-webkit-scrollbar {
-  display: none;
-}
+    display: none;
+  }
 }
 
 a {
