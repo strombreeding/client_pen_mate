@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import styled from "styled-components";
 import ArrowLetf26 from "./designs/ArrowLeft_26";
-import { EmptyBox, Text } from "../styles";
+import { EmptyBox, Text, colors } from "../styles";
 import { NavigateFunction } from "react-router-dom";
 
 const RowView = styled.div`
@@ -12,8 +12,9 @@ const RowView = styled.div`
   top: 0px;
   justify-content: space-between;
   padding: 0px 30px 0px 30px;
-  /* height: 60px; */
   align-items: center;
+  background-color: ${colors.White};
+  z-index: 100;
 `;
 
 const SimpleHeader: React.FC<{

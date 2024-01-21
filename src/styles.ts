@@ -31,9 +31,11 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+html {
+  font-size: 1px;
+}
 body {
 	/* line-height: 1; */
-  /* overflow-y: hidden; */
 }
 
 ol, ul {
@@ -54,12 +56,15 @@ table {
 * {
   /* overflow: hidden; */
 overscroll-behavior: none;
-  overflow: ${(props) => (props.canScroll ? "unset" : "hidden")};
+  /* overflow-y: ${(props) => (props.canScroll ? "unset" : "hidden")}; */
   box-sizing: border-box;
   -webkit-user-select: none; /* iOS와 일부 브라우저를 위한 접두사 */
   -moz-user-select: none; /* Firefox를 위한 접두사 */
   -ms-user-select: none; /* Internet Explorer를 위한 접두사 */
   user-select: none; /* 표준 속성 */
+  ::-webkit-scrollbar {
+  display: none;
+}
 }
 
 a {
@@ -134,8 +139,10 @@ const ChangwonDangamAsac = styled.div`
   white-space: pre-wrap;
 `;
 
-export const ScrollView = styled.div`
+export const ScrollView = styled.div<{ horizontal?: boolean }>`
   display: flex;
+  overflow-y: scroll;
+  overflow-x: hidden;
   flex-direction: column;
   align-items: center;
 `;
@@ -145,67 +152,67 @@ export const Text = {
     color?: string;
     cursor?: string;
   }>`
-    font-size: 34px;
+    font-size: 34rem;
     line-height: 41px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title1: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 28px;
+    font-size: 28rem;
     line-height: 34px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title2: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 22px;
+    font-size: 22rem;
     line-height: 28px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title3: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 20px;
+    font-size: 20rem;
     line-height: 25px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Headline: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
-    font-size: 17px;
+    font-size: 17rem;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Body: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 17px;
+    font-size: 17rem;
     line-height: 22px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Callout: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 16px;
+    font-size: 16rem;
     line-height: 21px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Subhead: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 15px;
+    font-size: 15rem;
     line-height: 20px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Footnote: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 13px;
+    font-size: 13rem;
     line-height: 18px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption1: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 12px;
+    font-size: 12rem;
     line-height: 16px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption2: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 11px;
+    font-size: 11rem;
     line-height: 13px;
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
@@ -255,6 +262,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   display: flex;
+  position: relative;
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`

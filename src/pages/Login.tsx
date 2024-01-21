@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { imgSrc } from "../assets/img";
 import {
   Container,
@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { showModal, showPopup } from "../store/slices/appState";
 import Modal from "../components/designs/Modal";
+import HeartBounce from "../components/animations/HeartBounce";
 
 /* Styled-Components */
 
@@ -55,18 +56,6 @@ export const FadeInSection = styled.section<{ isVisited: boolean }>`
   flex-direction: column;
   align-items: center;
   animation: ${(props) => (props.isVisited ? {} : FadeIn)} 0.2s ease-in-out;
-`;
-
-const BG = styled.div<{ show: boolean }>`
-  position: absolute;
-  width: 100vw;
-  height: 100%;
-  background-color: black;
-  opacity: 0.5;
-  z-index: 1;
-  cursor: pointer;
-  animation: ${(props) => (props.show ? FadeInPopup : FadeOutPopup)} ease-in-out
-    0.3s;
 `;
 
 const BtnIcon = styled.img`
@@ -106,6 +95,7 @@ const Login = () => {
           padding,
         }}
       >
+        <HeartBounce vis={true} />
         <Title isVisited={showAnimation}>
           <Text.ChangwonDangamAsac
             style={{ textAlign: "center" }}

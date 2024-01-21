@@ -128,6 +128,24 @@ const Input: React.FC<{
       }
     });
   }, [focus]);
+
+  useEffect(() => {
+    try {
+      //@ts-ignore
+      if (MOBILE && window.ReactNativeWebView.postMessage) {
+        setTimeout(() => {
+          //@ts-ignore
+          window.ReactNativeWebView.postMessage("keyOn");
+        }, 1000);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 2500);
+      }
+    } catch (err: any) {
+      console.log("zz");
+    }
+  }, []);
+
   return (
     <>
       <Pressable
@@ -135,9 +153,11 @@ const Input: React.FC<{
         state={text.length > maxLength ? "wrong" : "default"}
       >
         <TextInput
+          id="inputText"
           ref={inputRef}
           style={{ minWidth, width: minWidth }}
-          autoFocus={!isWebView ? false : autoFocus}
+          autoFocus={autoFocus}
+          // autoFocus={!isWebView ? false : autoFocus}
           type="text"
           onFocus={handleVisualViewPortResize}
           onBlur={handleVisualViewPortResize}
