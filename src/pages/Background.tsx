@@ -27,7 +27,7 @@ const BackgroundView = styled.div<{ loggedIn: boolean }>`
   height: 100vh;
   position: absolute;
   background-color: black;
-  animation: ${(props) => (props.loggedIn ? ChangeToWhite : {})} ease-in-out 1s
+  animation: ${(props) => (props.loggedIn ? ChangeToWhite : {})} ease-in-out 0.4
     forwards;
   ${(props) =>
     props.loggedIn ? `filter : blur(20px);` : ""}/* filter: blur(20px); */
