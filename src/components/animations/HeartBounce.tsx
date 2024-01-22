@@ -24,17 +24,19 @@ const Bounce = keyframes`
   }
 `;
 const BounceHeart = styled.img<{ vis: boolean }>`
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  top: 100px;
-  right: 100px;
-  left: 100px;
-  animation: ${Bounce} linear 0.5s;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  animation: ${(props) => (props.vis ? Bounce : {})} linear 0.5s;
 `;
 
 const HeartBounce: React.FC<{ vis: boolean }> = ({ vis }) => {
-  return <BounceHeart src={imgSrc.heart_fill} vis={vis} />;
+  return (
+    <BounceHeart
+      src={vis ? imgSrc.heart_fill : imgSrc.heart_un_fill}
+      vis={vis}
+    />
+  );
 };
 
 export default HeartBounce;

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import styled from "styled-components";
-import ArrowLetf26 from "./designs/ArrowLeft_26";
+import ArrowLetf26 from "./designs/26px/ArrowLeft_26";
 import { EmptyBox, Text, colors } from "../styles";
 import { NavigateFunction } from "react-router-dom";
 

@@ -7,10 +7,12 @@ import { SCREEN_WIDTH } from "../configs/device";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { setOverFlow } from "../store/slices/appState";
+import { imgSrc } from "../assets/img";
 
 const AvatarView = styled.div`
-  /* position: absolute; */
-  top: calc(7px+56px);
+  position: fixed;
+  /* top: calc(7px+56px) px; */
+  top: 100px;
   right: 50px;
   left: 50px;
   width: ${SCREEN_WIDTH * 0.722222}px;
@@ -26,54 +28,64 @@ const SelectModal = styled.div`
   border: 1px solid ${colors.Grey100};
   border-radius: 30px 30px 0px 0px;
   display: flex;
+  align-items: center;
   flex-direction: column;
   width: 100%;
   background-color: #fff;
 `;
 
-const ItemBtn = styled.div<{
-  width?: number | string;
-  height: number;
-  padding: string;
-  radius: number;
-}>`
-  white-space: nowrap;
-  min-width: 38px;
-  width: ${(props) => (props.width != null ? props.width + "px" : "auto")};
-  height: ${(props) => props.height}px;
+const CategoryBtn = styled.div`
+  padding: 7.5px;
   border: 1px solid ${colors.Grey100};
-  border-radius: ${(props) => props.radius}px;
-  padding: ${(props) => props.padding};
-  text-align: center;
-  background-color: rgba(235, 235, 240, 0.5);
+  min-width: 37px;
+  margin-right: 20px;
+  border-radius: 6px;
+  background-color: #ebebf040;
+`;
+
+const ItemContainer = styled.div`
+  padding: 0px 15px 0px 15px;
+  min-width: ${SCREEN_WIDTH * 0.80556}px;
+  /* width: ${SCREEN_WIDTH * 0.80556}px; */
+  overflow-y: hidden;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  display: grid;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+`;
+const ItemBtn = styled.div`
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  white-space: nowrap;
+  /* width: 90px; */
+  aspect-ratio: 1;
+  background-color: #ebebf040;
+  border: 1.5px solid ${colors.Grey100};
+  padding: 22.5px;
+  border-radius: 18px;
+  box-sizing: border-box;
 `;
 
 const PriceGuideView = styled.div`
   position: absolute;
-  bottom: 1px;
-  left: 1px;
-  border-radius: 0px 17px 0px 17px;
+  bottom: 0;
+  left: 0;
+  height: 20px;
+  border-radius: 0px 16.5px 0px 16.5px;
   padding: 0px 10px 0px 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: ${colors.Black};
-  opacity: 0.4;
+  background-color: #00000040;
 `;
 
-const ItemContainer = styled.div`
-  padding: 0px 15px 0px 15px;
-  overflow: unset;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-`;
-
-const InkImg = styled.div`
+const InkImg = styled.img`
   width: 9px;
   height: 9px;
-  background-color: ${colors.Grey100};
 `;
 
 interface IAvatarItems {
@@ -101,16 +113,16 @@ const MockItem: IAvatarItems[] = [
   { id: "!@#!#$$", name: "말똥", price: 50, category: "헤어" },
   { id: "!@!@35$$", name: "비대칭", price: 100, category: "헤어" },
   { id: "!#123!@#$$", name: "빡빡이", price: 150, category: "헤어" },
-  { id: "!#!112@#67$$", name: "상처", price: 150, category: "얼굴" },
-  { id: "!#!@#334$$", name: "홍조", price: 150, category: "얼굴" },
-  { id: "!#!@#3314$$", name: "여드름", price: 150, category: "얼굴" },
-  { id: "fw12g1", name: "검정", price: 150, category: "피부" },
-  { id: "fw6g1", name: "옐로", price: 150, category: "피부" },
-  { id: "fw436g1", name: "좀비", price: 150, category: "피부" },
-  { id: "fw4g1", name: "그린", price: 150, category: "피부" },
-  { id: "f6wg1", name: "화이트", price: 150, category: "피부" },
-  { id: "fw7g1", name: "검정", price: 150, category: "염색" },
-  { id: "fw7125g1", name: "코트", price: 150, category: "착장" },
+  { id: "!#!112@#67$$", name: "상처", price: 150, category: "헤어" },
+  { id: "!#!@#334$$", name: "홍조", price: 150, category: "헤어" },
+  { id: "!#!@#3314$$", name: "여드름", price: 150, category: "헤어" },
+  { id: "fw12g1", name: "검정", price: 150, category: "헤어" },
+  { id: "fw6g1", name: "옐로", price: 150, category: "헤어" },
+  { id: "fw436g1", name: "좀비", price: 150, category: "헤어" },
+  { id: "fw4g1", name: "그린", price: 150, category: "헤어" },
+  { id: "f6wg1", name: "화이트", price: 150, category: "헤어" },
+  { id: "fw7g1", name: "검정", price: 150, category: "헤어" },
+  { id: "fw7125g1", name: "코트", price: 150, category: "헤어" },
 ];
 const EditAvatar: React.FC = ({}) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -156,8 +168,10 @@ const EditAvatar: React.FC = ({}) => {
       <SelectModal>
         <div
           style={{
+            // position: "relative",
             flexDirection: "row",
             width: "auto",
+            backgroundColor: "red",
             display: "flex",
             overflowX: "scroll",
             overflowY: "hidden",
@@ -167,36 +181,23 @@ const EditAvatar: React.FC = ({}) => {
         >
           {category.map((item, i) => {
             return (
-              <ItemBtn
-                onClick={onClickCategory(item)}
-                style={{ marginRight: 20 }}
-                height={30}
-                padding="8px"
-                radius={6}
-                key={i}
-              >
-                <Text.Caption2>{item}</Text.Caption2>
-              </ItemBtn>
+              <CategoryBtn onClick={onClickCategory(item)}>
+                <Text.Caption2 color={colors.Grey600}>{item}</Text.Caption2>
+              </CategoryBtn>
             );
           })}
         </div>
 
         <EmptyBox height={20} />
 
-        <ItemContainer>
+        <ItemContainer style={{}}>
           {items.map((item, i) => {
             if (item.category === slectCategory) {
               return (
-                <ItemBtn
-                  key={item.id}
-                  width={90}
-                  height={90}
-                  radius={18}
-                  padding="23px"
-                >
+                <ItemBtn key={item.id}>
                   {true && (
                     <PriceGuideView>
-                      <InkImg />
+                      <InkImg src={imgSrc.ink} />
                       <Text.Caption2 color="#FFFFFF">
                         {item.price}
                       </Text.Caption2>

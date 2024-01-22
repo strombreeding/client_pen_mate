@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { colors } from "../../styles";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
-import X_14 from "./X_14";
+import X_14 from "./14px/X_14";
 import { getTextWidth } from "../../utils/getFontWidth";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
@@ -22,8 +22,8 @@ export const Pressable = styled.div<{
   display: flex;
   position: relative;
 `;
-export const TextInput = styled.input`
-  font-family: "Pretendard Regular";
+export const TextInput = styled.input<{ wrong?: boolean }>`
+  font-family: "Pretendard Variable";
   font-weight: 400;
   font-display: swap;
   font-size: 15px;
@@ -39,6 +39,9 @@ export const TextInput = styled.input`
   &::placeholder {
     text-align: center;
   }
+  -ms-caret-color: ${(props) => (props.wrong ? colors.Red30 : "#007AFF")};
+  caret-color: ${(props) => (props.wrong ? colors.Red30 : "#007AFF")};
+  /* -webkit-text-fill-color: red; */
 `;
 const Input: React.FC<{
   text: string;
@@ -48,6 +51,7 @@ const Input: React.FC<{
   nextFunction?: (e?: any) => any;
   autoFocus?: boolean;
   exception?: boolean;
+  wrong?: boolean;
   divRef?: React.MutableRefObject<HTMLDivElement | null>;
 }> = ({
   text,
@@ -58,6 +62,7 @@ const Input: React.FC<{
   autoFocus,
   exception,
   divRef,
+  wrong,
 }) => {
   placeHolder = "냥냥펀치이이이";
   const safeArea = useSelector((state: RootState) => state.appState.safeArea);
@@ -153,6 +158,7 @@ const Input: React.FC<{
         state={text.length > maxLength ? "wrong" : "default"}
       >
         <TextInput
+          wrong={wrong}
           id="inputText"
           ref={inputRef}
           style={{ minWidth, width: minWidth }}
@@ -166,7 +172,6 @@ const Input: React.FC<{
           value={text}
           onChange={onChangeText}
           onKeyDown={handleKeyDown}
-          onSubmit={(e) => alert("던시벌래마")}
         />
         {text.length > 0 && (
           <X_14

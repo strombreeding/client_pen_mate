@@ -64,6 +64,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
           receiveText={receiveText}
           placeHolder={"냥냥펀치"}
           nextFunction={goNext}
+          wrong={formData.nickname.length > 12 ? true : false}
         />
         <EmptyBox height={10} />
         <Text.Footnote
