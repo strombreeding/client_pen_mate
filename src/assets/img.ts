@@ -1,4 +1,6 @@
 export const imgSrc = {
+  bg: require("../assets/pngs/background.png"),
+
   apple: require("../assets/pngs/apple.png"),
   kakao: require("../assets/pngs/kakao.png"),
   google: require("../assets/pngs/google.png"),

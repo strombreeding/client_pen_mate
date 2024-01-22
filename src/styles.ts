@@ -22,7 +22,7 @@ time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	font-size: 100%;
+	/* font-size: 100%; */
 	font: inherit;
 	vertical-align: baseline;
 }
@@ -35,7 +35,9 @@ html {
   -webkit-text-size-adjust:none;
   -ms-text-size-adjust : none;
   -moz-text-size-adjust:none;
-  -o-text-size-adjust:none
+  -o-text-size-adjust:none;
+  height: 100vh;
+  background-color: transparent;
 }
 body {
 	line-height: 1;
@@ -57,9 +59,9 @@ table {
 	border-spacing: 0;
 }
 * {
-  /* overflow: hidden; */
+  overflow: hidden;
 overscroll-behavior: none;
-  /* overflow-y: ${(props) => (props.canScroll ? "unset" : "hidden")}; */
+  overflow-y: ${(props) => (props.canScroll ? "unset" : "hidden")};
   box-sizing: border-box;
   -webkit-user-select: none; /* iOS와 일부 브라우저를 위한 접두사 */
   -moz-user-select: none; /* Firefox를 위한 접두사 */
@@ -76,15 +78,6 @@ a {
 }
 `;
 
-export const Background = styled.div`
-  width: 100vw;
-  /* height: 100vh; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* background-color: skyblue; */
-  margin: 0;
-`;
 export const Wrap = styled.div`
   display: flex;
   width: 100%;
@@ -155,73 +148,73 @@ export const Text = {
     color?: string;
     cursor?: string;
   }>`
-    font-size: 34px;
+    font-size: 35px;
     /* line-height: 41px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title1: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 28px;
+    font-size: 29px;
     /* line-height: 34px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title2: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 22px;
+    font-size: 23px;
     /* line-height: 28px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title3: styled(PretendardBold)<{ cursor?: string; color?: string }>`
-    font-size: 20px;
+    font-size: 21px;
     /* line-height: 25px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Title4: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
-    font-size: 13px;
+    font-size: 14px;
     /* line-height: 25px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Headline: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
-    font-size: 17px;
+    font-size: 18px;
     /* line-height: 22px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Body: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 17px;
+    font-size: 18px;
     /* line-height: 22px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Callout: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 16px;
+    font-size: 17px;
     /* line-height: 21px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Subhead: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 15px;
+    font-size: 16px;
     /* line-height: 20px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Footnote: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 13px;
+    font-size: 14px;
     /* line-height: 18px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption1: styled(PretendardRegular)<{ cursor?: string; color?: string }>`
-    font-size: 12px;
+    font-size: 13px;
     /* line-height: 16px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};
   `,
   Caption2: styled(PretendardSemiBold)<{ cursor?: string; color?: string }>`
-    font-size: 11px;
+    font-size: 12px;
     /* line-height: 13px; */
     color: ${(props) => (props.color == null ? colors.Black : props.color)};
     cursor: ${(props) => (props.cursor == null ? "pointer" : props.cursor)};

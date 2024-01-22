@@ -13,7 +13,7 @@ const RowView = styled.div`
   justify-content: space-between;
   padding: 0px 30px 0px 30px;
   align-items: center;
-  background-color: ${colors.White};
+  /* background-color: ${colors.White}; */
   z-index: 100;
 `;
 
