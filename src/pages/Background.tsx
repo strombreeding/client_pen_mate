@@ -12,16 +12,15 @@ const ChangeToWhite = keyframes`
     background-color: #fff;
   }
   `;
-const ChangeToBlack = keyframes`
+const Opacity = keyframes`
   from {
-    background-color: #fff;
+    opacity: 0
   }
   to {
-    background-color: #000000;
+   opacity:0.8
   }
   
 `;
-
 const BackgroundView = styled.div<{ loggedIn: boolean }>`
   width: ${SCREEN_WIDTH};
   /* height: 100vh; */
@@ -38,11 +37,12 @@ const ColorView = styled.div<{ loggedIn: boolean }>`
   position: absolute;
   width: 100%;
   height: 100%;
-  opacity: 0.8;
+
   background-color: black;
   opacity: ${(props) => (props.loggedIn ? 0.8 : 0)};
-  animation: ${(props) => (props.loggedIn ? ChangeToWhite : {})} ease-in-out 1s
-    forwards;
+  animation: ${(props) => (props.loggedIn ? ChangeToWhite : {})} ease-in-out
+    0.4s forwards;
+  animation: ${(props) => (props.loggedIn ? Opacity : {})};
 `;
 const Background: React.FC = () => {
   const loggedIn = useSelector((state: RootState) => state.userState.logedIn);

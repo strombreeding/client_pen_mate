@@ -1,26 +1,13 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { imgSrc } from "../assets/img";
-import {
-  Container,
-  EmptyBox,
-  FadeIn,
-  FadeInPopup,
-  FadeOutPopup,
-  SafeArea,
-  Text,
-  Wrap,
-  colors,
-} from "../styles";
+import { Container, EmptyBox, FadeIn, Text, Wrap, colors } from "../styles";
 import { getOauthUrl } from "../apis/login/read";
-import { useNavigate } from "react-router-dom";
 import { useShowAnimation } from "../hooks/getShowAnimation";
 import { devicePadding } from "../utils/getDevicePadding";
 import { MOBILE, SCREEN_HEIGHT } from "../configs/device";
-import Popup from "../components/designs/Popup";
-import { SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { showModal, showPopup } from "../store/slices/appState";
+import { showModal } from "../store/slices/appState";
 import Modal from "../components/designs/Modal";
 import HeartBounce from "../components/animations/HeartBounce";
 
@@ -47,6 +34,7 @@ const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
   cursor: pointer;
   flex-direction: row;
   display: flex;
+  opacity: 0.8;
 `;
 
 export const FadeInSection = styled.section<{ isVisited: boolean }>`
@@ -73,18 +61,11 @@ const Login = () => {
   const showAnimation = useShowAnimation("Login");
   const onClick =
     (platform: "kakao" | "google" | "facebook" | "apple") => async () => {
-      // dispatch(showPopup(true));
-      // return;
       const res = await getOauthUrl(platform);
       window.location.href = res;
       window.sessionStorage.setItem("Login", "1");
-      // navigation(res);
     };
-  // const unShowPopup = () => {
-  //   setTimeout(() => {
-  //     dispatch(showModal(false));
-  //   }, 300);
-  // };
+
   const padding = devicePadding([226, 0], [40, 0]);
   return (
     // <Container>
@@ -99,7 +80,7 @@ const Login = () => {
         <Title isVisited={showAnimation}>
           <Text.ChangwonDangamAsac
             style={{ textAlign: "center" }}
-            color={colors.Red200}
+            color={colors.White}
           >
             Pen Mate
           </Text.ChangwonDangamAsac>
@@ -118,7 +99,11 @@ const Login = () => {
             <Text.Headline cursor="pointer">구글로 로그인</Text.Headline>
           </SocialLoginBtn>
 
-          <SocialLoginBtn bgColor="black" color="white">
+          <SocialLoginBtn
+            bgColor="black"
+            color="white"
+            style={{ border: "1px solid", borderColor: colors.Grey500 }}
+          >
             <BtnIcon src={imgSrc.apple} />
             <Text.Headline cursor="pointer" color={colors.White}>
               애플로 로그인
@@ -134,7 +119,7 @@ const Login = () => {
               dispatch(showModal(true));
             }}
           >
-            <Text.Subhead color={colors.Grey700}>
+            <Text.Subhead color={colors.Grey300}>
               도움이 필요하신가요?
             </Text.Subhead>
           </div>
