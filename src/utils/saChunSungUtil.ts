@@ -1,97 +1,204 @@
+import path from "path";
+
 export const findPathDFS = (
   graph: number[][],
   start: number[],
   end: number[],
   value: number
 ) => {
+  console.log(start);
+  const directions = getImportance(start, end);
+  const startTime = Date.now();
+  let nodes = 1;
+  const timer = setTimeout(() => {
+    return null;
+  }, 3000);
   if (start[0] === end[0] && start[1] === end[1]) return null;
   let bend = 0;
   const history: number[][] = [];
+
   const dfs = (
     graph: number[][],
     start: number[],
     end: number[],
-    path: number[][],
-    prevZ: undefined | string
+    path: number[][]
   ): null | number[][] => {
     const [x, y] = start;
-    console.log("현재 ", x, y);
-    console.log(`꺾임 : ${bend}`);
-
-    if (bend > 2) {
-      console.log("꺾임 최대치, 이 경로는 불가능합니다.");
-      bend = 0;
-      return null;
-    }
-    //   // 시작점 방문 표시
     path.push(start);
-    console.log("History: ", path);
-
+    // console.log("History: ", path, "End", end);
+    // console.log(directions);
     // 도착점에 도달했을 때 경로 반환
     if (x === end[0] && y === end[1] && graph[x][y] === value) {
       return path;
     }
 
-    // 상하좌우 이동 방향
-    // 꺾임을 감지해야하기 떄문에 row, col 요소 추가
-    const directions: [number, number, string][] = [
-      [-1, 0, "row"],
-      [1, 0, "row"],
-      [0, -1, "col"],
-      [0, 1, "col"],
-    ];
-
     //   각 방향을 한번씩 조회하여 목적지가 있다면 해당 목적지로 이동해야한다.
     //   두개의 for반복문을 이용하여 처음 반복문에서 위 기능 실행
-    for (const [dx, dy, dz] of directions) {
+    for (const [dx, dy] of directions) {
       const newX = x + dx;
       const newY = y + dy;
-      const currentZ = dz;
       if (newX === end[0] && newY === end[1]) {
-        if (prevZ !== undefined && prevZ !== currentZ) {
-          bend++;
-        }
-        console.log(newX, newY, "이동 함", prevZ, currentZ);
-
         // 시작점 방문 표시
-        const foundPath = dfs(graph, [newX, newY], end, path.slice(), currentZ);
+        const foundPath = dfs(graph, [newX, newY], end, path.slice());
         if (foundPath) {
-          return foundPath;
+          const success = calculTransXY(foundPath, 3);
+          return success ? foundPath : null;
         } else {
-          // console.log("초기화 진행");
           return null;
         }
       }
     }
 
     //   목적지가 없으니 다시 탐색
-    for (const [dx, dy, dz] of directions) {
+    for (const [dx, dy] of directions) {
       const newX = x + dx;
       const newY = y + dy;
-      const currentZ = dz;
       const exists = path.some(([x, y]) => x === newX && y === newY); // 기존 경로에 이미 있따면 false
       if (
-        newX >= 0 &&
-        newX < graph.length &&
+        newX >= 0 && // 좌표가 양수이고
+        newX < graph.length && // 좌표값이 게임판의 범위이고
         newY >= 0 &&
         newY < graph[0].length &&
-        !exists &&
-        graph[newX][newY] === 0
+        !exists && // 기존 경로에 없고
+        graph[newX][newY] === 0 // 목표점의 값이 0이라면 실행
       ) {
-        if (prevZ !== undefined && prevZ !== currentZ) {
-          bend++;
-        }
-        console.log(newX, newY, "이동 함", prevZ, currentZ);
-        const foundPath = dfs(graph, [newX, newY], end, path.slice(), currentZ);
+        const foundPath = dfs(graph, [newX, newY], end, path.slice());
 
-        if (foundPath) return foundPath;
+        if (foundPath) {
+          return foundPath;
+          // const success = calculTransXY(foundPath, 3);
+          // return success ? foundPath : null;
+        }
       }
     }
 
     return null; // 경로를 찾지 못한 경우 null 반환
   };
-  const path = dfs(graph, start, end, history, undefined);
+  const path = dfs(graph, start, end, history);
+
+  clearTimeout(timer);
+  const jobTime = Date.now();
+  const doneTime = jobTime - startTime;
+  console.log(`작업 수행시간`, doneTime, "ms");
   return path;
+};
+
+/**
+ * 우선순위 direction을 반환하여 성능 상승
+ */
+const getImportance = (start: number[], end: number[]) => {
+  const [sx, sy] = start;
+  const [ex, ey] = end;
+  let directions = [] as number[][];
+
+  /*
+    sx가 ex보다 클 경우 => 상 
+    sy가 ey보다 클 경우 => 좌 
+    둘다큼 => 좌 상 우 하  ex 5,4 => 3,2 
+    둘다작음 => 우 하 좌 상  ex 3,2 => 5,4
+    x는 같고 y 큼 => 좌 상 우 하
+    x는 같고 y 작음 => 우 상 좌 하
+    y는 같고 x 큼 => 좌 하 우 상
+    y는 같고 x 작음 => 좌 상 우 하
+  
+  */
+  //   let directions = [
+  //   [-1, 0], // 상
+  //   [1, 0],  // 하
+  //   [0, -1], // 좌
+  //   [0, 1],  // 우
+  // ];
+  /* 
+    sx가 크고 sy가 클경우 좌상하
+    sx가 크고 sy가 작을경우 우상하
+
+    sx가 크고 sy가 같을경우 상좌우
+    sx가 작고 sy가 클경우 좌하상
+
+    sx가 작고 sy가 작을 경우 우하상
+    sx가 작고 sy가 같을경우 하좌우
+
+    sx가 같고 sy가 클 경우 좌상하
+    sx가 같고 sy가 작을경우 우상하
+
+    
+  */
+  if (sx > ex && sy > ey) {
+    // 30,15 15,13
+    //
+    directions = [
+      [0, -1], // 좌
+      // [0, 1], // 우
+      [-1, 0], // 상
+      [1, 0], // 하
+    ];
+    console.log("우상하");
+  } else if (sx > ex && sy < ey) {
+    directions = [
+      // [0, -1], // 좌
+      [0, 1], // 우
+      [-1, 0], // 상
+      [1, 0], // 하
+    ];
+    console.log("우상하");
+  } else if (sx > ex && sy === ey) {
+    directions = [
+      [-1, 0], // 상
+      [0, -1], // 좌
+      [0, 1], // 우
+      // [1, 0], // 하
+    ];
+    console.log("상좌우");
+  } else if (sx < ex && sy > ey) {
+    directions = [
+      [0, -1], // 좌
+      // [0, 1], // 우
+      [1, 0], // 하
+      [-1, 0], // 상
+    ];
+    console.log("좌하상");
+  } else if (sx < ex && sy < ey) {
+    directions = [
+      [0, 1], // 우
+      [1, 0], // 하
+      [-1, 0], // 상
+      // [0, -1], // 좌
+    ];
+    console.log("좌하상");
+  } else if (sx < ex && sy === ey) {
+    directions = [
+      [1, 0], // 하
+      [0, -1], // 좌
+      [0, 1], // 우
+      // [-1, 0], // 상
+    ];
+    console.log("하좌우");
+  } else if (sx === ex && sy > ey) {
+    directions = [
+      // [0, 1], // 우
+      [0, -1], // 좌
+      [-1, 0], // 상
+      [1, 0], // 하
+    ];
+    console.log("좌상하");
+  } else if (sx === ex && sy < ey) {
+    directions = [
+      // [0, -1], // 좌
+      [0, 1], // 우
+      [-1, 0], // 상
+      [1, 0], // 하
+    ];
+    console.log("우상하");
+  } else {
+    directions = [
+      [-1, 0], // 상
+      [1, 0], // 하
+      [0, -1], // 좌
+      [0, 1], // 우
+    ];
+    console.log("상하좌우");
+  }
+  return directions;
 };
 
 export const createBoard = (
@@ -141,4 +248,50 @@ export const createBoard = (
   }
 
   return board;
+
+  // const graph1 = [
+  //   [0, 0, 0, 0, 0, 0],
+  //   [0, 1, 2, 1, 2, 0],
+  //   [0, 4, 3, 2, 1, 0],
+  //   [0, 1, 4, 4, 4, 0],
+  //   [0, 1, 2, 3, 3, 0],
+  //   [0, 1, 2, 1, 2, 0],
+  //   [0, 0, 0, 0, 0, 0],
+  // ];
+  // return graph1;
+  // const graph2 = [
+  //   [0, 0, 0, 0, 0, 0],
+  //   [0, 1, 2, 1, 2, 0],
+  //   [0, 4, 3, 2, 1, 0],
+  //   [0, 1, 4, 4, 4, 0],
+  //   [0, 0, 2, 3, 3, 0],
+  //   [0, 0, 2, 1, 2, 0],
+  //   [0, 0, 0, 0, 0, 0],
+  // ];
+  // return graph2;
+};
+
+// 경로를 넣으면 꺾임의 횟수를 판단하여
+const calculTransXY = (pathArr: number[][], underBand: number) => {
+  let bend = 0;
+  const arrXY = [];
+
+  console.log(pathArr);
+  // 다음과 같은 배열 생성 ["r","c","c","r","c"]
+  for (let i = 1; i < pathArr.length; i++) {
+    arrXY.push(
+      pathArr[i][0] === pathArr[i - 1][0] && pathArr[i][1] !== pathArr[i - 1][1]
+        ? "col"
+        : "row"
+    );
+  }
+  // 생성된 배열
+  for (let i = 1; i < arrXY.length; i++) {
+    if (arrXY[i] !== arrXY[i - 1]) {
+      bend++;
+    }
+  }
+
+  if (bend >= underBand) return false;
+  return true;
 };
