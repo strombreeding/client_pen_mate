@@ -10,11 +10,15 @@ import { useNavigate } from "react-router";
 import SimpleHeader from "../components/SimpleHeader";
 import { MOBILE } from "../configs/device";
 import { useParams, useMatch, Route } from "react-router-dom";
-export const getURLParams = (search: string, type?: "string" | "number") => {
+import { setLoginState } from "../store/slices/userState";
+export const getURLParams = (
+  search: string,
+  returnType?: "string" | "number"
+) => {
   const urlParams = new URLSearchParams(window.location.search);
   const specificParamValue = urlParams.get(search);
   if (specificParamValue == null) return -1;
-  if (type === "number") {
+  if (returnType === "number") {
     return Number(specificParamValue);
   }
   return specificParamValue;
@@ -26,6 +30,10 @@ const SignUp: React.FC = () => {
   const goBack = () => {
     navigate(-1);
   };
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    // dispatch(setLoginState(true));
+  }, []);
   return (
     <Container>
       <SimpleHeader goBack={goBack} />

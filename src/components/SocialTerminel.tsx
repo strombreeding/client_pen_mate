@@ -6,6 +6,7 @@ import { Container } from "../styles";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { setLoginState } from "../store/slices/userState";
+import { useHistory } from "../hooks/selectHistory";
 
 const SocialTerminel: React.FC = () => {
   const location = useLocation();
@@ -13,7 +14,7 @@ const SocialTerminel: React.FC = () => {
   const code = URL.get("code");
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
+  useHistory();
   const req = async () => {
     const res = await axios.post(SERVER_URI + "social/oauth", { code });
 

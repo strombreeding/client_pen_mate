@@ -47,7 +47,7 @@ const ThirdStep: React.FC<IThirdStepProps> = ({ step }) => {
   if (step !== 2) return <Fragment></Fragment>;
   return (
     <Wrap>
-      <FadeInSection isVisited={showAnimation}>
+      <FadeInSection visited={showAnimation}>
         <StepIndicator items={[0, 0, 0]} index={step} />
         <EmptyBox height={30} />
         <Text.Title2>

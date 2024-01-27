@@ -10,5 +10,6 @@ export const useShowAnimation = (page: string) => {
     return true;
   }
   console.log("방문여부 알 수 없음");
+
   return true;
 };

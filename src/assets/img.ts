@@ -4,6 +4,9 @@ export const imgSrc = {
   apple: require("../assets/pngs/apple.png"),
   kakao: require("../assets/pngs/kakao.png"),
   google: require("../assets/pngs/google.png"),
+
+  women: require("../assets/pngs/women.png"),
+  men: require("../assets/pngs/men.png"),
   /* 3d */
   ink: require("../assets/pngs/3d/ink.png"),
 

@@ -13,7 +13,6 @@ import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
 import { setSafeArea, showModal, showPopup } from "./store/slices/appState";
 import { IOS } from "./configs/device";
-import { useNavigate } from "react-router-dom";
 import Background from "./pages/Background";
 
 const BG = styled.div<{ show: boolean }>`
@@ -117,10 +116,10 @@ function App() {
   const canScroll = useSelector((state: RootState) => state.appState.overFlow);
 
   return (
-    <SafeArea safeArea={safeArea}>
-      <Background></Background>
+    <SafeArea safearea={safeArea}>
       {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
       {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
+      <Background></Background>
       <GlobalStyle canScroll={canScroll} />
       <Routers />
     </SafeArea>

@@ -11,7 +11,6 @@ import React from "react";
 import PrimaryBtn from "../designs/PrimaryBtn";
 import Input from "../designs/Input";
 import { FadeInSection } from "../../pages/Login";
-import { useShowAnimation } from "../../hooks/getShowAnimation";
 import { useNavigate } from "react-router-dom";
 import SimpleHeader from "../SimpleHeader";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +20,7 @@ import StepIndicator from "../designs/StepIndicator";
 import { devicePadding } from "../../utils/getDevicePadding";
 import { IOS, MOBILE, SCREEN_HEIGHT } from "../../configs/device";
 import styled from "styled-components";
+import { useShowAnimation } from "../../hooks/getShowAnimation";
 interface IFirstStepProps {
   step: number;
 }
@@ -32,7 +32,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
   const navigate = useNavigate();
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const dispatch = useDispatch<AppDispatch>();
-  const showAnimation = useShowAnimation("FirstStep");
+  const visitedPage = useShowAnimation("FirstStep");
   const divRef = useRef<HTMLDivElement | null>(null);
 
   const receiveText = (text: string) => {
@@ -51,7 +51,7 @@ const FirstStep: React.FC<IFirstStepProps> = ({ step }) => {
   if (step !== 0) return <Fragment></Fragment>;
   return (
     <Wrap ref={divRef} style={{ padding: "0px 30px 0px 30px" }}>
-      <FadeInSection isVisited={showAnimation}>
+      <FadeInSection visited={visitedPage}>
         <StepIndicator items={[0, 0, 0]} index={step} />
         <EmptyBox height={30} />
         <Text.Title2>뭐라고 불러드리면 될까요?</Text.Title2>

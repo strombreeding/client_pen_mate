@@ -18,6 +18,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { editSignUpData, setStep } from "../../store/slices/signUp";
 import StepIndicator from "../designs/StepIndicator";
 import { IOS, MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../../configs/device";
+import { imgSrc } from "../../assets/img";
 
 const GenderView = styled.div`
   display: flex;
@@ -26,10 +27,10 @@ const GenderView = styled.div`
   width: 100%;
 `;
 const GenderItem = styled.div<{ select: boolean }>`
-  width: ${SCREEN_WIDTH * 0.22222278}px;
-  height: ${SCREEN_WIDTH * 0.22222278}px;
-  max-width: 100px;
-  max-height: 100px;
+  width: 120px;
+  height: 120px;
+  max-width: 120px;
+  max-height: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,7 +50,8 @@ const SecondStep: React.FC<ISecondStepProps> = ({ step }) => {
   const formData = useSelector((state: RootState) => state.sighUp.formData);
   const [select, setSelect] = useState(formData.gender);
 
-  const genderTypes: Array<"여자" | "남자" | "기타"> = ["여자", "남자", "기타"];
+  const genderTypes: Array<"여자" | "남자"> = ["여자", "남자"];
+  // const genderTypes: Array<"여자" | "남자" | "기타"> = ["여자", "남자", "기타"];
   const goNext = () => {
     if (select.length < 1) {
       return;
@@ -59,7 +61,7 @@ const SecondStep: React.FC<ISecondStepProps> = ({ step }) => {
   if (step !== 1) return <Fragment></Fragment>;
   return (
     <Wrap style={{ padding: "0px 20px 0px 20px" }}>
-      <FadeInSection isVisited={showAnimation}>
+      <FadeInSection visited={showAnimation}>
         <StepIndicator items={[0, 0, 0]} index={step} />
 
         <EmptyBox height={30} />
@@ -84,10 +86,12 @@ const SecondStep: React.FC<ISecondStepProps> = ({ step }) => {
                 select={select === item}
                 style={{ margin: index === 1 ? "0px 10px 0px 10px" : "" }}
               >
-                <div
-                  style={{ width: 38, height: 38, backgroundColor: "grey" }}
+                <img
+                  src={index === 0 ? imgSrc.women : imgSrc.men}
+                  style={{ width: 40, height: 40 }}
                 />
-                <Text.Footnote>{item}</Text.Footnote>
+                <EmptyBox height={5} />
+                <Text.Footnote color={colors.Grey600}>{item}</Text.Footnote>
               </GenderItem>
             );
           })}

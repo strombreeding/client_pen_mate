@@ -10,6 +10,9 @@ import { AppDispatch, RootState } from "../store/store";
 import { showModal } from "../store/slices/appState";
 import Modal from "../components/designs/Modal";
 import HeartBounce from "../components/animations/HeartBounce";
+import { useEffect } from "react";
+import { setLoginState } from "../store/slices/userState";
+import { useHistory } from "../hooks/selectHistory";
 
 /* Styled-Components */
 
@@ -17,11 +20,11 @@ const Title = styled.div<{ isVisited: boolean }>`
   animation: ${(props) => (props.isVisited ? {} : FadeIn)} 1s ease-in-out;
   text-align: center;
 `;
-const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
+const SocialLoginBtn = styled.div<{ bgcolor?: string; color?: string }>`
   background-color: ${(props) =>
-    props.bgColor == null ? "white" : props.bgColor};
+    props.bgcolor == null ? "white" : props.bgcolor};
   padding: 14px 30px 14px 30px;
-  border: ${(props) => props.bgColor == null && "solid 1px #EFEFEF"};
+  border: ${(props) => props.bgcolor == null && "solid 1px #EFEFEF"};
   border-radius: 100px;
   width: ${MOBILE ? "100%" : "320px"};
   /* width: calc(100% * 0.8333); */
@@ -37,13 +40,13 @@ const SocialLoginBtn = styled.div<{ bgColor?: string; color?: string }>`
   opacity: 0.8;
 `;
 
-export const FadeInSection = styled.section<{ isVisited: boolean }>`
+export const FadeInSection = styled.section<{ visited: boolean }>`
   display: flex;
   width: 100%;
   text-align: center;
   flex-direction: column;
   align-items: center;
-  animation: ${(props) => (props.isVisited ? {} : FadeIn)} 0.2s ease-in-out;
+  animation: ${(props) => (props.visited ? {} : FadeIn)} 0.2s ease-in-out;
 `;
 
 const BtnIcon = styled.img`
@@ -65,6 +68,10 @@ const Login = () => {
       window.location.href = res;
       window.sessionStorage.setItem("Login", "1");
     };
+  useHistory();
+  useEffect(() => {
+    // dispatch(setLoginState(false));
+  }, []);
 
   const padding = devicePadding([226, 0], [40, 0]);
   return (
@@ -86,8 +93,8 @@ const Login = () => {
           </Text.ChangwonDangamAsac>
         </Title>
         <EmptyBox height={110} />
-        <FadeInSection isVisited={showAnimation}>
-          <SocialLoginBtn bgColor="#FEE500" onClick={onClick("kakao")}>
+        <FadeInSection visited={showAnimation}>
+          <SocialLoginBtn bgcolor="#FEE500" onClick={onClick("kakao")}>
             <BtnIcon src={imgSrc.kakao} />
             <Text.Headline cursor="pointer" color="#391B1B">
               카카오로 로그인
@@ -100,7 +107,7 @@ const Login = () => {
           </SocialLoginBtn>
 
           <SocialLoginBtn
-            bgColor="black"
+            bgcolor="black"
             color="white"
             style={{ border: "1px solid", borderColor: colors.Grey500 }}
           >
@@ -128,14 +135,14 @@ const Login = () => {
       </Wrap>
       {/* {popupState && (
         <Popup
-          title={"아바타 수정 나가기"}
-          content={`수정하던 내용이 저장되지 않습니다.
-          정말 나가시겠어요?`}
-          leftText={"취소"}
-          rightText={"나가기"}
-          rightBtnAction={() => {
-            alert("완료로직");
-          }}
+        title={"아바타 수정 나가기"}
+        content={`수정하던 내용이 저장되지 않습니다.
+        정말 나가시겠어요?`}
+        leftText={"취소"}
+        rightText={"나가기"}
+        rightBtnAction={() => {
+          alert("완료로직");
+        }}
         />
       )} */}
       {modalState && (

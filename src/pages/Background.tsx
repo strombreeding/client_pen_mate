@@ -3,6 +3,7 @@ import { imgSrc } from "../assets/img";
 import { MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../configs/device";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { useEffect, useState } from "react";
 
 const ChangeToWhite = keyframes`
   from {
@@ -12,54 +13,85 @@ const ChangeToWhite = keyframes`
     background-color: #fff;
   }
   `;
+const ChangeToBlack = keyframes`
+  from {
+    background-color: #fff;
+  }
+  to {
+    background-color: #000000;
+  }
+  `;
 const Opacity = keyframes`
   from {
-    opacity: 0
+    opacity: 0.8
   }
   to {
    opacity:0.8
   }
   
 `;
-const BackgroundView = styled.div<{ loggedIn: boolean }>`
+const WhiteView = styled.div`
   width: ${SCREEN_WIDTH};
-  /* height: 100vh; */
+  height: 100vh;
+  position: absolute;
+  background-color: white;
+  filter: blur(8px);
+`;
+const BlackView = styled.div`
+  width: ${SCREEN_WIDTH};
   height: 100vh;
   position: absolute;
   background-color: black;
-  animation: ${(props) => (props.loggedIn ? ChangeToWhite : {})} ease-in-out 0.4
-    forwards;
-  ${(props) =>
-    props.loggedIn ? `filter : blur(20px);` : ""}/* filter: blur(20px); */
 `;
-
-const ColorView = styled.div<{ loggedIn: boolean }>`
+// ${(props) => props.loggedIn && "opacity: 0;"}
+const ColorView = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-
-  background-color: black;
-  opacity: ${(props) => (props.loggedIn ? 0.8 : 0)};
-  animation: ${(props) => (props.loggedIn ? ChangeToWhite : {})} ease-in-out
-    0.4s forwards;
-  animation: ${(props) => (props.loggedIn ? Opacity : {})};
+  background-color: white;
+  opacity: 0.8;
+  animation: ${ChangeToWhite} ease-in-out 0.1s forwards;
+  animation: ${Opacity} ease-in-out 0.1s forwards;
 `;
 const Background: React.FC = () => {
   const loggedIn = useSelector((state: RootState) => state.userState.logedIn);
-  return (
-    <BackgroundView loggedIn={loggedIn}>
-      <ColorView loggedIn={loggedIn} />
-      {MOBILE && (
-        <img
-          src={imgSrc.bg}
-          style={{
-            width: "100%",
-            height: "100%",
-          }}
-        />
-      )}
-    </BackgroundView>
-  );
+  const thisPage = window.location.href;
+  const signUp = thisPage.includes("sign-up");
+  const signIn = thisPage.includes("sign-in");
+  console.log("백그라운드 이미지 온 ? ", signUp, signIn);
+
+  if (signUp) {
+    return (
+      <WhiteView>
+        <ColorView />
+        {MOBILE && (
+          <img
+            src={imgSrc.bg}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        )}
+      </WhiteView>
+    );
+  } else if (signIn) {
+    return (
+      <BlackView>
+        {MOBILE && (
+          <img
+            src={imgSrc.bg}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        )}
+      </BlackView>
+    );
+  } else {
+    return <WhiteView></WhiteView>;
+  }
 };
 
 export default Background;

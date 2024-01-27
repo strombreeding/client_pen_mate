@@ -3,18 +3,18 @@ import { Container, EmptyBox, Text, Wrap, colors } from "../styles";
 import SimpleHeader from "./SimpleHeader";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { SCREEN_WIDTH } from "../configs/device";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../configs/device";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { setOverFlow } from "../store/slices/appState";
 import { imgSrc } from "../assets/img";
 
 const AvatarView = styled.div`
-  position: fixed;
+  /* position: sticky; */
   /* top: calc(7px+56px) px; */
-  top: 100px;
+  /* top: 100px;
   right: 50px;
-  left: 50px;
+  left: 50px; */
   width: ${SCREEN_WIDTH * 0.722222}px;
   height: ${SCREEN_WIDTH * 0.722222}px;
   border-radius: 52px;
@@ -22,6 +22,10 @@ const AvatarView = styled.div`
   background-color: rgba(235, 235, 240, 0.5);
 `;
 const SelectModal = styled.div`
+  position: sticky;
+  top: 324px;
+  max-height: ${SCREEN_HEIGHT}px;
+  overflow: unset;
   margin-top: -15px;
   z-index: 1;
   padding: 30px 20px 0px 20px;
@@ -37,8 +41,8 @@ const SelectModal = styled.div`
 const CategoryBtn = styled.div`
   padding: 7.5px;
   border: 1px solid ${colors.Grey100};
-  min-width: 37px;
-  margin-right: 20px;
+  min-width: 40px;
+  margin-right: 15px;
   border-radius: 6px;
   background-color: #ebebf040;
 `;
@@ -123,9 +127,15 @@ const MockItem: IAvatarItems[] = [
   { id: "f6wg1", name: "화이트", price: 150, category: "헤어" },
   { id: "fw7g1", name: "검정", price: 150, category: "헤어" },
   { id: "fw7125g1", name: "코트", price: 150, category: "헤어" },
+  { id: "fw7]125g1", name: "코트", price: 150, category: "헤어" },
+  { id: "fw12ㅎㄷ5g1", name: "코트", price: 150, category: "헤어" },
+  { id: "fw7125ㅎg1", name: "코트", price: 150, category: "헤어" },
+  { id: "fw7125gㅎㅎ1", name: "코트", price: 150, category: "헤어" },
+  { id: "fw7125gㅗㅗ1", name: "코트", price: 150, category: "헤어" },
 ];
 const EditAvatar: React.FC = ({}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const isLogged = useSelector((state: RootState) => state.userState.logedIn);
   // const;
   const [category, setCategory] = useState([""] as string[]);
   const [items, setItems] = useState([] as IAvatarItems[]);
@@ -159,7 +169,7 @@ const EditAvatar: React.FC = ({}) => {
   }, []);
 
   return (
-    <Container style={{ position: "relative" }}>
+    <Container style={{ position: "relative", height: "100vh" }}>
       <SimpleHeader goBack={navigate} />
 
       <EmptyBox height={7} />
@@ -168,15 +178,16 @@ const EditAvatar: React.FC = ({}) => {
       <SelectModal>
         <div
           style={{
-            // position: "relative",
-            flexDirection: "row",
-            width: "auto",
-            backgroundColor: "red",
+            position: "sticky",
+            top: 30,
+            // flexDirection: "row",
+            width: "100%",
             display: "flex",
             overflowX: "scroll",
             overflowY: "hidden",
-            margin: "0px -20px 0px 0px",
-            padding: "0px 20px 0px 0px",
+            marginRight: -20,
+            // margin: "0px -20px 0px 0px",
+            // padding: "0px 20px 0px 20px",
           }}
         >
           {category.map((item, i) => {

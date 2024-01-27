@@ -32,10 +32,6 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 html {
-  -webkit-text-size-adjust:none;
-  -ms-text-size-adjust : none;
-  -moz-text-size-adjust:none;
-  -o-text-size-adjust:none;
   height: 100vh;
   background-color: transparent;
 }
@@ -60,18 +56,28 @@ table {
 }
 * {
   overflow: hidden;
-overscroll-behavior: none;
+  overscroll-behavior: none;
   overflow-y: ${(props) => (props.canScroll ? "unset" : "hidden")};
   box-sizing: border-box;
-  -webkit-user-select: none; /* iOS와 일부 브라우저를 위한 접두사 */
-  -moz-user-select: none; /* Firefox를 위한 접두사 */
-  -ms-user-select: none; /* Internet Explorer를 위한 접두사 */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-text-size-adjust:none;
+  -ms-text-size-adjust : none;
+  -moz-text-size-adjust:none;
+  -o-text-size-adjust:none;
   user-select: none; /* 표준 속성 */
   ::-webkit-scrollbar {
     display: none;
   }
 }
-
+div {
+  touch-action: manipulation; /* 더블 클릭에 의한 확대 방지 */
+}
 a {
   text-decoration: none;
   color: inherit;
@@ -265,6 +271,7 @@ export const Container = styled.div`
   align-items: center;
   display: flex;
   position: relative;
+  /* background-color: skyblue; */
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`
@@ -273,12 +280,12 @@ export const EmptyBox = styled.div<{ height?: number; width?: number }>`
   width: ${(props) => props.width}px;
 `;
 
-export const SafeArea = styled.div<{ safeArea: number[] }>`
+export const SafeArea = styled.div<{ safearea: number[] }>`
   display: flex;
   width: ${SCREEN_WIDTH};
   flex-direction: column;
   align-items: center;
-  padding-top: ${(props) => props.safeArea[0]}px;
-  padding-bottom: ${(props) => props.safeArea[1]}px;
+  padding-top: ${(props) => props.safearea[0]}px;
+  padding-bottom: ${(props) => props.safearea[1]}px;
   background-color: white;
 `;
