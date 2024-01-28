@@ -144,15 +144,15 @@ const getImportance = (start: number[], end: number[]) => {
       [0, -1], // 좌
       [-1, 0], // 상
       [0, 1], // 우
-      // [1, 0], // 하
+      [1, 0], // 하
     ];
     console.log("좌상우");
   } else if (sx > ex && sy < ey) {
     directions = [
       [0, 1], // 우
       [-1, 0], // 상
-      // [1, 0], // 하
       [0, -1], // 좌
+      [1, 0], // 하
     ];
     console.log("우상좌");
   } else if (sx > ex && sy === ey) {
@@ -160,15 +160,15 @@ const getImportance = (start: number[], end: number[]) => {
       [-1, 0], // 상
       [0, -1], // 좌
       [0, 1], // 우
-      // [1, 0], // 하
+      [1, 0], // 하
     ];
     console.log("상좌우");
   } else if (sx < ex && sy > ey) {
     directions = [
       [0, -1], // 좌
-      // [0, 1], // 우
       [1, 0], // 하
       [-1, 0], // 상
+      [0, 1], // 우
     ];
     console.log("좌하상");
   } else if (sx < ex && sy < ey) {
@@ -176,7 +176,7 @@ const getImportance = (start: number[], end: number[]) => {
       [0, 1], // 우
       [1, 0], // 하
       [-1, 0], // 상
-      // [0, -1], // 좌
+      [0, -1], // 좌
     ];
     console.log("우하상");
   } else if (sx < ex && sy === ey) {
@@ -184,23 +184,23 @@ const getImportance = (start: number[], end: number[]) => {
       [1, 0], // 하
       [0, -1], // 좌
       [0, 1], // 우
-      // [-1, 0], // 상
+      [-1, 0], // 상
     ];
     console.log("하좌우");
   } else if (sx === ex && sy > ey) {
     directions = [
-      // [0, 1], // 우
       [0, -1], // 좌
       [-1, 0], // 상
       [1, 0], // 하
+      [0, 1], // 우
     ];
     console.log("좌상하");
   } else if (sx === ex && sy < ey) {
     directions = [
-      // [0, -1], // 좌
       [0, 1], // 우
       [-1, 0], // 상
       [1, 0], // 하
+      [0, -1], // 좌
     ];
     console.log("우상하");
   } else {
