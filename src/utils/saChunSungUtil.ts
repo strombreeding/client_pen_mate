@@ -1,5 +1,3 @@
-import path from "path";
-
 export const findPathDFS = (
   graph: number[][],
   start: number[],
@@ -7,6 +5,13 @@ export const findPathDFS = (
   value: number
 ) => {
   console.log(start);
+  // const visitPath: boolean[][] = graph.map((row) => row.map((_) => false));
+  // const directions = [
+  //   [-1, 0], // 상
+  //   [1, 0], // 하
+  //   [0, -1], // 좌
+  //   [0, 1], // 우
+  // ];
   const directions = getImportance(start, end);
   const startTime = Date.now();
   let nodes = 1;
@@ -25,6 +30,12 @@ export const findPathDFS = (
   ): null | number[][] => {
     const [x, y] = start;
     path.push(start);
+    // visitPath[x][y] = true;
+    const isUnder3Band = calculTransXY(path, 3);
+    if (!isUnder3Band) {
+      console.log("꺾임이 3회이므로, 이번 노드는 조기 종료합니다.");
+      return null;
+    }
     // console.log("History: ", path, "End", end);
     // console.log(directions);
     // 도착점에 도달했을 때 경로 반환
@@ -41,8 +52,9 @@ export const findPathDFS = (
         // 시작점 방문 표시
         const foundPath = dfs(graph, [newX, newY], end, path.slice());
         if (foundPath) {
-          const success = calculTransXY(foundPath, 3);
-          return success ? foundPath : null;
+          // const success = calculTransXY(foundPath, 3);
+          return foundPath;
+          // return success ? foundPath : null;
         } else {
           return null;
         }
@@ -51,6 +63,7 @@ export const findPathDFS = (
 
     //   목적지가 없으니 다시 탐색
     for (const [dx, dy] of directions) {
+      console.log(dx, dy, " 좌표로 이동");
       const newX = x + dx;
       const newY = y + dy;
       const exists = path.some(([x, y]) => x === newX && y === newY); // 기존 경로에 이미 있따면 false
@@ -62,6 +75,7 @@ export const findPathDFS = (
         !exists && // 기존 경로에 없고
         graph[newX][newY] === 0 // 목표점의 값이 0이라면 실행
       ) {
+        console.log(newX, newY, " 이동");
         const foundPath = dfs(graph, [newX, newY], end, path.slice());
 
         if (foundPath) {
@@ -109,8 +123,8 @@ const getImportance = (start: number[], end: number[]) => {
   //   [0, 1],  // 우
   // ];
   /* 
-    sx가 크고 sy가 클경우 좌상하
-    sx가 크고 sy가 작을경우 우상하
+    sx가 크고 sy가 클경우 좌상우
+    sx가 크고 sy가 작을경우 우상좌
 
     sx가 크고 sy가 같을경우 상좌우
     sx가 작고 sy가 클경우 좌하상
@@ -128,19 +142,19 @@ const getImportance = (start: number[], end: number[]) => {
     //
     directions = [
       [0, -1], // 좌
-      // [0, 1], // 우
       [-1, 0], // 상
-      [1, 0], // 하
+      [0, 1], // 우
+      // [1, 0], // 하
     ];
-    console.log("우상하");
+    console.log("좌상우");
   } else if (sx > ex && sy < ey) {
     directions = [
-      // [0, -1], // 좌
       [0, 1], // 우
       [-1, 0], // 상
-      [1, 0], // 하
+      // [1, 0], // 하
+      [0, -1], // 좌
     ];
-    console.log("우상하");
+    console.log("우상좌");
   } else if (sx > ex && sy === ey) {
     directions = [
       [-1, 0], // 상
@@ -164,7 +178,7 @@ const getImportance = (start: number[], end: number[]) => {
       [-1, 0], // 상
       // [0, -1], // 좌
     ];
-    console.log("좌하상");
+    console.log("우하상");
   } else if (sx < ex && sy === ey) {
     directions = [
       [1, 0], // 하
