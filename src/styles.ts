@@ -33,7 +33,7 @@ footer, header, hgroup, menu, nav, section {
 }
 html {
   height: 100vh;
-  background-color: transparent;
+  background-color: black;
 }
 body {
 	line-height: 1;
