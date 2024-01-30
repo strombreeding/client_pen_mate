@@ -59,12 +59,45 @@ const SaChunSung = () => {
     level: gamelevel.BEGINNER,
     intAI: 5,
   });
-  const [zz, setzz] = useState("START");
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [isStarting, setIsStarting] = useState("START");
   const boardRef = useRef<HTMLDivElement>(null);
   const createAIRef = useRef<HTMLDivElement>(null);
   const userClickCnt = useRef(0);
 
   const [aiStatus, setAiStatus] = useState(false);
+  let aiCnt = 0;
+
+  const playAI = async () => {
+    ++aiCnt;
+    ++aiCnt;
+    if (!aiStatus) return;
+
+    if (aiBoard.length === 0 || aiBoard == null) return;
+
+    try {
+      const node = await utils.saChunSung.playerBot(aiBoard);
+      if (JSON.stringify(node) === JSON.stringify(aiBoard)) {
+      }
+
+      if (aiComplate !== JSON.stringify(node)) {
+        setAiBaord(node);
+        await asyncSleep(500 * gameSetting.intAI);
+        await playAI();
+      } else {
+        alert(`AI WIN ${aiCnt}번 클릭`);
+        aiCnt = 0;
+        window.location.reload();
+      }
+    } catch (err: any) {
+      if (Number(err.message) === 404) {
+        alert(`AI WIN ${aiCnt}번 클릭`);
+        aiCnt = 0;
+        window.location.reload();
+      }
+    }
+  };
   const clickCard = async (clicked: boolean, i: number, a: number) => {
     if (clicked) {
       console.log("1번분기");
@@ -85,29 +118,43 @@ const SaChunSung = () => {
     if (step === "second") {
       userClickCnt.current++;
 
+      if (board[firstItem[0]][firstItem[1]] !== board[i][a]) return; // 값이 다른경우 경로탐색 안해도됨
       console.log(userClickCnt.current);
       setStep("first");
       setSecondItem([-1, -1]);
       setFirstItem([-1, -1]);
-      const isPair = await utils.saChunSung.findPathDFS(
-        board,
-        firstItem,
-        [i, a],
-        board[firstItem[0]][firstItem[1]]
-      );
-      if (isPair) {
-        const copy = [...board];
-        copy[firstItem[0]][firstItem[1]] = 0;
-        copy[i][a] = 0;
-        if (complate === JSON.stringify(copy) && settingStep === 4) {
-          alert(`
-          YOU WIN!!
-          ${userClickCnt.current / 2}번 클릭만에 클리어!`);
-          window.location.reload();
-        }
+      try {
+        const isPair = await utils.saChunSung.findPathDFS(
+          board,
+          firstItem,
+          [i, a],
+          board[firstItem[0]][firstItem[1]]
+        );
+        if (isPair) {
+          board[firstItem[0]][firstItem[1]] = 0;
+          board[i][a] = 0;
+          const copy = JSON.parse(JSON.stringify(board));
 
-        setBoard([...copy]);
+          setBoard([...board]);
+          const remainingPath = await utils.saChunSung.remainingPathFinder(
+            copy,
+            "hint"
+          );
+          console.log(remainingPath);
+          if (
+            (complate === JSON.stringify(board) && settingStep === 4) ||
+            remainingPath == null
+          ) {
+            alert(`
+            YOU WIN!!
+            ${userClickCnt.current / 2}번 클릭만에 클리어!`);
+            window.location.reload();
+          }
+        }
+      } catch (err) {
+        alert("앗 비정상적 동작!!");
       }
+
       return;
     }
   };
@@ -132,7 +179,6 @@ const SaChunSung = () => {
     setFirstItem([-1, -1]);
   };
 
-  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(setOverFlow(true));
 
@@ -142,38 +188,18 @@ const SaChunSung = () => {
   }, []);
   useEffect(() => {
     if (aiBoard.length > 0 && aiBoard != null && aiStatus) {
-      console.log(JSON.stringify(aiBoard));
-      console.log(aiBoard);
       setTimeout(async () => await playAI(), 0);
       // playAI(aiBoard);
     } else {
     }
     // playAI();
   }, [aiStatus]);
-  let aiCnt = 0;
-
-  const playAI = async (fisrtGraph?: number[][]) => {
-    ++aiCnt;
-    if (!aiStatus) return;
-
-    if (aiBoard.length === 0 || aiBoard == null) return;
-    const node = await utils.saChunSung.playerBot(aiBoard);
-    if (aiComplate !== JSON.stringify(node)) {
-      setAiBaord(node);
-      await asyncSleep(500 * gameSetting.intAI);
-      await playAI();
-    } else {
-      alert(`AI WIN ${aiCnt}번 클릭`);
-      aiCnt = 0;
-      window.location.reload();
-    }
-  };
 
   return (
     <Container>
       <Text.ChangwonDangamAsac
         onClick={() => {
-          if (zz === "START") {
+          if (isStarting === "START") {
             const accept = window.confirm("exit?");
             if (accept) {
               window.location.reload();
@@ -183,6 +209,7 @@ const SaChunSung = () => {
       >
         사천성 게임!
       </Text.ChangwonDangamAsac>
+
       {/* <div>
         <input
           type="tel"
@@ -196,13 +223,14 @@ const SaChunSung = () => {
           onChange={(e) => setCols(Number(e.currentTarget.value))}
         />
       </div> */}
-      {/* <RowBoard
+      <RowBoard
         ref={boardRef}
         // style={{ opacity: 0 }}
         onClick={() => create()}
       >
         <Text.Body>게임판 생성!</Text.Body>
-      </RowBoard> */}
+      </RowBoard>
+
       <RowBoard
         ref={createAIRef}
         style={{ opacity: 0 }}
@@ -380,18 +408,18 @@ const SaChunSung = () => {
       {settingStep === 3 && (
         <div
           onClick={() => {
-            setTimeout(() => setzz("3"), 600);
-            setTimeout(() => setzz("2"), 1600);
-            setTimeout(() => setzz("1"), 2600);
-            setTimeout(() => setzz("GO!"), 3600);
+            setTimeout(() => setIsStarting("3"), 600);
+            setTimeout(() => setIsStarting("2"), 1600);
+            setTimeout(() => setIsStarting("1"), 2600);
+            setTimeout(() => setIsStarting("GO!"), 3600);
             setTimeout(() => {
-              setzz("START");
+              setIsStarting("START");
               setSettingStep(4);
               create();
             }, 4600);
           }}
         >
-          <Text.Headline>{zz}</Text.Headline>
+          <Text.Headline>{isStarting}</Text.Headline>
         </div>
       )}
       <div>

@@ -4,16 +4,7 @@ export const findPathDFS = async (
   end: number[],
   startValue: number
 ) => {
-  // const visitPath: boolean[][] = graph.map((row) => row.map((_) => false));
-  // const directions = [
-  //   [-1, 0], // 상
-  //   [1, 0], // 하
-  //   [0, -1], // 좌
-  //   [0, 1], // 우
-  // ];
   const directions = getImportance(start, end);
-  const startTime = Date.now();
-  let nodes = 1;
   const timer = setTimeout(() => {
     return null;
   }, 3000);
@@ -24,8 +15,7 @@ export const findPathDFS = async (
   const path = await dfs(graph, start, end, history, directions, startValue);
 
   clearTimeout(timer);
-  const jobTime = Date.now();
-  const doneTime = jobTime - startTime;
+
   return path;
 };
 
@@ -123,20 +113,25 @@ export const createBoard = (rows: number, cols: number) => {
 
   const maxItem = (rows - 2) * (cols - 2);
   if (maxItem % 2 !== 0) return [[]]; // 짝수여야 짝이 맞음
-  let itemLength = 9;
-  while (itemLength !== 0) {
-    if (maxItem % itemLength === 0) break;
-    itemLength--;
+  let cnt = 1;
+  const itemLength: number[] = [1];
+  while (cnt < 10) {
+    cnt++;
+    if (!Number.isInteger(maxItem / (itemLength.length + 1))) continue;
+    if (maxItem % cnt !== 0) continue;
+    itemLength.push(cnt);
   }
+  console.log(itemLength);
 
-  const maxStack = maxItem / itemLength; // 12면 아이템랭스는 3이고 12/3 = 4, 각아이템이 4번씩
-  const itemStack = Array.from({ length: itemLength + 1 }, (i) =>
+  const maxStack = maxItem / itemLength.length; // 12면 아이템랭스는 3이고 12/3 = 4, 각아이템이 4번씩
+  console.log(maxStack);
+  const itemStack = Array.from({ length: itemLength.length + 1 }, (i) =>
     Array(maxStack).fill(0)
   ); // [[],[],[]]
   for (let i = 0; i < board.length; i++) {
     if (i === 0 || i === board.length - 1) continue;
     for (let r = 1; r < cols - 1; r++) {
-      const randomNumber = Math.floor(Math.random() * itemLength + 1); // 랜덤으로하나뽑음
+      const randomNumber = Math.floor(Math.random() * itemLength.length + 1); // 랜덤으로하나뽑음
 
       if (itemStack[randomNumber].length > 0) {
         itemStack[randomNumber].pop();
@@ -146,13 +141,17 @@ export const createBoard = (rows: number, cols: number) => {
       }
     }
   }
-  // return [
-  //   [0, 0, 0, 0],
-  //   [0, 1, 2, 0],
-  //   [0, 2, 1, 0],
-  //   [0, 0, 0, 0],
-  // ];
+
   return board;
+  const zz = [
+    [0, 0, 0, 0, 0],
+    [0, 1, 2, 3, 0],
+    [0, 3, 1, 2, 0],
+    [0, 1, 1, 2, 0],
+    [0, 3, 3, 2, 0],
+    [0, 0, 0, 0, 0],
+  ];
+  return zz;
 };
 
 // 경로를 넣으면 꺾임의 횟수를 판단하여
@@ -181,74 +180,14 @@ const calculTransXY = (pathArr: number[][], underBand: number) => {
 };
 
 export const playerBot = async (board: number[][]): Promise<number[][]> => {
+  // const graph = JSON.parse(JSON.stringify(board));
   const graph = [...board];
   if (graph.length === 0 || graph == null) return [[]];
-  console.log(JSON.stringify(graph));
-  const maxX = graph.length - 2;
-  const maxY = graph[0].length - 2;
-  for (let x = 1; x < graph.length - 1; x++) {
-    for (let y = 1; y < graph[x].length - 1; y++) {
-      let currnetY = y + 1;
-      let currnetX = x;
-
-      if (graph[x][y] === 0) continue; // 0이라면 다음
-      // || graph[currnetX][currnetY] === 0
-      let done = false;
-      let limit = 1000;
-
-      while (!done && limit !== 0) {
-        --limit;
-
-        if (graph[x][y] === graph[currnetX][currnetY]) {
-          const directions = getImportance([x, y], [currnetX, currnetY]);
-          const startValue = graph[x][y];
-          const canFound = await dfs(
-            graph,
-            [x, y],
-            [currnetX, currnetY],
-            [],
-            directions,
-            startValue
-          ); //
-          if (canFound) {
-            graph[x][y] = 0;
-            graph[currnetX][currnetY] = 0;
-            return graph;
-          } else if (canFound == null) {
-            if (currnetX >= maxX && currnetY >= maxY) {
-              break;
-            }
-
-            // 현재 y값이 maxY값이라면 y를초기화하고, 다음행으로 이동후 다시반복
-            else if (currnetY >= maxY) {
-              currnetY = 1;
-              currnetX++;
-              continue;
-            } else {
-              currnetY++;
-              continue;
-            }
-          }
-        } else {
-          // x값이 최대행이고 y도 끝까지왔다면 다음 y로
-          if (currnetX >= maxX && currnetY >= maxY) {
-            break;
-          }
-
-          // 현재 y값이 maxY값이라면 y를초기화하고, 다음행으로 이동후 다시반복
-          else if (currnetY >= maxY) {
-            currnetY = 1;
-            currnetX++;
-            continue;
-          } else {
-            currnetY++;
-            continue;
-          }
-        }
-      }
-    }
+  const isPath = await remainingPathFinder(graph, "bot");
+  console.log(isPath, graph);
+  if (isPath === undefined) {
+    throw new Error("404");
   }
-
   return graph;
 };
 
@@ -342,3 +281,149 @@ export function sleep(ms: number) {
 export function asyncSleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+// export const remainingPathFinder = async (
+//   graph: number[][],
+//   type: "hint" | "bot"
+// ) => {
+//   let copyGraph = [...graph];
+//   if (type === "hint") {
+//     copyGraph = JSON.parse(JSON.stringify(graph));
+//   }
+//   const maxX = copyGraph.length - 2;
+//   const maxY = copyGraph[0].length - 2;
+//   for (let x = 1; x < copyGraph.length - 1; x++) {
+//     for (let y = 1; y < copyGraph[x].length - 1; y++) {
+//       let currnetY = y + 1;
+//       let currnetX = x;
+
+//       if (copyGraph[x][y] === 0) continue; // 0이라면 다음
+//       // || copyGraph[currnetX][currnetY] === 0
+//       let done = false;
+//       let limit = 1000;
+
+//       while (!done && limit !== 0) {
+//         --limit;
+
+//         // 값이 같은 경우에 발동
+//         if (copyGraph[x][y] === copyGraph[currnetX][currnetY]) {
+//           const directions = getImportance([x, y], [currnetX, currnetY]);
+//           const startValue = copyGraph[x][y];
+//           const canFound = await dfs(
+//             copyGraph,
+//             [x, y],
+//             [currnetX, currnetY],
+//             [],
+//             directions,
+//             startValue
+//           ); //
+//           if (canFound) {
+//             copyGraph[x][y] = 0;
+//             copyGraph[currnetX][currnetY] = 0;
+//             return type === "bot" ? copyGraph : canFound;
+//           } else if (canFound == null) {
+//             if (currnetX >= maxX && currnetY >= maxY) {
+//               break;
+//             }
+
+//             // 현재 y값이 maxY값이라면 y를초기화하고, 다음행으로 이동후 다시반복
+//             else if (currnetY >= maxY) {
+//               currnetY = 1;
+//               currnetX++;
+//               continue;
+//             } else {
+//               currnetY++;
+//               continue;
+//             }
+//           }
+//         } else {
+//           // x값이 최대행이고 y도 끝까지왔다면 다음 y로
+//           if (currnetX >= maxX && currnetY >= maxY) {
+//             break;
+//           }
+
+//           // 현재 y값이 maxY값이라면 y를초기화하고, 다음행으로 이동후 다시반복
+//           else if (currnetY >= maxY) {
+//             currnetY = 1;
+//             currnetX++;
+//             continue;
+//           } else {
+//             currnetY++;
+//             continue;
+//           }
+//         }
+//       }
+//     }
+//   }
+// };
+
+export const remainingPathFinder = async (
+  graph: number[][],
+  type: "hint" | "bot"
+) => {
+  const maxX = graph.length - 2;
+  const maxY = graph[0].length - 2;
+  for (let x = 1; x < graph.length - 1; x++) {
+    for (let y = 1; y < graph[x].length - 1; y++) {
+      let currnetY = y + 1;
+      let currnetX = x;
+
+      if (graph[x][y] === 0) continue; // 0이라면 다음
+      // || graph[currnetX][currnetY] === 0
+      let done = false;
+      let limit = 1000;
+
+      while (!done && limit !== 0) {
+        --limit;
+
+        if (graph[x][y] === graph[currnetX][currnetY]) {
+          const directions = getImportance([x, y], [currnetX, currnetY]);
+          const startValue = graph[x][y];
+          const canFound = await dfs(
+            graph,
+            [x, y],
+            [currnetX, currnetY],
+            [],
+            directions,
+            startValue
+          ); //
+          if (canFound) {
+            console.log(canFound);
+            graph[x][y] = 0;
+            graph[currnetX][currnetY] = 0;
+            return type === "bot" ? graph : canFound;
+          } else if (canFound == null) {
+            if (currnetX >= maxX && currnetY >= maxY) {
+              break;
+            }
+
+            // 현재 y값이 maxY값이라면 y를초기화하고, 다음행으로 이동후 다시반복
+            else if (currnetY >= maxY) {
+              currnetY = 1;
+              currnetX++;
+              continue;
+            } else {
+              currnetY++;
+              continue;
+            }
+          }
+        } else {
+          // x값이 최대행이고 y도 끝까지왔다면 다음 y로
+          if (currnetX >= maxX && currnetY >= maxY) {
+            break;
+          }
+
+          // 현재 y값이 maxY값이라면 y를초기화하고, 다음행으로 이동후 다시반복
+          else if (currnetY >= maxY) {
+            currnetY = 1;
+            currnetX++;
+            continue;
+          } else {
+            currnetY++;
+            continue;
+          }
+        }
+      }
+    }
+  }
+};

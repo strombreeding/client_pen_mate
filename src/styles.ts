@@ -33,7 +33,7 @@ footer, header, hgroup, menu, nav, section {
 }
 html {
   height: 100vh;
-  background-color: black;
+  background-color: #181a1b;
 }
 body {
 	line-height: 1;
@@ -271,7 +271,6 @@ export const Container = styled.div`
   align-items: center;
   display: flex;
   position: relative;
-  /* background-color: skyblue; */
 `;
 
 export const EmptyBox = styled.div<{ height?: number; width?: number }>`
@@ -287,5 +286,5 @@ export const SafeArea = styled.div<{ safearea: number[] }>`
   align-items: center;
   padding-top: ${(props) => props.safearea[0]}px;
   padding-bottom: ${(props) => props.safearea[1]}px;
-  background-color: white;
+  background-color: #181a1b;
 `;

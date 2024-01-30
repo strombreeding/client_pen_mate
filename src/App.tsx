@@ -15,17 +15,17 @@ import { setSafeArea, showModal, showPopup } from "./store/slices/appState";
 import { IOS } from "./configs/device";
 import Background from "./pages/Background";
 
-const BG = styled.div<{ show: boolean }>`
-  position: absolute;
-  width: 100vw;
-  height: 100%;
-  background-color: black;
-  opacity: 0.5;
-  z-index: 1;
-  cursor: pointer;
-  animation: ${(props) => (props.show ? FadeInPopup : FadeOutPopup)} ease-in-out
-    0.3s;
-`;
+// const BG = styled.div<{ show: boolean }>`
+//   position: absolute;
+//   width: 100vw;
+//   height: 100%;
+//   background-color: black;
+//   opacity: 0.5;
+//   z-index: 1;
+//   cursor: pointer;
+//   animation: ${(props) => (props.show ? FadeInPopup : FadeOutPopup)} ease-in-out
+//     0.3s;
+// `;
 
 function App() {
   const popupState = useSelector((state: RootState) => state.appState.popup);
