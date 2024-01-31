@@ -9,3 +9,18 @@ export type SignInFormData = {
   agreement: boolean;
   interested?: string[];
 };
+
+export enum gamelevel {
+  BEGINNER = "3,4",
+  FRESHMAN = "6,6",
+  SOPHOMORE = "9,8",
+  JUNIOR = "12,10",
+  SENIOR = "15,12",
+  HARD = "18,12",
+}
+
+export type SachunsungGameSetting = {
+  matchAI: boolean;
+  level: gamelevel;
+  intAI: number;
+};
