@@ -94,13 +94,9 @@ const SaChunSung = () => {
           onChange={(e) => setCols(Number(e.currentTarget.value))}
         />
       </div> */}
-      {/* <RowBoard
-        ref={boardRef}
-        // style={{ opacity: 0 }}
-        onClick={() => create()}
-      >
+      <RowBoard onClick={() => create()}>
         <Text.Body>게임판 생성!</Text.Body>
-      </RowBoard> */}
+      </RowBoard>
 
       {/* <RowBoard
         ref={createAIRef}

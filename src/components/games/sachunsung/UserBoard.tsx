@@ -37,6 +37,8 @@ const UserBoard: FC<{
       if (board[firstItem[0]][firstItem[1]] !== board[i][a]) {
         setSecondItem([-1, -1]);
         setFirstItem([-1, -1]);
+        setStep("first");
+
         return;
       } // 값이 다른경우 경로탐색 안해도됨
 

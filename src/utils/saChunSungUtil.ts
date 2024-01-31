@@ -117,17 +117,20 @@ export const createBoard = (rows: number, cols: number) => {
   const itemLength: number[] = [1];
   while (cnt < 10) {
     cnt++;
+
     if (!Number.isInteger(maxItem / (itemLength.length + 1))) continue;
+    if ((maxItem / (itemLength.length + 1)) % 2 !== 0) continue;
     if (maxItem % cnt !== 0) continue;
+
     itemLength.push(cnt);
   }
-  console.log(itemLength);
 
-  const maxStack = maxItem / itemLength.length; // 12면 아이템랭스는 3이고 12/3 = 4, 각아이템이 4번씩
-  console.log(maxStack);
+  const maxStack = maxItem / itemLength.length; // 12면 아이템랭스는 3이고 12/ = 4, 각아이템이 4번씩
+
   const itemStack = Array.from({ length: itemLength.length + 1 }, (i) =>
     Array(maxStack).fill(0)
   ); // [[],[],[]]
+
   for (let i = 0; i < board.length; i++) {
     if (i === 0 || i === board.length - 1) continue;
     for (let r = 1; r < cols - 1; r++) {
