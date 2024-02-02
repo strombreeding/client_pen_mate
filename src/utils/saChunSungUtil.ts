@@ -1,3 +1,4 @@
+/** 클릭시 경로를 경로가 있는지 여부  */
 export const findPathDFS = async (
   graph: number[][],
   start: number[],
@@ -19,9 +20,7 @@ export const findPathDFS = async (
   return path;
 };
 
-/**
- * 우선순위 direction을 반환하여 성능 상승
- */
+/** 목표지점 최단거리 direction을 반환하여 성능 상승 */
 const getImportance = (start: number[], end: number[]) => {
   const [sx, sy] = start;
   const [ex, ey] = end;
@@ -105,6 +104,7 @@ const getImportance = (start: number[], end: number[]) => {
   return directions;
 };
 
+/** 게임판 생성 로직 */
 export const createBoard = (rows: number, cols: number) => {
   rows = rows + 2;
   cols = cols + 2;
@@ -114,31 +114,39 @@ export const createBoard = (rows: number, cols: number) => {
   const maxItem = (rows - 2) * (cols - 2);
   if (maxItem % 2 !== 0) return [[]]; // 짝수여야 짝이 맞음
   let cnt = 1;
-  const itemLength: number[] = [1];
+  const itemLength: number[] = [1, 2, 3];
+  if (cols > 14) itemLength.push(4, 5, 6, 7, 8, 9);
+  // const itemLength: number[] = [1];
   while (cnt < 10) {
+    // cnt++;
     cnt++;
 
-    if (!Number.isInteger(maxItem / (itemLength.length + 1))) continue;
-    if ((maxItem / (itemLength.length + 1)) % 2 !== 0) continue;
-    if (maxItem % cnt !== 0) continue;
+    // 12 / 6 가 정수일 경우 멈춤
+    if (
+      Number.isInteger(maxItem / itemLength.length) &&
+      (maxItem / itemLength.length) % 2 === 0
+    ) {
+      break;
+    }
+    itemLength.pop();
 
-    itemLength.push(cnt);
+    // itemLength.push(cnt);
   }
 
   const maxStack = maxItem / itemLength.length; // 12면 아이템랭스는 3이고 12/ = 4, 각아이템이 4번씩
 
-  const itemStack = Array.from({ length: itemLength.length + 1 }, (i) =>
-    Array(maxStack).fill(0)
+  const itemStack = Array.from({ length: itemLength.length }, (i) =>
+    Array(maxStack).fill(1)
   ); // [[],[],[]]
-
+  console.log(Math.floor(Math.random() * itemLength.length));
   for (let i = 0; i < board.length; i++) {
     if (i === 0 || i === board.length - 1) continue;
     for (let r = 1; r < cols - 1; r++) {
-      const randomNumber = Math.floor(Math.random() * itemLength.length + 1); // 랜덤으로하나뽑음
+      const randomNumber = Math.floor(Math.random() * itemLength.length); // 랜덤으로하나뽑음
 
       if (itemStack[randomNumber].length > 0) {
         itemStack[randomNumber].pop();
-        board[i][r] = randomNumber;
+        board[i][r] = randomNumber + 1;
       } else {
         r--;
       }

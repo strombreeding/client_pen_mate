@@ -11,10 +11,10 @@ export type SignInFormData = {
 };
 
 export enum gamelevel {
-  BEGINNER = "3,4",
-  FRESHMAN = "6,6",
-  SOPHOMORE = "9,8",
-  JUNIOR = "12,10",
+  BEGINNER = "3,4", // 4 까지
+  FRESHMAN = "6,6", // 6까지
+  SOPHOMORE = "9,8", // 8
+  JUNIOR = "12,10", //
   SENIOR = "15,12",
   HARD = "18,12",
 }
