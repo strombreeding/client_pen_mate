@@ -13,7 +13,10 @@ import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
 import { setSafeArea, showModal, showPopup } from "./store/slices/appState";
 import { IOS } from "./configs/device";
-import Background from "./pages/Background";
+import { isMobile } from "react-device-detect";
+import { Viewport } from "./nativeView";
+import { imgSrc } from "./assets/img";
+import BottomNav from "./components/BottomNav";
 
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
@@ -72,17 +75,7 @@ function App() {
       }
     };
   }, []);
-  useEffect(() => {
-    // window.addEventListener("popstate", (e) => {
-    //   alert("나갈꺼냐?");
-    //   e.preventDefault();
-    // });
-    // window.addEventListener("beforeunload", (e) => {
-    //   // alert("나갈꺼냐?");
-    //   dispatch(showPopup(true));
-    //   e.preventDefault();
-    // });
-  }, []);
+  useEffect(() => {}, []);
 
   const [req, setReq] = useState(0);
 
@@ -113,17 +106,27 @@ function App() {
     // return () =>
   }, []);
 
-  const canScroll = useSelector((state: RootState) => state.appState.overFlow);
+  const canScroll = true;
+  // const canScroll = useSelector((state: RootState) => state.appState.overFlow);
 
   return (
     <SafeArea safearea={safeArea}>
-      {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
-      {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
-      <Background></Background>
-      <GlobalStyle canScroll={canScroll} />
-      <Routers />
+      <Viewport bgUrl={imgSrc.bg_viewport}>
+        {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
+        {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
+        <Background>
+          <GlobalStyle canScroll={canScroll} />
+          <Routers />
+        </Background>
+      </Viewport>
     </SafeArea>
   );
 }
-
+const Background = styled.div`
+  position: relative;
+  width: ${isMobile ? "100%" : "10%"};
+  min-width: 360px;
+  height: 100vh;
+  background: linear-gradient(180deg, #000000 22.92%, #3500a6 100%);
+`;
 export default App;

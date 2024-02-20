@@ -5,13 +5,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { Container, Text } from "../styles";
+import { Container } from "../styles";
 import styled from "styled-components";
 import * as utils from "../utils/index";
 import { MOBILE } from "../configs/device";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
-import { setOverFlow } from "../store/slices/appState";
 import { asyncSleep } from "../utils/timer";
 import { type SachunsungGameSetting, gamelevel } from "../types";
 import SelectLevel from "../components/games/sachunsung/SelectLevel";
@@ -20,6 +19,7 @@ import SelectAiIntellect from "../components/games/sachunsung/SelectAiIntellect"
 import AiBoard from "../components/games/sachunsung/AiBoard";
 import { RowBoard } from "../components/games/sachunsung/styledComponents";
 import UserBoard from "../components/games/sachunsung/UserBoard";
+import { Text } from "../assets/fontStyles";
 // import { createBoard, findPathDFS } from "../utils";
 
 type IGameLevel = [];
@@ -59,16 +59,9 @@ const SaChunSung = () => {
     setComplate(boardToString);
   };
 
-  useEffect(() => {
-    dispatch(setOverFlow(true));
-
-    return () => {
-      dispatch(setOverFlow(false));
-    };
-  }, []);
   return (
     <Container>
-      <Text.ChangwonDangamAsac
+      <Text.SemiBold_32
         onClick={() => {
           if (isStarting === "START") {
             const accept = window.confirm("exit?");
@@ -79,7 +72,7 @@ const SaChunSung = () => {
         }}
       >
         사천성 게임!
-      </Text.ChangwonDangamAsac>
+      </Text.SemiBold_32>
 
       {/* <div>
         <input
@@ -94,9 +87,9 @@ const SaChunSung = () => {
           onChange={(e) => setCols(Number(e.currentTarget.value))}
         />
       </div> */}
-      <RowBoard onClick={() => create()}>
+      {/* <RowBoard onClick={() => create()}>
         <Text.Body>게임판 생성!</Text.Body>
-      </RowBoard>
+      </RowBoard> */}
 
       {/* <RowBoard
         ref={createAIRef}
@@ -138,12 +131,10 @@ const SaChunSung = () => {
             }, 4600);
           }}
         >
-          <Text.Headline>{isStarting}</Text.Headline>
+          <Text.Esa_Bold_20>{isStarting}</Text.Esa_Bold_20>
         </div>
       )}
-      <Text.ChangwonDangamAsac>
-        {settingStep === 4 ? "YOU" : ""}
-      </Text.ChangwonDangamAsac>
+      <Text.Esa_Bold_20>{settingStep === 4 ? "YOU" : ""}</Text.Esa_Bold_20>
       <UserBoard
         board={board}
         setBoard={setBoard}

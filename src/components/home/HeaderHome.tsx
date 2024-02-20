@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { EmptyBox, Text } from "../../styles";
+import { EmptyBox } from "../../styles";
 import { imgSrc } from "../../assets/img";
 import Bell26 from "../designs/26px/Bell_26";
 import Dm_26 from "../designs/26px/Dm_26";
 import { Fragment } from "react";
+import { Text } from "../../assets/fontStyles";
 
 const Header = styled.div`
   display: flex;
@@ -12,7 +13,6 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   min-height: 64px;
-  position: fixed;
   width: 100%;
 `;
 export const RowView = styled.div`
@@ -22,17 +22,14 @@ export const RowView = styled.div`
 
 const HeaderHome = () => {
   return (
-    <Fragment>
-      <Header>
-        <Text.Title1>홈</Text.Title1>
-        <RowView>
-          <Bell26 />
-          <EmptyBox width={20} />
-          <Dm_26 />
-        </RowView>
-      </Header>
-      <EmptyBox height={64} />
-    </Fragment>
+    <Header>
+      <Text.Esa_Bold_16>홈</Text.Esa_Bold_16>
+      <RowView>
+        <Bell26 />
+        <EmptyBox width={20} />
+        <Dm_26 />
+      </RowView>
+    </Header>
   );
 };
 

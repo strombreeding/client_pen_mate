@@ -1,10 +1,56 @@
-@font-face {
+/* @font-face {
   font-family: "ChangwonDangamAsac";
   font-weight: 700;
   src: url(./assets/fonts/woff/CWDangamAsac-Bold.woff) format("woff");
-}
+} */
 
 /* @font-face {
   font-family: "Pretendard Variable";
   src: url(./assets/fonts/PretendardVariable.ttf) format("truetype");
 } */
+@font-face {
+  font-family: "esamanruBold";
+  src: url("./assets/fonts/esamanruBold.ttf");
+}
+
+@font-face {
+  font-family: "esamanru";
+  src: url("./assets/fonts/esamanruMedium.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "esamanruLight";
+  src: url("./assets/fonts/esamanruLight.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SpoqaHanSansNeoBold";
+  src: url("./assets/fonts/SpoqaHanSansNeoBold.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SpoqaHanSansNeoLight";
+  src: url("./assets/fonts/SpoqaHanSansNeoLight.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SpoqaHanSansNeoMedium";
+  src: url("./assets/fonts/SpoqaHanSansNeoMedium.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SpoqaHanSansNeoRegular";
+  src: url("./assets/fonts/SpoqaHanSansNeoRegular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}

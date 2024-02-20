@@ -9,12 +9,9 @@ import {
   useNavigation,
   useNavigationType,
 } from "react-router-dom";
-import Login from "./pages/Login";
 import SocialTerminel from "./components/SocialTerminel";
-import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import useDisablePinchZoom from "./hooks/disabledPinchZoom";
-import EditAvatar from "./components/EditAvatar";
 import Background from "./pages/Background";
 import PublicPage from "./routes/PublicPage";
 import Home from "./pages/Home";
@@ -25,13 +22,15 @@ const Routers: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* 로그인이 없어도 실행가능한 레터,  */}
-        {/* <Route element={<PublicPage />}> */}
+        {/* 바텀네비스택 */}
         <Route path="/" element={<Home />} />
-        <Route path="/edit-avatar" element={<EditAvatar />} />
-        <Route path="/sign-in" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/ranking" element={<Home />} />
+        <Route path="/store" element={<Home />} />
+        <Route path="/profile" element={<Home />} />
+        {/* <Route element={<PublicPage />}> */}
+        {/* <Route path="/edit-avatar" element={<EditAvatar />} /> */}
         <Route path="/social/kakao" element={<SocialTerminel />} />
-        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/games" element={<SaChunSung />} />
         {/* </Route> */}
         {/* 로그인이 필요한것들, 매칭-AI서비스 */}

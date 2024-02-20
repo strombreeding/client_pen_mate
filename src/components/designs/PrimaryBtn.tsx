@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { Text, colors } from "../../styles";
 import React, { useEffect, useState } from "react";
 import { BtnStatus } from "../../types";
 import { MOBILE } from "../../configs/device";
+import { colors } from "../../assets/colors";
+import { Text } from "../../assets/fontStyles";
 const LayOut = styled.div<{
   status: BtnStatus;
   exception: boolean | undefined;
@@ -73,7 +74,7 @@ const PrimaryBtn: React.FC<{
             onMouseUp={setEnd}
             status={status}
           >
-            <Text.Headline color="white">{text}</Text.Headline>
+            <Text.Esa_Bold_18 color="white">{text}</Text.Esa_Bold_18>
           </LayOut>
         </BtnContainer>
       ) : (
@@ -87,7 +88,7 @@ const PrimaryBtn: React.FC<{
           onMouseUp={setEnd}
           status={status}
         >
-          <Text.Headline color="white">{text}</Text.Headline>
+          <Text.Esa_Bold_18 color="white">{text}</Text.Esa_Bold_18>
         </LayOut>
       )}
     </>

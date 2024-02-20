@@ -1,18 +1,14 @@
 import styled, { keyframes } from "styled-components";
-import {
-  EmptyBox,
-  FadeInPopup,
-  FadeOutPopup,
-  Text,
-  colors,
-} from "../../styles";
+import { EmptyBox, FadeInPopup, FadeOutPopup } from "../../styles";
 import PrimaryBtn from "./PrimaryBtn";
 import SecondaryBtn from "./SecondaryBtn";
 import { TouchEventHandler, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { setOverFlow, showModal } from "../../store/slices/appState";
+import { showModal } from "../../store/slices/appState";
 import { SCREEN_HEIGHT } from "../../configs/device";
+import { colors } from "../../assets/colors";
+import { Text } from "../../assets/fontStyles";
 
 const BG = styled.div<{ show: boolean }>`
   position: absolute;
@@ -105,15 +101,18 @@ const Modal: React.FC<{
 
         <EmptyBox height={10} />
         <div>
-          <Text.Title3>{title}</Text.Title3>
+          <Text.Esa_Bold_18>{title}</Text.Esa_Bold_18>
         </div>
 
         <EmptyBox height={20} />
 
         <div>
-          <Text.Subhead color={colors.Grey500} style={{ textAlign: "center" }}>
+          <Text.Esa_Bold_14
+            color={colors.Grey500}
+            style={{ textAlign: "center" }}
+          >
             {content}
-          </Text.Subhead>
+          </Text.Esa_Bold_14>
         </div>
 
         <EmptyBox height={40} />

@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction, FC } from "react";
 import type { SachunsungGameSetting } from "../../../types";
-import { Text } from "../../../styles";
+import { Text } from "../../../assets/fontStyles";
 
 const SelectAiIntellect: FC<{
   setGameSetting: Dispatch<SetStateAction<SachunsungGameSetting>>;
@@ -19,7 +19,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Headline>FOOL</Text.Headline>
+          <Text.Esa_Bold_16>FOOL</Text.Esa_Bold_16>
         </div>
         <div
           style={{
@@ -30,7 +30,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Headline>COLLEGE</Text.Headline>
+          <Text.Esa_Bold_16>COLLEGE</Text.Esa_Bold_16>
         </div>
         <div
           style={{
@@ -41,7 +41,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Headline>GENIUS</Text.Headline>
+          <Text.Esa_Bold_16>GENIUS</Text.Esa_Bold_16>
         </div>
         <div
           style={{
@@ -52,7 +52,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Headline>GOD</Text.Headline>
+          <Text.Esa_Bold_16>GOD</Text.Esa_Bold_16>
         </div>
       </div>
     </>

@@ -24,3 +24,5 @@ export type SachunsungGameSetting = {
   level: gamelevel;
   intAI: number;
 };
+
+export type NavTab = "home" | "ranking" | "store" | "profile";

@@ -4,13 +4,13 @@ import {
   PayloadAction,
   PayloadActionCreator,
 } from "@reduxjs/toolkit";
-import { SignInFormData } from "../../types";
+import { NavTab, SignInFormData } from "../../types";
 import { Dispatch, SetStateAction } from "react";
 
 interface AppState {
   popup: boolean;
   modal: boolean;
-  overFlow: boolean;
+  navTab: string;
   keyboardHeight: number;
   safeArea: number[];
 }
@@ -18,9 +18,9 @@ interface AppState {
 const initialState: AppState = {
   popup: false,
   modal: false,
-  overFlow: false,
   keyboardHeight: 0,
   safeArea: [0, 0],
+  navTab: "home",
 };
 
 const appState = createSlice({
@@ -36,11 +36,12 @@ const appState = createSlice({
     editKeyboardHeight: (state, action: PayloadAction<number>) => {
       state.keyboardHeight = action.payload;
     },
-    setOverFlow: (state, action: PayloadAction<boolean>) => {
-      state.overFlow = action.payload;
-    },
     setSafeArea: (state, action: PayloadAction<number[]>) => {
       state.safeArea = [...action.payload];
+    },
+
+    setNavTab: (state, action: PayloadAction<string>) => {
+      state.navTab = action.payload;
     },
   },
 });
@@ -49,8 +50,8 @@ export const {
   showPopup,
   showModal,
   editKeyboardHeight,
-  setOverFlow,
   setSafeArea,
+  setNavTab,
 } = appState.actions;
 
 export default appState.reducer;

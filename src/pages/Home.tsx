@@ -1,29 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import HeaderHome from "../components/home/HeaderHome";
 import { Container } from "../styles";
+import { Pressable, View } from "../nativeView";
+import { imgSrc } from "../assets/img";
+import BigGameBtn from "../components/designs/BigGameBtn";
+import BottomNav from "../components/BottomNav";
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <Container style={{ position: "relative" }}>
+    <Container
+      style={{
+        position: "relative",
+        height: "100%",
+        justifyContent: "space-between",
+      }}
+    >
       <HeaderHome />
-      <div
-        onClick={() => {
-          navigate("/sign-in");
-        }}
-      >
-        로그인 요망
-      </div>
-      <div>gd</div> <div>gd</div>
-      <div>gd</div>
-      <div>gd</div>
-      <div>gd</div>
-      <div>gd</div>
-      <div>gd</div>
-      <div>gd</div>
-      <div>gd</div>
-      <div>gd</div>
+      <BigGameBtn />
+      <BottomNav />
     </Container>
   );
 };

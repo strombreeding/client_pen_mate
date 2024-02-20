@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { colors } from "../../styles";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import X_14 from "./14px/X_14";
 import { getTextWidth } from "../../utils/getFontWidth";
@@ -7,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { editKeyboardHeight } from "../../store/slices/appState";
 import { IOS, MOBILE } from "../../configs/device";
+import { colors } from "../../assets/colors";
 
 export const Pressable = styled.div<{
   state: "wrong" | "default";

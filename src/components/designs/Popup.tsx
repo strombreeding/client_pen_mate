@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { EmptyBox, Text, colors } from "../../styles";
+import { EmptyBox } from "../../styles";
 import PrimaryBtn from "./PrimaryBtn";
 import SecondaryBtn from "./SecondaryBtn";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { showPopup } from "../../store/slices/appState";
 import { SCREEN_HEIGHT } from "../../configs/device";
+import { Text } from "../../assets/fontStyles";
+import { colors } from "../../assets/colors";
 
 const Popup: React.FC<{
   title: string;
@@ -34,14 +36,17 @@ const Popup: React.FC<{
     <View show={state}>
       <div>
         <EmptyBox height={10} />
-        <Text.Title3>{title}</Text.Title3>
+        <Text.Esa_Bold_18>{title}</Text.Esa_Bold_18>
         <EmptyBox height={10} />
       </div>
       <div>
         <EmptyBox height={10} />
-        <Text.Subhead color={colors.Grey500} style={{ textAlign: "center" }}>
+        <Text.Esa_Bold_14
+          color={colors.Grey500}
+          style={{ textAlign: "center" }}
+        >
           {content}
-        </Text.Subhead>
+        </Text.Esa_Bold_14>
         <EmptyBox height={10} />
       </div>
       <EmptyBox height={20} />

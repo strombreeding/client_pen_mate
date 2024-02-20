@@ -7,8 +7,9 @@ import React, {
 } from "react";
 import * as utils from "../../../utils";
 import { asyncSleep } from "../../../utils/timer";
-import { Text } from "../../../styles";
+
 import { Card, RowBoard } from "./styledComponents";
+import { Text } from "../../../assets/fontStyles";
 
 const AiBoard: FC<{
   intAI: number;
@@ -63,9 +64,7 @@ const AiBoard: FC<{
     <div style={{ opacity: aiStatus ? 1 : 0 }}>
       <div>{settingStep === 4 ? "===============================" : ""}</div>
 
-      <Text.ChangwonDangamAsac>
-        {settingStep === 4 ? "AI" : ""}
-      </Text.ChangwonDangamAsac>
+      <Text.SemiBold_24>{settingStep === 4 ? "AI" : ""}</Text.SemiBold_24>
 
       {aiBoard.map((items, i) => {
         return (
@@ -77,7 +76,7 @@ const AiBoard: FC<{
                   clicked={false}
                   success={aiBoard[i][a] === 0 ? true : false}
                 >
-                  <Text.Caption1>{num}</Text.Caption1>
+                  <Text.Esa_Light_16>{num}</Text.Esa_Light_16>
                 </Card>
               );
             })}

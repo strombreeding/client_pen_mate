@@ -1,5 +1,18 @@
 export const imgSrc = {
-  bg: require("../assets/pngs/background.png"),
+  bg_login: require("../assets/pngs/backgroundStars.png"),
+  bg_viewport: require("../assets/pngs/backgroundImage.png"),
+
+  home_un: require("../assets/pngs/home_un.png"),
+  home_active: require("../assets/pngs/home_active.png"),
+  store_un: require("../assets/pngs/store_un.png"),
+  store_active: require("../assets/pngs/store_active.png"),
+  ranking_un: require("../assets/pngs/ranking_un.png"),
+  ranking_active: require("../assets/pngs/ranking_active.png"),
+  profile_un: require("../assets/pngs/profile_un.png"),
+  profile_active: require("../assets/pngs/profile_active.png"),
+
+  polygon_big_ko: require("../assets/pngs/polygon_ko.png"),
+  polygon_big_en: require("../assets/pngs/polygon_en.png"),
 
   apple: require("../assets/pngs/apple.png"),
   kakao: require("../assets/pngs/kakao.png"),
@@ -7,8 +20,6 @@ export const imgSrc = {
 
   women: require("../assets/pngs/women.png"),
   men: require("../assets/pngs/men.png"),
-  /* 3d */
-  ink: require("../assets/pngs/3d/ink.png"),
 
   /* 30px */
   /* 바텀 네비 아이콘 */

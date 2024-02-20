@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
 import { Card, RowBoard } from "./styledComponents";
-import { Text } from "../../../styles";
 import * as utils from "../../../utils";
+import { Text } from "../../../assets/fontStyles";
 
 const UserBoard: FC<{
   board: number[][];
@@ -105,7 +105,7 @@ const UserBoard: FC<{
                     clickCard(clicked, i, a);
                   }}
                 >
-                  <Text.Caption1>{num}</Text.Caption1>
+                  <Text.Esa_Light_16>{num}</Text.Esa_Light_16>
                 </Card>
               );
             })}
