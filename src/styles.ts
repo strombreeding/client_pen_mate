@@ -58,7 +58,7 @@ table {
 * {
   overflow: hidden;
   overscroll-behavior: none;
-  /* overflow-y: unset; */
+  overflow-y: unset;
   /* overflow-y: ${(props) => (props.canScroll ? "unset" : "hidden")}; */
   box-sizing: border-box;
   user-select: none; /* 표준 속성 */

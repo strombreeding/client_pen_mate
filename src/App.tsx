@@ -126,7 +126,7 @@ const Background = styled.div`
   position: relative;
   width: ${isMobile ? "100%" : "10%"};
   min-width: 360px;
-  height: 100vh;
+  height: 100%;
   background: linear-gradient(180deg, #000000 22.92%, #3500a6 100%);
 `;
 export default App;
