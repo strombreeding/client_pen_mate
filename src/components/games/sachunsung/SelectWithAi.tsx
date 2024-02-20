@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, type FC } from "react";
 import type { SachunsungGameSetting } from "../../../types";
+import { Text } from "../../../assets/fontStyles";
 
 const WithAiBot: FC<{
   setGameSetting: Dispatch<SetStateAction<SachunsungGameSetting>>;
@@ -7,9 +8,9 @@ const WithAiBot: FC<{
 }> = ({ setGameSetting, setSettingStep }) => {
   return (
     <>
-      <div>YOU vs AI</div>
+      <Text.Esa_Bold_12>YOU vs AI</Text.Esa_Bold_12>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <div
+        <Text.Esa_Bold_12
           style={{ margin: 20 }}
           onClick={(e) => {
             setGameSetting((prev) => ({
@@ -20,8 +21,8 @@ const WithAiBot: FC<{
           }}
         >
           Do Fight!{" "}
-        </div>
-        <div
+        </Text.Esa_Bold_12>
+        <Text.Esa_Bold_12
           style={{ margin: 20 }}
           onClick={(e) => {
             setGameSetting((prev) => ({
@@ -33,7 +34,7 @@ const WithAiBot: FC<{
         >
           {" "}
           Im Chicken
-        </div>
+        </Text.Esa_Bold_12>
       </div>
     </>
   );

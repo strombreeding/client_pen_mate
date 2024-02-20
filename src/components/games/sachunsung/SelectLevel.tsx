@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, type FC } from "react";
 import { SachunsungGameSetting, gamelevel } from "../../../types";
+import { Text } from "../../../assets/fontStyles";
 
 const SelectLevel: FC<{
   setGameSetting: Dispatch<SetStateAction<SachunsungGameSetting>>;
@@ -8,9 +9,9 @@ const SelectLevel: FC<{
   return (
     <div>
       <>
-        <div>난이도</div>
+        <Text.Esa_Bold_16>난이도</Text.Esa_Bold_16>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div
+          <Text.Esa_Bold_12
             style={{ margin: 20 }}
             onClick={(e) => {
               setGameSetting((prev) => ({
@@ -21,8 +22,8 @@ const SelectLevel: FC<{
             }}
           >
             BEGINNER{" "}
-          </div>
-          <div
+          </Text.Esa_Bold_12>
+          <Text.Esa_Bold_12
             style={{ margin: 20 }}
             onClick={(e) => {
               setGameSetting((prev) => ({
@@ -34,10 +35,10 @@ const SelectLevel: FC<{
           >
             {" "}
             FRESHMAN
-          </div>
+          </Text.Esa_Bold_12>
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div
+          <Text.Esa_Bold_12
             style={{ margin: 20 }}
             onClick={(e) => {
               setGameSetting((prev) => ({
@@ -48,8 +49,8 @@ const SelectLevel: FC<{
             }}
           >
             SOPHOMORE{" "}
-          </div>
-          <div
+          </Text.Esa_Bold_12>
+          <Text.Esa_Bold_12
             style={{ margin: 20 }}
             onClick={(e) => {
               setGameSetting((prev) => ({
@@ -61,10 +62,10 @@ const SelectLevel: FC<{
           >
             {" "}
             JUNIOR
-          </div>
+          </Text.Esa_Bold_12>
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div
+          <Text.Esa_Bold_12
             style={{ margin: 20 }}
             onClick={(e) => {
               setGameSetting((prev) => ({
@@ -75,8 +76,8 @@ const SelectLevel: FC<{
             }}
           >
             SENIOR{" "}
-          </div>
-          <div
+          </Text.Esa_Bold_12>
+          <Text.Esa_Bold_12
             style={{ margin: 20 }}
             onClick={(e) => {
               setGameSetting((prev) => ({ ...prev, level: gamelevel.HARD }));
@@ -85,7 +86,7 @@ const SelectLevel: FC<{
           >
             {" "}
             HARD
-          </div>
+          </Text.Esa_Bold_12>
         </div>
       </>
     </div>
