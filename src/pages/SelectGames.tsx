@@ -6,103 +6,97 @@ import GameCard from "../components/designs/Card";
 import { imgSrc } from "../assets/img";
 import { SCREEN_WIDTH } from "../configs/device";
 
+const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
 
 const SelectGames = () => {
-  const games = [
-    { title: "뱅", regDate: "어제", img: imgSrc.apple },
-    { title: "사천성", regDate: "오늘", img: imgSrc.apple },
+  const [games, setGames] = useState([
     { title: "테트리스", regDate: "그저께", img: imgSrc.apple },
     { title: "뱅", regDate: "어제", img: imgSrc.apple },
+    { title: "사천성+", regDate: "오늘", img: imgSrc.apple },
+    { title: "테트리스", regDate: "그저께", img: imgSrc.apple },
     { title: "뱅", regDate: "어제", img: imgSrc.apple },
-    { title: "뱅", regDate: "어제", img: imgSrc.apple },
-    { title: "뱅", regDate: "어제", img: imgSrc.apple },
-    { title: "뱅", regDate: "어제", img: imgSrc.apple },
-    { title: "뱅", regDate: "어제", img: imgSrc.apple },
-    { title: "뱅", regDate: "어제", img: imgSrc.apple },
-  ];
-  const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
+  ]);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const selectIdx = 2;
 
   useEffect(() => {
     // 컴포넌트가 마운트된 후에 초기 스크롤 위치를 설정합니다.
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft = initOffsetX;
+      scrollRef.current.scrollLeft = initOffsetX + caculMoveValue;
     }
   }, []);
 
-  const [direction, setDirection] = useState<"init" | "R" | "L">("init");
-  const [startX, setStartX] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  useEffect(() => {}, []);
-  useEffect(() => {
-    console.log("시작 또는 종료");
-    if (dragging) {
+  const infinityArr = (direction: "R" | "L") => {
+    const currentGame = { ...games[selectIdx] };
+    const newArr = [...games];
+    if (direction === "L") {
+      newArr.unshift(currentGame);
+    } else if (direction === "R") {
+      newArr.push(currentGame);
     }
-  }, [dragging]);
-  const dragRef = useRef(0);
-
-  const draging = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!scrollRef.current) return;
-    const currentX = e.touches[0].clientX;
-    const prevX = scrollRef.current.scrollLeft;
-    // if (currentX > startX) {
-    //   //크면 좌측 left 로 가야하니까 --
-    //   setX(prevX - 6);
-    // } else {
-    //   //우측  ++
-    //   setX(prevX + 6);
-    // }
-    console.log(scrollRef.current.scrollLeft);
+    setGames([...newArr]);
   };
-  // useEffect(() => {
-  //   if (!scrollRef.current) return;
-  //   scrollRef.current.scrollLeft = x;
-  // }, [x]);
+
+  // const [dragRef.current, setdragRef.current] = useState(0);
+  // const [dragging, setDragging] = useState(false);
+  const dragRef = useRef(0);
+  const draggingRef = useRef(false);
+  const directionRef = useRef<"R" | "L" | "Init">("Init");
+
   return (
     <Container>
-      <Text.Esa_Bold_12
-        onClick={() => {
-          console.log(startX);
-          if (!scrollRef.current) return;
-          scrollRef.current.scrollLeft = startX + 265;
-        }}
-      >
-        클릭ggg
-      </Text.Esa_Bold_12>
       <ScrollView
-        scrollDisenable={false}
         onTouchStart={(e) => {
-          setDragging(true);
-          setStartX(scrollRef.current!.scrollLeft);
+          console.log("스크롤 시작 ! ", scrollRef.current!.scrollLeft);
+          // setdragRef.current(scrollRef.current!.scrollLeft);
+          dragRef.current = scrollRef.current!.scrollLeft;
+          draggingRef.current = true;
         }}
         onTouchMove={(e) => {
+          if (!draggingRef.current) return;
+
           const currentX = scrollRef.current!.scrollLeft;
-          const min = startX - caculMoveValue + caculMoveValue / 2;
-          const max = startX + caculMoveValue - caculMoveValue / 2;
-          if (currentX <= min) {
-            setDragging(false);
-            setDirection("L");
+          // const min = dragRef.current - caculMoveValue + caculMoveValue - 40;
+          // const max = dragRef.current + caculMoveValue - caculMoveValue - 40;
+          console.log("이동한 값", dragRef.current - currentX);
+          if (dragRef.current - currentX >= 1) {
+            directionRef.current = "L";
+            // setSelectIdx(selectIdx - 1);
+            draggingRef.current = false;
             return;
-          } else if (currentX >= max) {
-            setDragging(false);
-            setDirection("R");
+          } else if ((dragRef.current - currentX) * -1 >= 1) {
+            directionRef.current = "R";
+            // setSelectIdx(selectIdx + 1);
+            draggingRef.current = false;
             return;
           } else {
+            directionRef.current = "Init";
+            // setSelectIdx(selectIdx);
+            // draggingRef.current = false;
+            return;
           }
-          console.log(`최소 ${min} 최대 ${max}`, "현재", currentX);
+
+          // if (currentX <= min) {
+          //   return;
+          // } else if (currentX >= max) {
+          //   return;
+          // }
+          // console.log(`최소 ${min} 최대 ${max}`, "현재", currentX);
         }}
         onTouchEnd={(e) => {
           const isRef = scrollRef.current;
+          console.log(selectIdx);
           if (!isRef) return;
-          if (direction === "R") {
-            const rightMove = startX + caculMoveValue;
-            isRef.scrollLeft = rightMove;
-          } else if (direction === "L") {
-            const leftMove = startX - caculMoveValue;
-            isRef.scrollLeft = leftMove;
+          if (directionRef.current === "R") {
+            isRef.scrollLeft = initOffsetX + caculMoveValue;
+          } else if (directionRef.current === "L") {
+            isRef.scrollLeft = initOffsetX + caculMoveValue;
+          } else {
+            isRef.scrollLeft = initOffsetX + caculMoveValue;
           }
-          setStartX(0);
+          dragRef.current = 0;
+          draggingRef.current = false;
         }}
         ref={scrollRef}
         horizontal
