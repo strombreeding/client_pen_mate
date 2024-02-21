@@ -1,6 +1,7 @@
 export const imgSrc = {
   bg_login: require("../assets/pngs/backgroundStars.png"),
   bg_viewport: require("../assets/pngs/backgroundImage.png"),
+  bg_game: require("../assets/pngs/bg_game.png"),
 
   home_un: require("../assets/pngs/home_un.png"),
   home_active: require("../assets/pngs/home_active.png"),

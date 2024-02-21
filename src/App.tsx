@@ -1,23 +1,16 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Routers from "./Router";
-import {
-  GlobalStyle,
-  FadeInPopup,
-  FadeOutPopup,
-  SafeArea,
-  EmptyBox,
-} from "./styles";
+import { GlobalStyle, SafeArea } from "./styles";
 import { SERVER_URI } from "./configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
-import { setSafeArea, showModal, showPopup } from "./store/slices/appState";
-import { IOS } from "./configs/device";
-import { isMobile } from "react-device-detect";
+import { setSafeArea, showModal } from "./store/slices/appState";
+import { IOS, MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
 import { Viewport } from "./nativeView";
 import { imgSrc } from "./assets/img";
-import BottomNav from "./components/BottomNav";
-
+import { colors } from "./assets/colors";
+import GameBg from "./components/designs/GameBG";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -45,37 +38,36 @@ function App() {
       dispatch(showModal(false));
     }, 300);
   };
-  useEffect(() => {
-    const handleTouchStart = (event: TouchEvent) => {
-      if (event.touches.length >= 2) {
-        event.preventDefault();
-      }
-    };
+  // useEffect(() => {
+  //   const handleTouchStart = (event: TouchEvent) => {
+  //     if (event.touches.length >= 2) {
+  //       event.preventDefault();
+  //     }
+  //   };
 
-    const handleTouchMove = (event: TouchEvent) => {
-      if (event.touches.length >= 2) {
-        event.preventDefault();
-      }
-    };
-    const containerElement = containerRef.current;
+  //   const handleTouchMove = (event: TouchEvent) => {
+  //     if (event.touches.length >= 2) {
+  //       event.preventDefault();
+  //     }
+  //   };
+  //   const containerElement = containerRef.current;
 
-    if (containerElement) {
-      containerElement.addEventListener("touchstart", handleTouchStart, {
-        passive: false,
-      });
-      containerElement.addEventListener("touchmove", handleTouchMove, {
-        passive: false,
-      });
-    }
+  //   if (containerElement) {
+  //     containerElement.addEventListener("touchstart", handleTouchStart, {
+  //       passive: false,
+  //     });
+  //     containerElement.addEventListener("touchmove", handleTouchMove, {
+  //       passive: false,
+  //     });
+  //   }
 
-    return () => {
-      if (containerElement) {
-        containerElement.removeEventListener("touchstart", handleTouchStart);
-        containerElement.removeEventListener("touchmove", handleTouchMove);
-      }
-    };
-  }, []);
-  useEffect(() => {}, []);
+  //   return () => {
+  //     if (containerElement) {
+  //       containerElement.removeEventListener("touchstart", handleTouchStart);
+  //       containerElement.removeEventListener("touchmove", handleTouchMove);
+  //     }
+  //   };
+  // }, []);
 
   const [req, setReq] = useState(0);
 
@@ -106,27 +98,37 @@ function App() {
     // return () =>
   }, []);
 
-  const canScroll = true;
-  // const canScroll = useSelector((state: RootState) => state.appState.overFlow);
-
+  const canScroll = false;
+  console.log(imgSrc.bg_game);
   return (
     <SafeArea safearea={safeArea}>
-      <Viewport bgUrl={imgSrc.bg_viewport}>
-        {/* {popupState && <BG onClick={() => console.log()} show={popupState} />} */}
-        {/* {popupState && <BG onClick={unShowPopup} show={popupState} />} */}
-        <Background>
-          <GlobalStyle canScroll={canScroll} />
-          <Routers />
-        </Background>
-      </Viewport>
+      <Viewport bgUrl={imgSrc.bg_viewport} />
+
+      <Background>
+        <GlobalStyle canScroll={canScroll} />
+        <Routers />
+      </Background>
     </SafeArea>
   );
 }
-const Background = styled.div`
-  position: relative;
-  width: ${isMobile ? "100%" : "10%"};
+
+/* 
+
+*/
+const Background = styled.div<{ bg?: any }>`
+  position: sticky;
+  top: 0;
+  display: flex;
+  width: ${MOBILE ? SCREEN_WIDTH + "px" : "20%"};
   min-width: 360px;
-  height: 100%;
-  background: linear-gradient(180deg, #000000 22.92%, #3500a6 100%);
+  max-width: 760px;
+  height: ${SCREEN_HEIGHT}px;
+  /* max-height: ${SCREEN_HEIGHT}px; */
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0) 22.92%,
+    rgba(53, 0, 166) 100%
+  );
 `;
+
 export default App;

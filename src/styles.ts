@@ -22,7 +22,7 @@ time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	/* font-size: 100%; */
+	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
 }
@@ -32,9 +32,7 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 html {
-  height: 100vh;
-  background-color: white;
-  /* background-color: #181a1b; */
+  background-color: #181a1b;
 }
 body {
 	line-height: 1;
@@ -56,10 +54,7 @@ table {
 	border-spacing: 0;
 }
 * {
-  overflow: hidden;
   overscroll-behavior: none;
-  overflow-y: unset;
-  /* overflow-y: ${(props) => (props.canScroll ? "unset" : "hidden")}; */
   box-sizing: border-box;
   user-select: none; /* 표준 속성 */
   -webkit-user-select: none; /* Safari */
@@ -75,6 +70,7 @@ table {
   ::-webkit-scrollbar {
     display: none;
   }
+  touch-action: manipulation; /* 더블 클릭에 의한 확대 방지 */
 }
 div {
   touch-action: manipulation; /* 더블 클릭에 의한 확대 방지 */
@@ -134,11 +130,12 @@ export const EmptyBox = styled.div<{ height?: number; width?: number }>`
 
 export const SafeArea = styled.div<{ safearea: number[] }>`
   display: flex;
-  width: ${SCREEN_WIDTH};
+  /* width: ${SCREEN_WIDTH}; */
+  max-height: ${SCREEN_HEIGHT};
   flex-direction: column;
   align-items: center;
   padding-top: ${(props) => props.safearea[0]}px;
   padding-bottom: ${(props) => props.safearea[1]}px;
-  background-color: white;
+  /* background-color: white; */
   /* background-color: #181a1b; */
 `;

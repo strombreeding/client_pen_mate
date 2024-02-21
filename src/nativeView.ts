@@ -1,32 +1,39 @@
 import styled from "styled-components";
+import React from "react";
+import { MOBILE } from "./configs/device";
 // import backgroundImage from "@/assets/pngs/backgroundImage.png";
+interface IScrollViewProps {
+  horizontal?: boolean;
+  direction?: "row" | "column";
+}
 
-export const View = styled.div`
+export const View = styled.div<{ direction?: "row" | "column" }>`
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
   position: relative;
+  flex-direction: ${(props) => (props.direction == null ? "column" : "row")};
 `;
 
-export const ScrollView = styled.div<{ horizontal: true }>`
+export const ScrollView = styled.div<IScrollViewProps>`
   position: relative;
   display: flex;
-  flex-direction: column;
-  overflow-y: ${(props) => (props.horizontal ? "hidden" : "auto")};
-  overflow-x: ${(props) => (props.horizontal ? "auto" : "hidden")};
+  flex-direction: ${(props) =>
+    props.horizontal == null || false ? "column" : "row"};
+  overflow-y: ${(props) =>
+    props.horizontal == null || false ? "auto" : "hidden"};
+  overflow-x: ${(props) =>
+    props.horizontal == null || false ? "hidden" : "auto"};
 `;
 
 export const Pressable = styled.div<{}>`
-  display: flex;
   flex-direction: column;
-  overflow: hidden;
+  display: flex;
   position: relative;
 `;
 
 export const Viewport = styled.div<{ bgUrl: any }>`
-  position: fixed;
+  position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -42,7 +42,6 @@ const Modal: React.FC<{
   const close = () => {
     setState(false);
     setTimeout(() => {
-      //   dispatch(setOverFlow(false));
       dispatch(showModal(false));
     }, 500);
   };

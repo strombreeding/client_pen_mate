@@ -6,7 +6,6 @@ export const MOBILE = isMobile;
 export const SCREEN_HEIGHT = window.innerHeight;
 export const SCREEN_WIDTH = window.innerWidth;
 
-// alert(SCREEN_HEIGHT);
 export const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 // const isAndroid = /Android/.test(navigator.userAgent);
 

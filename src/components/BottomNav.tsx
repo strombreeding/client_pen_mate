@@ -6,22 +6,24 @@ import { AppDispatch, RootState } from "../store/store";
 import { setNavTab } from "../store/slices/appState";
 import { NavTab } from "../types";
 import { useNavigate } from "react-router-dom";
+import { IOS } from "../configs/device";
 
 const Wrapper = styled.div`
   min-width: 360px;
+  width: 100%;
   position: relative;
   /* position: absolute; */
-  bottom: 0;
+  /* bottom: 0; */
   background: rgba(0, 0, 0, 0.2);
   background-blend-mode: overlay;
-  box-shadow: 0px -5px 30px rgba(41, 39, 130, 0.1),
-    inset 0px 1px 0.5px rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(40px);
+  box-shadow: 0px 10px 30px rgba(41, 39, 130, 0.1),
+    inset 0px 1.5px 0.5px rgba(255, 255, 255, 0.5);
+  /* backdrop-filter: blur(40px); */
   border-radius: 50px 50px 0px 0px;
 `;
 
 const IconWrapper = styled.div`
-  margin: 5% 5% 20% 5%;
+  margin: 5% 5% ${IOS ? 50 : 30}px 5%;
   width: 90%;
   height: 40%;
   /* background-color: #ffffff9b; */
