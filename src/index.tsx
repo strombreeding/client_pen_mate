@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { isMobile } from "react-device-detect";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import "./index.css";

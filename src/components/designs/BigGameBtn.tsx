@@ -3,13 +3,12 @@ import { imgSrc } from "../../assets/img";
 import { Pressable, View } from "../../nativeView";
 import styled, { keyframes } from "styled-components";
 import { BtnStatus } from "../../types";
-import { isMobile } from "react-device-detect";
-import { SCREEN_WIDTH } from "../../configs/device";
+import { MOBILE, SCREEN_WIDTH } from "../../configs/device";
 import { useNavigate } from "react-router-dom";
 
 const BtnContainer = styled.div<{ status: BtnStatus }>`
   transform: scale(${(props) => (props.status === "pressed" ? 1.03 : 1)});
-  ${!isMobile &&
+  ${!MOBILE &&
   `:hover {
       transform: scale(1.03);
     }`}
@@ -17,8 +16,8 @@ const BtnContainer = styled.div<{ status: BtnStatus }>`
   cursor: pointer;
 `;
 const Btn = styled.img`
-  width: calc(100% * 0.6666667);
-  height: calc(100% * 0.727777778);
+  width: ${SCREEN_WIDTH * 0.6666667}px;
+  height: ${SCREEN_WIDTH * 0.727777778}px;
   align-self: center;
 `;
 

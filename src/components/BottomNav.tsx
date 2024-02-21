@@ -6,14 +6,12 @@ import { AppDispatch, RootState } from "../store/store";
 import { setNavTab } from "../store/slices/appState";
 import { NavTab } from "../types";
 import { useNavigate } from "react-router-dom";
-import { IOS } from "../configs/device";
+import { IOS, SCREEN_WIDTH } from "../configs/device";
 
 const Wrapper = styled.div`
   min-width: 360px;
-  width: 100%;
+  width: ${SCREEN_WIDTH}px;
   position: relative;
-  /* position: absolute; */
-  /* bottom: 0; */
   background: rgba(0, 0, 0, 0.2);
   background-blend-mode: overlay;
   box-shadow: 0px 10px 30px rgba(41, 39, 130, 0.1),

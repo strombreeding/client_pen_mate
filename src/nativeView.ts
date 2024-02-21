@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import React from "react";
-import { MOBILE } from "./configs/device";
 // import backgroundImage from "@/assets/pngs/backgroundImage.png";
 interface IScrollViewProps {
   horizontal?: boolean;
-  direction?: "row" | "column";
+  scrollDisenable?: boolean;
 }
 
 export const View = styled.div<{ direction?: "row" | "column" }>`
@@ -18,10 +17,15 @@ export const ScrollView = styled.div<IScrollViewProps>`
   display: flex;
   flex-direction: ${(props) =>
     props.horizontal == null || false ? "column" : "row"};
+
   overflow-y: ${(props) =>
     props.horizontal == null || false ? "auto" : "hidden"};
   overflow-x: ${(props) =>
     props.horizontal == null || false ? "hidden" : "auto"};
+
+  ${(props) => props.scrollDisenable == true && `overflow:hidden;`}
+  scroll-snap-type-x: mandatory; // 딱딱 끊어지게 움직이도록 설정
+  scroll-behavior: smooth;
 `;
 
 export const Pressable = styled.div<{}>`

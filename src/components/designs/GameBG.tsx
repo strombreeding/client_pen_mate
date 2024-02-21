@@ -8,7 +8,7 @@ const LinearBackground = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: ${MOBILE ? SCREEN_WIDTH + "px" : "20%"};
+  width: ${SCREEN_WIDTH + "px"};
   min-width: 360px;
   max-width: 760px;
   height: ${SCREEN_HEIGHT}px;

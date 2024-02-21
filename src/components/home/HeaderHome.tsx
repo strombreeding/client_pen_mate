@@ -1,18 +1,17 @@
 import styled from "styled-components";
 import { EmptyBox } from "../../styles";
 import { imgSrc } from "../../assets/img";
-import Bell26 from "../designs/26px/Bell_26";
-import Dm_26 from "../designs/26px/Dm_26";
 import { Fragment } from "react";
 import { Text } from "../../assets/fontStyles";
+import { View } from "../../nativeView";
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 15px 30px 15px 30px;
+  padding: 0px 20px 0px 20px;
   justify-content: space-between;
   align-items: center;
-  min-height: 64px;
+  min-height: 44px;
   width: 100%;
 `;
 export const RowView = styled.div`
@@ -21,13 +20,20 @@ export const RowView = styled.div`
 `;
 
 const HeaderHome = () => {
+  const point = 1004;
   return (
     <Header>
-      <Text.Esa_Bold_16>홈</Text.Esa_Bold_16>
+      <View>
+        <Text.Esa_Bold_16>esaynee_</Text.Esa_Bold_16>
+        <EmptyBox height={4} />
+        <View style={{ flexDirection: "row" }}>
+          <img src={imgSrc.atata_point} style={{ width: 12, height: 15 }} />
+          <EmptyBox width={5} />
+          <Text.Esa_Medium_16>{point}p</Text.Esa_Medium_16>
+        </View>
+      </View>
       <RowView>
-        <Bell26 />
         <EmptyBox width={20} />
-        <Dm_26 />
       </RowView>
     </Header>
   );

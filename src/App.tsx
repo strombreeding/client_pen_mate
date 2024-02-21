@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
 import { setSafeArea, showModal } from "./store/slices/appState";
-import { IOS, MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
+import { IOS, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
 import { Viewport } from "./nativeView";
 import { imgSrc } from "./assets/img";
 import { colors } from "./assets/colors";
@@ -119,8 +119,7 @@ const Background = styled.div<{ bg?: any }>`
   position: sticky;
   top: 0;
   display: flex;
-  width: ${MOBILE ? SCREEN_WIDTH + "px" : "20%"};
-  min-width: 360px;
+  width: ${SCREEN_WIDTH}px;
   max-width: 760px;
   height: ${SCREEN_HEIGHT}px;
   /* max-height: ${SCREEN_HEIGHT}px; */

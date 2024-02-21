@@ -1,7 +1,5 @@
 import styled, { createGlobalStyle, keyframes } from "styled-components";
-import { MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
-import { useSelector } from "react-redux";
-import { RootState } from "./store/store";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
 
 export const GlobalStyle = createGlobalStyle<{ canScroll: boolean }>`
 
@@ -115,7 +113,7 @@ export const FadeOutPopup = keyframes`
 `;
 
 export const Container = styled.div`
-  width: 100%;
+  width: ${SCREEN_WIDTH}px;
   flex-direction: column;
   align-items: center;
   display: flex;
@@ -130,7 +128,6 @@ export const EmptyBox = styled.div<{ height?: number; width?: number }>`
 
 export const SafeArea = styled.div<{ safearea: number[] }>`
   display: flex;
-  /* width: ${SCREEN_WIDTH}; */
   max-height: ${SCREEN_HEIGHT};
   flex-direction: column;
   align-items: center;

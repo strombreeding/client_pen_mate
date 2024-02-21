@@ -1,5 +1,3 @@
-import { isMobile } from "react-device-detect";
-
 export const SERVER_URI =
   process.env.REACT_APP_SERVER_URI == undefined
     ? // ? "http://localhost:8080/"

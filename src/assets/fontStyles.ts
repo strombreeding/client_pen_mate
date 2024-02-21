@@ -1,25 +1,60 @@
 import styled from "styled-components";
 
-const SpoqaHanSansNeoBold = styled.div`
+const SpoqaHanSansNeoBold = styled.div<{ numOf2Lines?: boolean }>`
   font-family: "SpoqaHanSansNeoBold";
+  ${(props) =>
+    props.numOf2Lines != null &&
+    `white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; `}
 `;
-const SpoqaHanSansNeoLight = styled.div`
+const SpoqaHanSansNeoLight = styled.div<{ numOf2Lines?: boolean }>`
   font-family: "SpoqaHanSansNeoLight";
+  ${(props) =>
+    props.numOf2Lines != null &&
+    `white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; `}
 `;
-const SpoqaHanSansNeoMedium = styled.div`
+const SpoqaHanSansNeoMedium = styled.div<{ numOf2Lines?: boolean }>`
   font-family: "SpoqaHanSansNeoMedium";
+  ${(props) =>
+    props.numOf2Lines != null &&
+    `white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; `}
 `;
-const SpoqaHanSansNeoRegular = styled.div`
+const SpoqaHanSansNeoRegular = styled.div<{ numOf2Lines?: boolean }>`
   font-family: "SpoqaHanSansNeoRegular";
+  ${(props) =>
+    props.numOf2Lines != null &&
+    `white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; `}
 `;
-const esamanruBold = styled.div`
+const esamanruBold = styled.div<{ numOf2Lines?: boolean }>`
   font-family: "esamanruBold";
+  ${(props) =>
+    props.numOf2Lines != null &&
+    `white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; `}
 `;
-const esamanru = styled.div`
+const esamanru = styled.div<{ numOf2Lines?: boolean }>`
   font-family: "esamanru";
+  ${(props) =>
+    props.numOf2Lines != null &&
+    `white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; `}
 `;
-const esamanruLight = styled.div`
+const esamanruLight = styled.div<{ numOf2Lines?: boolean }>`
   font-family: "esamanruLight";
+  ${(props) =>
+    props.numOf2Lines != null &&
+    `white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; `}
 `;
 
 export const Text = {
