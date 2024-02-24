@@ -20,5 +20,11 @@ export const colors = {
   Blue500: "#638DFF",
   Blue600: "#4D73FF",
   Blue700: "#2F59CC",
-  BackGround1: "linear-gradient(180deg, #000000 22.92%, #3500a6 100%)",
+  BackGround1: "linear-gradient(180deg, #000000 22.92%, #3500a6 100%);",
+  Background2: "#0E0328",
+  Main_Button1: "#3150FE",
+  Accent: "#8FFF00",
+
+  Pale_Puple: "#452A7C",
+  Gray_1: "#C1C1C1",
 };

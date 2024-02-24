@@ -24,8 +24,6 @@ export const ScrollView = styled.div<IScrollViewProps>`
     props.horizontal == null || false ? "hidden" : "auto"};
 
   ${(props) => props.scrollDisenable == true && `overflow:hidden;`}
-  scroll-snap-type-x: mandatory; // 딱딱 끊어지게 움직이도록 설정
-  scroll-behavior: smooth;
 `;
 
 export const Pressable = styled.div<{}>`
