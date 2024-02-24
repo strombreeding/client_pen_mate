@@ -58,103 +58,114 @@ const esamanruLight = styled.div<{ numOf2Lines?: boolean }>`
 `;
 
 export const Text = {
-  SemiBold_32: styled(SpoqaHanSansNeoBold)`
+  SemiBold_32: styled(esamanruBold)<{ color?: string }>`
     font-size: 32px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  SemiBold_24: styled(SpoqaHanSansNeoBold)`
+  SemiBold_24: styled(esamanruBold)<{ color?: string }>`
     font-size: 24px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  SemiBold_20: styled(SpoqaHanSansNeoBold)`
+  SemiBold_20: styled(esamanruBold)<{ color?: string }>`
     font-size: 20px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Regular_32: styled(SpoqaHanSansNeoRegular)`
+  Regular_32: styled(esamanru)<{ color?: string }>`
     font-size: 32px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Regular_24: styled(SpoqaHanSansNeoRegular)`
+  Regular_24: styled(esamanru)<{ color?: string }>`
     font-size: 24px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Regular_20: styled(SpoqaHanSansNeoRegular)`
+  Regular_20: styled(esamanru)<{ color?: string }>`
     font-size: 20px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Light_32: styled(SpoqaHanSansNeoLight)`
+  Light_32: styled(esamanruLight)<{ color?: string }>`
     font-size: 32px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Light_24: styled(SpoqaHanSansNeoLight)`
+  Light_24: styled(esamanruLight)<{ color?: string }>`
     font-size: 24px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Light_20: styled(SpoqaHanSansNeoLight)`
+  Light_20: styled(esamanruLight)<{ color?: string }>`
     font-size: 20px;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
 
-  Esa_Bold_20: styled(esamanruBold)`
+  Spo_Regular_20: styled(esamanru)<{ color?: string }>`
     font-size: 20;
-    color: white;
-  `,
-  Esa_Bold_18: styled(esamanruBold)`
-    font-size: 18;
-    color: white;
-  `,
-  Esa_Bold_16: styled(esamanruBold)`
-    font-size: 16;
-    color: white;
-  `,
-  Esa_Bold_14: styled(esamanruBold)`
-    font-size: 14;
-    color: white;
-  `,
-  Esa_Bold_12: styled(esamanruBold)`
-    font-size: 12;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
 
-  Esa_Medium_20: styled(esamanru)`
-    font-size: 20;
-    color: white;
-  `,
-  Esa_Medium_18: styled(esamanru)`
+  Spo_Regular_18: styled(esamanru)<{ color?: string }>`
     font-size: 18;
-    color: white;
-  `,
-  Esa_Medium_16: styled(esamanru)`
-    font-size: 16;
-    color: white;
-  `,
-  Esa_Medium_14: styled(esamanru)`
-    font-size: 14;
-    color: white;
-  `,
-  Esa_Medium_12: styled(esamanru)`
-    font-size: 12;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
 
-  Esa_Light_20: styled(esamanruLight)`
-    font-size: 20;
-    color: white;
-  `,
-  Esa_Light_18: styled(esamanruLight)`
-    font-size: 18;
-    color: white;
-  `,
-  Esa_Light_16: styled(esamanruLight)`
+  Spo_Regular_16: styled(esamanru)<{ color?: string }>`
     font-size: 16;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Esa_Light_14: styled(esamanruLight)`
+  Spo_Regular_14: styled(esamanru)<{ color?: string }>`
     font-size: 14;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
-  Esa_Light_12: styled(esamanruLight)`
+
+  Spo_Regular_12: styled(esamanru)<{ color?: string }>`
     font-size: 12;
-    color: white;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Medium_20: styled(SpoqaHanSansNeoMedium)<{ color?: string }>`
+    font-size: 20;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Medium_18: styled(SpoqaHanSansNeoMedium)<{ color?: string }>`
+    font-size: 18;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Medium_16: styled(SpoqaHanSansNeoMedium)<{ color?: string }>`
+    font-size: 16;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Medium_14: styled(SpoqaHanSansNeoMedium)<{ color?: string }>`
+    font-size: 14;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Medium_12: styled(SpoqaHanSansNeoMedium)<{ color?: string }>`
+    font-size: 12;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Light_20: styled(esamanruLight)<{ color?: string }>`
+    font-size: 20;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Light_18: styled(esamanruLight)<{ color?: string }>`
+    font-size: 18;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Light_16: styled(esamanruLight)<{ color?: string }>`
+    font-size: 16;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Light_14: styled(esamanruLight)<{ color?: string }>`
+    font-size: 14;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+
+  Spo_Light_12: styled(esamanruLight)<{ color?: string }>`
+    font-size: 12;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
 };

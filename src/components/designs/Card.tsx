@@ -69,11 +69,11 @@ const GameCard: React.FC<{ img: any; title: string; anythings?: any }> = ({
 
       <View style={{ justifyContent: "space-between", height: "100%" }}>
         <View>
-          <Text.Esa_Medium_14>{title}</Text.Esa_Medium_14>
+          <Text.Spo_Medium_14>{title}</Text.Spo_Medium_14>
         </View>
 
         <View>
-          <Text.Esa_Medium_14>안녕</Text.Esa_Medium_14>
+          <Text.Spo_Medium_14>안녕</Text.Spo_Medium_14>
         </View>
       </View>
     </CardLayer>

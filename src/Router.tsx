@@ -17,6 +17,7 @@ import PublicPage from "./routes/PublicPage";
 import Home from "./pages/Home";
 import SaChunSung from "./pages/SaChunSung";
 import SelectGames from "./pages/SelectGames";
+import Join from "./pages/Join";
 
 const Routers: React.FC = () => {
   useDisablePinchZoom();
@@ -24,11 +25,12 @@ const Routers: React.FC = () => {
     <BrowserRouter>
       <Routes>
         {/* 바텀네비스택 */}
+
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
         <Route path="/ranking" element={<Home />} />
         <Route path="/store" element={<Home />} />
-        <Route path="/profile" element={<Home />} />
+        <Route path="/profile" element={<Join />} />
+        <Route path="/join" element={<Join />} />
         {/* <Route element={<PublicPage />}> */}
         {/* <Route path="/edit-avatar" element={<EditAvatar />} /> */}
         <Route path="/social/kakao" element={<SocialTerminel />} />

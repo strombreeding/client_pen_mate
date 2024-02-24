@@ -42,39 +42,41 @@ const BottomNav = () => {
   const navigation = useNavigate();
   const navTab = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const type = e.currentTarget.id;
-    navigation("/" + type);
+    navigation(type);
     dispatch(setNavTab(type));
   };
 
   return (
     <Wrapper>
       <IconWrapper>
-        <Pressable id="home" onClick={navTab}>
+        <Pressable id="/" onClick={navTab}>
           <NavIcon
-            src={currentTab === "home" ? imgSrc.home_active : imgSrc.home_un}
+            src={currentTab === "/" ? imgSrc.home_active : imgSrc.home_un}
             alt=""
           />
         </Pressable>
-        <Pressable id="ranking" onClick={navTab}>
+        <Pressable id="/ranking" onClick={navTab}>
           <NavIcon
             src={
-              currentTab === "ranking"
+              currentTab === "/ranking"
                 ? imgSrc.ranking_active
                 : imgSrc.ranking_un
             }
             alt=""
           />
         </Pressable>
-        <Pressable id="store" onClick={navTab}>
+        <Pressable id="/store" onClick={navTab}>
           <NavIcon
-            src={currentTab === "store" ? imgSrc.store_active : imgSrc.store_un}
+            src={
+              currentTab === "/store" ? imgSrc.store_active : imgSrc.store_un
+            }
             alt=""
           />
         </Pressable>
-        <Pressable id="profile" onClick={navTab}>
+        <Pressable id="/profile" onClick={navTab}>
           <NavIcon
             src={
-              currentTab === "profile"
+              currentTab === "/profile"
                 ? imgSrc.profile_active
                 : imgSrc.profile_un
             }

@@ -8,9 +8,9 @@ const WithAiBot: FC<{
 }> = ({ setGameSetting, setSettingStep }) => {
   return (
     <>
-      <Text.Esa_Bold_12>YOU vs AI</Text.Esa_Bold_12>
+      <Text.Spo_Medium_12>YOU vs AI</Text.Spo_Medium_12>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <Text.Esa_Bold_12
+        <Text.Spo_Medium_12
           style={{ margin: 20 }}
           onClick={(e) => {
             setGameSetting((prev) => ({
@@ -21,8 +21,8 @@ const WithAiBot: FC<{
           }}
         >
           Do Fight!{" "}
-        </Text.Esa_Bold_12>
-        <Text.Esa_Bold_12
+        </Text.Spo_Medium_12>
+        <Text.Spo_Medium_12
           style={{ margin: 20 }}
           onClick={(e) => {
             setGameSetting((prev) => ({
@@ -34,7 +34,7 @@ const WithAiBot: FC<{
         >
           {" "}
           Im Chicken
-        </Text.Esa_Bold_12>
+        </Text.Spo_Medium_12>
       </div>
     </>
   );

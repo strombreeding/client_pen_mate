@@ -76,7 +76,9 @@ const SecondaryBtn: React.FC<{
             onMouseUp={setEnd}
             status={status}
           >
-            <Text.Esa_Bold_18 color={colors.Grey1100}>{text}</Text.Esa_Bold_18>
+            <Text.Spo_Medium_18 color={colors.Grey1100}>
+              {text}
+            </Text.Spo_Medium_18>
           </LayOut>
         </BtnContainer>
       ) : (
@@ -90,7 +92,9 @@ const SecondaryBtn: React.FC<{
           onMouseUp={setEnd}
           status={status}
         >
-          <Text.Esa_Bold_18 color={colors.Grey1100}>{text}</Text.Esa_Bold_18>
+          <Text.Spo_Medium_18 color={colors.Grey1100}>
+            {text}
+          </Text.Spo_Medium_18>
         </LayOut>
       )}
     </>

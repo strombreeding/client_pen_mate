@@ -76,7 +76,7 @@ const AiBoard: FC<{
                   clicked={false}
                   success={aiBoard[i][a] === 0 ? true : false}
                 >
-                  <Text.Esa_Light_16>{num}</Text.Esa_Light_16>
+                  <Text.Spo_Light_16>{num}</Text.Spo_Light_16>
                 </Card>
               );
             })}

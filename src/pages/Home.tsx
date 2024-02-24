@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import HeaderHome from "../components/home/HeaderHome";
 import { Container } from "../styles";
 import { Pressable, View } from "../nativeView";
@@ -8,7 +8,6 @@ import BottomNav from "../components/BottomNav";
 
 const Home = () => {
   const navigate = useNavigate();
-
   return (
     <Container
       style={{

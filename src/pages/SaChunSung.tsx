@@ -131,10 +131,10 @@ const SaChunSung = () => {
             }, 4600);
           }}
         >
-          <Text.Esa_Bold_20>{isStarting}</Text.Esa_Bold_20>
+          <Text.Spo_Medium_20>{isStarting}</Text.Spo_Medium_20>
         </div>
       )}
-      <Text.Esa_Bold_20>{settingStep === 4 ? "YOU" : ""}</Text.Esa_Bold_20>
+      <Text.Spo_Medium_20>{settingStep === 4 ? "YOU" : ""}</Text.Spo_Medium_20>
       <UserBoard
         board={board}
         setBoard={setBoard}

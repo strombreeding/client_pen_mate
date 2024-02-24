@@ -100,18 +100,18 @@ const Modal: React.FC<{
 
         <EmptyBox height={10} />
         <div>
-          <Text.Esa_Bold_18>{title}</Text.Esa_Bold_18>
+          <Text.Spo_Medium_18>{title}</Text.Spo_Medium_18>
         </div>
 
         <EmptyBox height={20} />
 
         <div>
-          <Text.Esa_Bold_14
+          <Text.Spo_Medium_14
             color={colors.Grey500}
             style={{ textAlign: "center" }}
           >
             {content}
-          </Text.Esa_Bold_14>
+          </Text.Spo_Medium_14>
         </div>
 
         <EmptyBox height={40} />

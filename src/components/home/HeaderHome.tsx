@@ -24,12 +24,12 @@ const HeaderHome = () => {
   return (
     <Header>
       <View>
-        <Text.Esa_Bold_16>esaynee_</Text.Esa_Bold_16>
+        <Text.Spo_Medium_16>esaynee_</Text.Spo_Medium_16>
         <EmptyBox height={4} />
         <View style={{ flexDirection: "row" }}>
           <img src={imgSrc.atata_point} style={{ width: 12, height: 15 }} />
           <EmptyBox width={5} />
-          <Text.Esa_Medium_16>{point}p</Text.Esa_Medium_16>
+          <Text.Spo_Medium_16>{point}p</Text.Spo_Medium_16>
         </View>
       </View>
       <RowView>

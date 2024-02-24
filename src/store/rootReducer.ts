@@ -8,7 +8,7 @@ import appReducer from "./slices/appState";
 const rootReducer = combineReducers({
   appState: appReducer,
   userState: userReducer,
-  visted: visitedPageReducer,
+  visitedPage: visitedPageReducer,
   sighUp: signUpReducer,
   // 추가적인 리듀서들이 있다면 여기에 추가
 });

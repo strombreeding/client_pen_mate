@@ -3,6 +3,8 @@ export const imgSrc = {
   bg_viewport: require("../assets/pngs/backgroundImage.png"),
   bg_game: require("../assets/pngs/bg_game.png"),
 
+  atata_join: require("../assets/pngs/atata_join.png"),
+
   atata_point: require("../assets/pngs/atata_point.png"),
   atata_un: require("../assets/pngs/atata_un.png"),
   atata_atcive: require("../assets/pngs/atata_active.png"),

@@ -74,7 +74,7 @@ const PrimaryBtn: React.FC<{
             onMouseUp={setEnd}
             status={status}
           >
-            <Text.Esa_Bold_18 color="white">{text}</Text.Esa_Bold_18>
+            <Text.Spo_Medium_18 color="white">{text}</Text.Spo_Medium_18>
           </LayOut>
         </BtnContainer>
       ) : (
@@ -88,7 +88,7 @@ const PrimaryBtn: React.FC<{
           onMouseUp={setEnd}
           status={status}
         >
-          <Text.Esa_Bold_18 color="white">{text}</Text.Esa_Bold_18>
+          <Text.Spo_Medium_18 color="white">{text}</Text.Spo_Medium_18>
         </LayOut>
       )}
     </>

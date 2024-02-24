@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import Routers from "./Router";
-import { GlobalStyle, SafeArea } from "./styles";
+import { EmptyBox, GlobalStyle, SafeArea } from "./styles";
 import { SERVER_URI } from "./configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
 import { setSafeArea, showModal } from "./store/slices/appState";
 import { IOS, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
-import { Viewport } from "./nativeView";
+import { View, Viewport } from "./nativeView";
 import { imgSrc } from "./assets/img";
 import { colors } from "./assets/colors";
 import GameBg from "./components/designs/GameBG";
@@ -33,43 +33,6 @@ function App() {
   console.log(window.innerHeight);
 
   const dispatch = useDispatch<AppDispatch>();
-  const unShowPopup = () => {
-    setTimeout(() => {
-      dispatch(showModal(false));
-    }, 300);
-  };
-  // useEffect(() => {
-  //   const handleTouchStart = (event: TouchEvent) => {
-  //     if (event.touches.length >= 2) {
-  //       event.preventDefault();
-  //     }
-  //   };
-
-  //   const handleTouchMove = (event: TouchEvent) => {
-  //     if (event.touches.length >= 2) {
-  //       event.preventDefault();
-  //     }
-  //   };
-  //   const containerElement = containerRef.current;
-
-  //   if (containerElement) {
-  //     containerElement.addEventListener("touchstart", handleTouchStart, {
-  //       passive: false,
-  //     });
-  //     containerElement.addEventListener("touchmove", handleTouchMove, {
-  //       passive: false,
-  //     });
-  //   }
-
-  //   return () => {
-  //     if (containerElement) {
-  //       containerElement.removeEventListener("touchstart", handleTouchStart);
-  //       containerElement.removeEventListener("touchmove", handleTouchMove);
-  //     }
-  //   };
-  // }, []);
-
-  const [req, setReq] = useState(0);
 
   useEffect(() => {
     const readDataFromReactNative = (event: MessageEvent<string>) => {
@@ -98,22 +61,51 @@ function App() {
     // return () =>
   }, []);
 
+  useEffect(() => {
+    const consoles = () => {
+      console.log("바뀐 path", window.location.pathname);
+    };
+    window.addEventListener("popstate", consoles);
+
+    return () => window.removeEventListener("popstate", consoles);
+  }, []);
+
   const canScroll = false;
   console.log(imgSrc.bg_game);
   return (
-    <SafeArea safearea={safeArea}>
+    <SafeAreaView>
+      {/* <SafeArea safearea={safeArea}> */}
+
       <Viewport bgUrl={imgSrc.bg_viewport} />
 
       <Background>
         <GlobalStyle canScroll={canScroll} />
         <Routers />
       </Background>
-    </SafeArea>
+    </SafeAreaView>
   );
 }
 
-/* 
+const SafeAreaView: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
 
+  return (
+    <View
+      style={{
+        height: SCREEN_HEIGHT + safeArea[0] + safeArea[1],
+      }}
+    >
+      {/* <EmptyBox height={safeArea[0]} /> */}
+      {children}
+      {/* <EmptyBox height={safeArea[1]} /> */}
+    </View>
+  );
+};
+
+/* 
+const 
 */
 const Background = styled.div<{ bg?: any }>`
   position: sticky;

@@ -10,9 +10,9 @@ import { Dispatch, SetStateAction } from "react";
 interface AppState {
   popup: boolean;
   modal: boolean;
-  navTab: string;
   keyboardHeight: number;
   safeArea: number[];
+  navTab: string;
 }
 
 const initialState: AppState = {
@@ -20,7 +20,7 @@ const initialState: AppState = {
   modal: false,
   keyboardHeight: 0,
   safeArea: [0, 0],
-  navTab: "home",
+  navTab: window.location.pathname,
 };
 
 const appState = createSlice({

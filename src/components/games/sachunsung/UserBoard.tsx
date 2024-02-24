@@ -105,7 +105,7 @@ const UserBoard: FC<{
                     clickCard(clicked, i, a);
                   }}
                 >
-                  <Text.Esa_Light_16>{num}</Text.Esa_Light_16>
+                  <Text.Spo_Light_16>{num}</Text.Spo_Light_16>
                 </Card>
               );
             })}

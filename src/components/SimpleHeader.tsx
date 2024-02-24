@@ -33,7 +33,7 @@ const SimpleHeader: React.FC<{
           }
         }}
       />
-      <Text.Esa_Bold_16>{title}</Text.Esa_Bold_16>
+      <Text.Spo_Medium_16>{title}</Text.Spo_Medium_16>
       <EmptyBox width={26} />
     </RowView>
   );

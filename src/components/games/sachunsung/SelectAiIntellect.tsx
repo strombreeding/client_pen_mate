@@ -19,7 +19,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Esa_Bold_16>FOOL</Text.Esa_Bold_16>
+          <Text.Spo_Medium_16>FOOL</Text.Spo_Medium_16>
         </div>
         <div
           style={{
@@ -30,7 +30,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Esa_Bold_16>COLLEGE</Text.Esa_Bold_16>
+          <Text.Spo_Medium_16>COLLEGE</Text.Spo_Medium_16>
         </div>
         <div
           style={{
@@ -41,7 +41,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Esa_Bold_16>GENIUS</Text.Esa_Bold_16>
+          <Text.Spo_Medium_16>GENIUS</Text.Spo_Medium_16>
         </div>
         <div
           style={{
@@ -52,7 +52,7 @@ const SelectAiIntellect: FC<{
             setSettingStep(3);
           }}
         >
-          <Text.Esa_Bold_16>GOD</Text.Esa_Bold_16>
+          <Text.Spo_Medium_16>GOD</Text.Spo_Medium_16>
         </div>
       </div>
     </>

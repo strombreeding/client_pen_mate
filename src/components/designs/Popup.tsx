@@ -36,17 +36,17 @@ const Popup: React.FC<{
     <View show={state}>
       <div>
         <EmptyBox height={10} />
-        <Text.Esa_Bold_18>{title}</Text.Esa_Bold_18>
+        <Text.Spo_Medium_18>{title}</Text.Spo_Medium_18>
         <EmptyBox height={10} />
       </div>
       <div>
         <EmptyBox height={10} />
-        <Text.Esa_Bold_14
+        <Text.Spo_Medium_14
           color={colors.Grey500}
           style={{ textAlign: "center" }}
         >
           {content}
-        </Text.Esa_Bold_14>
+        </Text.Spo_Medium_14>
         <EmptyBox height={10} />
       </div>
       <EmptyBox height={20} />
