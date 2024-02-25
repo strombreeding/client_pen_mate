@@ -31,6 +31,7 @@ function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   console.log(SERVER_URI);
   console.log(window.innerHeight);
+  console.log(window.innerWidth);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -73,16 +74,14 @@ function App() {
   const canScroll = false;
   console.log(imgSrc.bg_game);
   return (
-    <SafeAreaView>
-      {/* <SafeArea safearea={safeArea}> */}
-
+    <SafeArea safearea={safeArea}>
       <Viewport bgUrl={imgSrc.bg_viewport} />
 
       <Background>
         <GlobalStyle canScroll={canScroll} />
         <Routers />
       </Background>
-    </SafeAreaView>
+    </SafeArea>
   );
 }
 
@@ -93,9 +92,11 @@ const SafeAreaView: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <View
-      style={{
-        height: SCREEN_HEIGHT + safeArea[0] + safeArea[1],
-      }}
+      style={
+        {
+          // height: SCREEN_HEIGHT + safeArea[0] + safeArea[1],
+        }
+      }
     >
       {/* <EmptyBox height={safeArea[0]} /> */}
       {children}

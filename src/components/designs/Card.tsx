@@ -48,7 +48,6 @@ const CardLayer = styled(View)<{ selected: boolean }>`
   /* animation: ${(props) => props.selected !== true && toSmall} linear 0.3s; */
   /* forwards; */
 `;
-console.log(SCREEN_WIDTH * 0.68);
 
 const CardImg = styled.img`
   width: 150px;

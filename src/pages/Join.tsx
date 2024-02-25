@@ -58,6 +58,7 @@ function Join() {
   const handleStep = (type: PageStep) => {
     setStep(type);
   };
+  // safeArea 영역이 잡히는데 어떻게하지..
 
   return (
     <Container style={{ justifyContent: "space-between" }}>
@@ -66,14 +67,21 @@ function Join() {
         <Logo visited={isVisited} src={imgSrc.atata_join} />
       </View>
 
-      {/* <Outlet /> */}
       <AnimationView
         visited={isVisited}
         style={{ width: "100%", alignItems: "center", marginTop: 20 }}
       >
-        {step === "login" ? <Login step={step} /> : <SignUp step={step} />}
+        {step === "login" ? (
+          <SignUp step={step} />
+        ) : (
+          // ? <Login step={step} />
+          // : <SignUp step={step} />}
+          <Login step={step} />
+        )}
       </AnimationView>
+
       {/* <BottomNav /> */}
+      {/* <EmptyBox height={50} /> */}
     </Container>
   );
 }

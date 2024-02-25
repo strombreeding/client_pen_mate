@@ -34,7 +34,8 @@ const Routers: React.FC = () => {
         {/* <Route element={<PublicPage />}> */}
         {/* <Route path="/edit-avatar" element={<EditAvatar />} /> */}
         <Route path="/social/kakao" element={<SocialTerminel />} />
-        <Route path="/games" element={<SelectGames />} />
+        <Route path="/games/*" element={<SelectGames />}></Route>
+        <Route path="/games/sachunsung" element={<SaChunSung />}></Route>
         {/* </Route> */}
         {/* 로그인이 필요한것들, 매칭-AI서비스 */}
         <Route></Route>

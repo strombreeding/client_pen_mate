@@ -1,5 +1,6 @@
 import {
   Fragment,
+  MouseEventHandler,
   TouchEventHandler,
   useEffect,
   useRef,
@@ -11,7 +12,6 @@ import { Container, EmptyBox } from "../styles";
 import GameCard from "../components/designs/Card";
 import { imgSrc } from "../assets/img";
 import { SCREEN_WIDTH } from "../configs/device";
-import Carousel from "./test";
 
 const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
@@ -78,15 +78,44 @@ const SelectGames = () => {
   };
 
   const dragRef = useRef(0);
+
   const onTouchStart: TouchEventHandler<HTMLDivElement> = (e) => {
     touchStartX = e.nativeEvent.changedTouches[0].clientX;
     dragRef.current = langeRef.current[idx];
   };
 
+  const onMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
+    touchStartX = e.clientX;
+    dragRef.current = langeRef.current[idx];
+  };
+
   const onTouchMove: TouchEventHandler<HTMLDivElement> = (e) => {
     if (scrollRef.current == null) return;
+
     if (dragRef.current < 0) return;
+
     const currTouchX = e.nativeEvent.changedTouches[0].clientX;
+
+    if (touchStartX > currTouchX) {
+      scrollRef.current.style.transform = `translateX(-${
+        langeRef.current[idx] + 8
+      }px)`;
+      dragRef.current = -1;
+    } else if (touchStartX < currTouchX) {
+      scrollRef.current.style.transform = `translateX(-${
+        langeRef.current[idx] - 8
+      }px)`;
+      dragRef.current = -1;
+    }
+  };
+
+  const onMouseMove: MouseEventHandler<HTMLDivElement> = (e) => {
+    if (scrollRef.current == null) return;
+
+    if (dragRef.current < 0) return;
+
+    const currTouchX = e.clientX;
+
     if (touchStartX > currTouchX) {
       scrollRef.current.style.transform = `translateX(-${
         langeRef.current[idx] + 8
@@ -110,13 +139,31 @@ const SelectGames = () => {
     }
   };
 
+  const onMouseUp: MouseEventHandler<HTMLDivElement> = (e) => {
+    touchEndX = e.clientX;
+    dragRef.current = -1;
+    if (touchStartX >= touchEndX) {
+      handleSwipe(1);
+    } else {
+      handleSwipe(-1);
+    }
+  };
+
+  // 모바일 환경이 아닐때는 양 옆 클릭 이벤트나 방향키로 움직일 수 있게 해야할까 ?
+  // 테트리스, 뱅은 마우스 없이도 가능하게 해야함.
+  // 그러기 때문에 키보드 입력을 핸들링하여 동작하는 것
+  // 그럼 컴포넌트 분리?
+
   return (
     <Container style={{ overflow: "hidden" }}>
-      {/* <Carousel carouselList={games.map((item) => item.img)} /> */}
+      <EmptyBox height={50} />
       <View
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
         ref={scrollRef}
         style={{
           flex: 1,

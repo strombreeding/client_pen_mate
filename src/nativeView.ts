@@ -9,7 +9,7 @@ interface IScrollViewProps {
 export const View = styled.div<{ direction?: "row" | "column" }>`
   display: flex;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
   flex-direction: ${(props) => (props.direction == null ? "column" : "row")};
 `;
 
