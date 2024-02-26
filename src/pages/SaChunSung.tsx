@@ -20,6 +20,7 @@ import AiBoard from "../components/games/sachunsung/AiBoard";
 import { RowBoard } from "../components/games/sachunsung/styledComponents";
 import UserBoard from "../components/games/sachunsung/UserBoard";
 import { Text } from "../assets/fontStyles";
+import GameBg from "../components/designs/GameBG";
 // import { createBoard, findPathDFS } from "../utils";
 
 type IGameLevel = [];
@@ -61,6 +62,8 @@ const SaChunSung = () => {
 
   return (
     <Container>
+      <GameBg></GameBg>
+
       <Text.SemiBold_32
         onClick={() => {
           if (isStarting === "START") {
@@ -87,9 +90,9 @@ const SaChunSung = () => {
           onChange={(e) => setCols(Number(e.currentTarget.value))}
         />
       </div> */}
-      {/* <RowBoard onClick={() => create()}>
-        <Text.Body>게임판 생성!</Text.Body>
-      </RowBoard> */}
+      <RowBoard onClick={() => create()}>
+        <Text.Light_20>게임판 생성!</Text.Light_20>
+      </RowBoard>
 
       {/* <RowBoard
         ref={createAIRef}

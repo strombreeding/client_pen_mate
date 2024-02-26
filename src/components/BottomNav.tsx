@@ -42,7 +42,7 @@ const BottomNav = () => {
   const navigation = useNavigate();
   const navTab = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const type = e.currentTarget.id;
-    navigation(type);
+    // navigation(type);
     dispatch(setNavTab(type));
   };
 

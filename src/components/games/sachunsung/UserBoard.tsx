@@ -2,6 +2,8 @@ import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
 import { Card, RowBoard } from "./styledComponents";
 import * as utils from "../../../utils";
 import { Text } from "../../../assets/fontStyles";
+import { gameImg } from "../../../assets/gameImg";
+import { url } from "inspector";
 
 const UserBoard: FC<{
   board: number[][];
@@ -90,7 +92,7 @@ const UserBoard: FC<{
         return (
           <RowBoard key={i}>
             {item.map((num, a) => {
-              //   if (a === 0 || item.length - 1 === a) return;
+              const sourceName = `sachunsung_${num}`;
               const clicked =
                 (i === firstItem[0] && a === firstItem[1]) ||
                 (i === secondItem[0] && a === secondItem[1])
@@ -105,7 +107,16 @@ const UserBoard: FC<{
                     clickCard(clicked, i, a);
                   }}
                 >
-                  <Text.Spo_Light_16>{num}</Text.Spo_Light_16>
+                  <img
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      border: `solid 1px skyblue`,
+                      borderRadius: 5,
+                    }}
+                    src={gameImg[sourceName]}
+                  />
+                  {/* <Text.Spo_Light_16>{num}</Text.Spo_Light_16> */}
                 </Card>
               );
             })}

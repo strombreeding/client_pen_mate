@@ -4,10 +4,10 @@ import { imgSrc } from "../../assets/img";
 
 // Linear Gradient 스타일
 const LinearBackground = styled.div`
-  position: relative;
+  position: absolute;
   display: flex;
   flex-direction: column;
-
+  z-index: -1;
   width: ${SCREEN_WIDTH + "px"};
   min-width: 360px;
   max-width: 760px;

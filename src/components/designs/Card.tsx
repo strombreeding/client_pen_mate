@@ -3,7 +3,7 @@ import { View } from "../../nativeView";
 import { Container, EmptyBox } from "../../styles";
 import { Text } from "../../assets/fontStyles";
 import { SCREEN_WIDTH } from "../../configs/device";
-
+import React from "react";
 const toSmall = keyframes`
   from{
     /* height: ${SCREEN_WIDTH * 0.68}px; */
@@ -50,8 +50,8 @@ const CardLayer = styled(View)<{ selected: boolean }>`
 `;
 
 const CardImg = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  aspect-ratio: 1;
 `;
 
 const GameCard: React.FC<{ img: any; title: string; anythings?: any }> = ({
@@ -59,10 +59,9 @@ const GameCard: React.FC<{ img: any; title: string; anythings?: any }> = ({
   title,
   anythings,
 }) => {
-  console.log(anythings);
   return (
-    <CardLayer selected={anythings}>
-      <CardImg src={img} />
+    <CardLayer style={{ cursor: "pointer" }} selected={anythings.selected}>
+      <CardImg style={{ pointerEvents: "none" }} src={img} />
 
       <EmptyBox height={10} />
 
@@ -79,4 +78,4 @@ const GameCard: React.FC<{ img: any; title: string; anythings?: any }> = ({
   );
 };
 
-export default GameCard;
+export default React.memo(GameCard);

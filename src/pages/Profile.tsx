@@ -6,7 +6,7 @@ function Profile() {
   const loggedIn = false;
   const navigator = useNavigate();
   useEffect(() => {
-    if (!loggedIn) navigator("/login");
+    if (!loggedIn) navigator("/join");
   }, []);
   return <Login></Login>;
 }
