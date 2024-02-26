@@ -78,6 +78,11 @@ function App() {
       <Viewport bgUrl={imgSrc.bg_viewport} />
 
       <Background>
+        <EmptyBox
+          height={safeArea[0]}
+          width={SCREEN_WIDTH}
+          style={{ zIndex: 100 }}
+        />
         <GlobalStyle canScroll={canScroll} />
         <Routers />
       </Background>
@@ -85,33 +90,14 @@ function App() {
   );
 }
 
-const SafeAreaView: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
-
-  return (
-    <View
-      style={
-        {
-          // height: SCREEN_HEIGHT + safeArea[0] + safeArea[1],
-        }
-      }
-    >
-      {/* <EmptyBox height={safeArea[0]} /> */}
-      {children}
-      {/* <EmptyBox height={safeArea[1]} /> */}
-    </View>
-  );
-};
-
 /* 
 const 
 */
 const Background = styled.div<{ bg?: any }>`
-  position: sticky;
-  top: 0;
+  position: relative;
+  /* top: 0; */
   display: flex;
+  flex-direction: column;
   width: ${SCREEN_WIDTH}px;
   max-width: 760px;
   height: ${SCREEN_HEIGHT}px;
