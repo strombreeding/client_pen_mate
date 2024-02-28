@@ -25,7 +25,7 @@ export const usePageState = (canPopState?: boolean) => {
 
   const path = window.location.pathname;
   const storageData = window.localStorage.getItem("history");
-  const history = storageData ? JSON.parse(storageData) : ["", path];
+  const history = storageData ? JSON.parse(storageData) : ["/", path];
 
   const reduxHistory = useSelector(
     (state: RootState) => state.visitedPage.pageState

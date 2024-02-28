@@ -49,13 +49,14 @@ function App() {
   useEffect(() => {
     // 여기서 리덕스로 히스토리를 잡아 그냥 계속.
     const state = () => {
-      alert(canPopstate);
       console.log("이건 메인APP", canPopstate);
-      if (canPopstate) {
-        window.history.go(0);
-      } else {
-        window.history.go(1);
-      }
+      // if (canPopstate) {
+      window.history.pushState({}, "", pageState[0]);
+      window.history.go(0);
+      // } else {
+      // window.history.pushState({}, "", pageState[1]);
+      // window.history.go(1);
+      // }
     };
     window.addEventListener("popstate", state);
 

@@ -6,12 +6,18 @@ import BigGameBtn from "../components/designs/BigGameBtn";
 import BottomNav from "../components/navigations/BottomNav";
 import Profile from "./Profile";
 import SelectGames from "./SelectGames";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
 import { usePageState } from "../hooks/getVisitedPage";
+import { useEffect } from "react";
+import { setNavTab } from "../store/slices/appState";
 
 function Main() {
+  const dispatch = useDispatch<AppDispatch>();
   const navType = useSelector((state: RootState) => state.appState.navTab);
+  useEffect(() => {
+    dispatch(setNavTab(window.location.pathname));
+  }, []);
   const pageState = usePageState();
 
   return (

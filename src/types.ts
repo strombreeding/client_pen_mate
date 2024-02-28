@@ -26,3 +26,13 @@ export type SachunsungGameSetting = {
 };
 
 export type NavTab = "home" | "ranking" | "store" | "profile";
+
+// export interface GameProps {
+//   id: string;
+//   title: string;
+//   description: string;
+//   minReward: number;
+//   cost: number;
+//   matchType: string[];
+//   player: string[];
+// }

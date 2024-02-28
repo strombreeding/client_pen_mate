@@ -3,11 +3,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type GameTitle =
   | "Cosmic Junkyard"
-  | "Gravity Blocks"
-  | "BANG!"
+  | "Gravity WorkShop"
+  | "Bang!"
   | "우주 고철장"
-  | "테트리스"
-  | "뱅"
+  | "중력 작업장"
+  | "결투!"
   | undefined;
 export type GamePlayer = "ai" | "2p" | "rank" | "bounties" | undefined;
 export type MatchType = "regular" | "oneShot";

@@ -19,7 +19,6 @@ const bounce = keyframes`
         scale: 1.4;
       }
       90%{
-        
         scale  :1 ;
       }
       100%{
@@ -32,12 +31,24 @@ const fadeOut = keyframes`
     opacity: 1;
     display: flex;
   }
-
-  70%{
+50%{
+  opacity: 1;
+}
+60%{
+  opacity: 0.7;
+}
+70%{
+  opacity: 0.45;
+}
+  80%{
     opacity: 0.2;
     display: flex;
   }
-
+  99%{
+    opacity: 0.1;
+    display: flex;
+    
+  }
   100%{
     opacity: 0;
     display: none;

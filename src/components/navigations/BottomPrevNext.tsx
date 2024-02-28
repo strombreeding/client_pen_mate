@@ -36,7 +36,7 @@ function BottomPrevNext({
   const goBack = () => {
     console.log(pageState);
     dispatch(setCanPopstateEvent(true));
-    navigate(-1);
+    navigate(pageState[0]);
   };
   return (
     <BottomLayer style={style}>

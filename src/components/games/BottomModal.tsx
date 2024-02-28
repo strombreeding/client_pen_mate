@@ -4,21 +4,12 @@ import { Text } from "../../assets/fontStyles";
 import { langueage } from "../../configs/language";
 import { EmptyBox } from "../../styles";
 import { useNavigate } from "react-router-dom";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import BottomLayer from "../navigations/BottomLayer";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../configs/device";
-import { GameTitle, setGameState } from "../../store/slices/gameState";
+import { useEffect, useRef, useState } from "react";
+import { SCREEN_HEIGHT } from "../../configs/device";
+import { setGameState } from "../../store/slices/gameState";
 import { imgSrc } from "../../assets/img";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { usePageState } from "../../hooks/getVisitedPage";
 
 interface IBottomModalProps {
   visible: boolean;
