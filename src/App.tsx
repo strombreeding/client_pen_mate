@@ -11,6 +11,7 @@ import { Viewport } from "./nativeView";
 import { imgSrc } from "./assets/img";
 import GameBg from "./components/designs/GameBG";
 import { usePageState } from "./hooks/getVisitedPage";
+import { useSafeAreaSize } from "./hooks/getSafeAreaSize";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -26,14 +27,20 @@ import { usePageState } from "./hooks/getVisitedPage";
 function App() {
   const pageState = usePageState();
 
-  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
   const bgImg = useSelector((state: RootState) => state.appState.bgImg);
   const canPopstate = useSelector(
     (state: RootState) => state.appState.canPopstateEvent
   );
+  // const popupState = useSelector((state: RootState) => state.appState.popup);
+  // const modalState = useSelector((state: RootState) => state.appState.modal);
+  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
+  // const receiveRef = useRef(false);
+  // const containerRef = useRef<HTMLDivElement>(null);
   console.log(SERVER_URI);
   console.log(window.innerHeight);
   console.log(window.innerWidth);
+  useSafeAreaSize();
+  // const dispatch = useDispatch<AppDispatch>();
 
   const dispatch = useDispatch<AppDispatch>();
   const choiceTitle = useSelector(
@@ -56,7 +63,6 @@ function App() {
       window.removeEventListener("popstate", state);
     };
   }, []);
-
   useEffect(() => {
     const readDataFromReactNative = (event: MessageEvent<string>) => {
       if (typeof event.data === "string") {
@@ -68,6 +74,13 @@ function App() {
         }
       }
     };
+
+    //   if (IOS) {
+    //     window.addEventListener("message", readDataFromReactNative);
+    //   } else if (!IOS) {
+    //     //@ts-ignore
+    //     document.addEventListener("message", readDataFromReactNative);
+    //   }
 
     if (IOS) {
       window.addEventListener("message", readDataFromReactNative);
@@ -105,6 +118,12 @@ function App() {
 
   //   window.addEventListener("popstate", preventGoBack);
   //   return () => window.removeEventListener("popstate", preventGoBack);
+  //   return () => {
+  //     //@ts-ignore
+  //     document.removeEventListener("message", readDataFromReactNative);
+  //     window.removeEventListener("message", readDataFromReactNative);
+  //   };
+  //   // return () =>
   // }, []);
 
   const canScroll = false;

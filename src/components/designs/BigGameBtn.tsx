@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { imgSrc } from "../../assets/img";
 import { Pressable, View } from "../../nativeView";
 import styled, { keyframes } from "styled-components";
@@ -23,6 +23,7 @@ const Btn = styled.img`
 
 const BigGameBtn = () => {
   const [language] = useState("ko");
+
   const [status, setStatus] = useState<BtnStatus>("default");
 
   const setPressed = () => {
