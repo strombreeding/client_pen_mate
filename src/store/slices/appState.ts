@@ -13,6 +13,8 @@ interface AppState {
   keyboardHeight: number;
   safeArea: number[];
   navTab: string;
+  canPopstateEvent: boolean;
+  bgImg: string | undefined;
 }
 
 const initialState: AppState = {
@@ -21,6 +23,8 @@ const initialState: AppState = {
   keyboardHeight: 0,
   safeArea: [0, 0],
   navTab: window.location.pathname,
+  canPopstateEvent: true,
+  bgImg: undefined,
 };
 
 const appState = createSlice({
@@ -43,6 +47,14 @@ const appState = createSlice({
     setNavTab: (state, action: PayloadAction<string>) => {
       state.navTab = action.payload;
     },
+
+    setCanPopstateEvent: (state, action: PayloadAction<boolean>) => {
+      state.canPopstateEvent = action.payload;
+    },
+
+    setBgImg: (state, action: PayloadAction<string | undefined>) => {
+      state.bgImg = action.payload;
+    },
   },
 });
 
@@ -52,6 +64,8 @@ export const {
   editKeyboardHeight,
   setSafeArea,
   setNavTab,
+  setCanPopstateEvent,
+  setBgImg,
 } = appState.actions;
 
 export default appState.reducer;

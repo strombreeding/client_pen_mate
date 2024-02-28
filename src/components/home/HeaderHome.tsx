@@ -24,11 +24,11 @@ const HeaderHome = () => {
   return (
     <Header>
       <View>
-        <Text.Spo_Medium_16>esaynee_</Text.Spo_Medium_16>
+        <Text.Regular_16>esaynee_</Text.Regular_16>
         <EmptyBox height={4} />
-        <View style={{ flexDirection: "row" }}>
-          <img src={imgSrc.atata_point} style={{ width: 12, height: 15 }} />
-          <EmptyBox width={5} />
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <img src={imgSrc.atata_point} style={{ width: 20, height: 20 }} />
+          {/* <EmptyBox width={5} /> */}
           <Text.Spo_Medium_16>{point}p</Text.Spo_Medium_16>
         </View>
       </View>

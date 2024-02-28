@@ -92,7 +92,7 @@ const UserBoard: FC<{
         return (
           <RowBoard key={i}>
             {item.map((num, a) => {
-              const sourceName = `sachunsung_${num}`;
+              const sourceName = `junkyard_ico_${num}`;
               const clicked =
                 (i === firstItem[0] && a === firstItem[1]) ||
                 (i === secondItem[0] && a === secondItem[1])

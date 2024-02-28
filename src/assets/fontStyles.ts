@@ -82,6 +82,10 @@ export const Text = {
     font-size: 20px;
     color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
+  Regular_16: styled(esamanru)<{ color?: string }>`
+    font-size: 16px;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
   Light_32: styled(esamanruLight)<{ color?: string }>`
     font-size: 32px;
     color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
@@ -92,6 +96,10 @@ export const Text = {
   `,
   Light_20: styled(esamanruLight)<{ color?: string }>`
     font-size: 20px;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
+  Light_12: styled(esamanruLight)<{ color?: string }>`
+    font-size: 12px;
     color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
 

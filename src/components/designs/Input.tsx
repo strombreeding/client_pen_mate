@@ -8,7 +8,7 @@ import { editKeyboardHeight } from "../../store/slices/appState";
 import { IOS, MOBILE } from "../../configs/device";
 import { colors } from "../../assets/colors";
 
-export const Pressable = styled.div<{
+const Pressable = styled.div<{
   state: "wrong" | "default";
   exception: boolean | undefined;
 }>`

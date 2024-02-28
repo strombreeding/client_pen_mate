@@ -24,7 +24,7 @@ export const ScrollView = styled.div<IScrollViewProps>`
   overflow-x: ${(props) =>
     props.horizontal == null || false ? "hidden" : "auto"};
 
-  ${(props) => props.scrollDisenable == true && `overflow:hidden;`}
+  /* ${(props) => props.scrollDisenable == true && `overflow:hidden;`} */
 `;
 
 export const Pressable = styled.div<{}>`
@@ -33,14 +33,13 @@ export const Pressable = styled.div<{}>`
   position: relative;
 `;
 
-export const Viewport = styled.div<{ bgUrl: any }>`
+export const Viewport = styled.img`
   position: absolute;
   width: 100vw;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url(${(props) => props.bgUrl});
   background-size: cover;
   background-repeat: no-repeat;
 `;

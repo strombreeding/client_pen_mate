@@ -1,5 +1,4 @@
 import {
-  Fragment,
   MouseEventHandler,
   TouchEventHandler,
   useEffect,
@@ -7,13 +6,23 @@ import {
   useState,
 } from "react";
 import { Text } from "../assets/fontStyles";
-import { ScrollView, View } from "../nativeView";
+import { View } from "../nativeView";
 import { Container, EmptyBox } from "../styles";
 import GameCard from "../components/designs/Card";
-import { imgSrc } from "../assets/img";
 import { SCREEN_WIDTH } from "../configs/device";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { gameImg } from "../assets/gameImg";
+import { langueage } from "../configs/language";
+import BottomModal from "../components/games/BottomModal";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { GameTitle, setGameState } from "../store/slices/gameState";
+import GameBg from "../components/designs/GameBG";
+import { setBgImg } from "../store/slices/appState";
+import { imgSrc } from "../assets/img";
+import BottomLayer from "../components/navigations/BottomLayer";
+import BottomPrevNext from "../components/navigations/BottomPrevNext";
+import { usePageState } from "../hooks/getVisitedPage";
 
 const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
@@ -22,19 +31,47 @@ let touchEndX = 0;
 
 // == 컴포넌트
 
-const SelectGames = () => {
-  const [games, setGames] = useState([
-    { idx: 0, title: "사천성", regDate: "오늘", img: gameImg.sachunsung },
-    { idx: 1, title: "뱅", regDate: "어제", img: imgSrc.apple },
-    { idx: 2, title: "테트리스", regDate: "그저께", img: imgSrc.apple },
-  ]);
+interface IGamesProps {
+  id: string;
+  title: GameTitle;
+  description: string;
+  img: string;
+}
 
+const SelectGames = () => {
+  const pageState = usePageState();
+
+  const [games, setGames] = useState<IGamesProps[]>([
+    {
+      id: "sachunsung",
+      title: "우주 고철장",
+      description: "시간 내에 많은 짝을 맞추고 AP를 얻으세요!",
+      img: gameImg.junkyard,
+    },
+    { id: "bang", title: "BANG!", description: "어제", img: gameImg.bang_img },
+    {
+      id: "tetris",
+      title: "테트리스",
+      description: "오랜시간 생존하여 AP를 얻으세요!",
+      img: gameImg.tetris_img,
+    },
+  ]);
   const [idx, setIdx] = useState(2);
+  const choiceTitle = useSelector(
+    (state: RootState) => state.gameState.status.gameTitle
+  );
+  const dispatch = useDispatch<AppDispatch>();
 
   const langeRef = useRef<number[]>([]);
-
+  const dragRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const navigation = useNavigate();
+
+  // const preventClose = (e: BeforeUnloadEvent) => {
+  //   e.preventDefault();
+  //   e.returnValue = "";
+  // };
+
   useEffect(() => {
     const startData = games[0];
     const endData = games[games.length - 1];
@@ -50,14 +87,35 @@ const SelectGames = () => {
 
       return subLange;
     });
-    setGames(newList);
 
-    return () => console.log("언마운트");
+    setGames(newList);
+    return () => {
+      console.log("언마운트");
+    };
+  }, []);
+
+  // 새로고침 시 재확인
+  // useEffect(() => {
+  //   console.log(window.history.state.idx);
+  //   window.addEventListener("beforeunload", preventClose);
+  //   return () => window.removeEventListener("beforeunload", preventClose);
+  // }, []);
+
+  useEffect(() => {
+    dispatch(setBgImg(imgSrc.bg_game));
+    // dispatch(setCanPopstateEvent(false));
+    const popstateLimit = (e: PopStateEvent) => {
+      // window.history.go(1);\
+    };
+    window.addEventListener("popstate", popstateLimit);
+    return () => {
+      window.removeEventListener("popstate", popstateLimit);
+      // dispatch(setCanPopstateEvent(true));
+    };
   }, []);
 
   useEffect(() => {
     if (scrollRef.current === null) return;
-    // console.log(idx);
     scrollRef.current.style.transform = `translateX(-${langeRef.current[idx]}px)`;
   }, [idx]);
 
@@ -84,8 +142,6 @@ const SelectGames = () => {
       scrollRef.current.style.transition = "all 0.25s ease-in-out";
     }
   };
-
-  const dragRef = useRef(0);
 
   const onTouchStart: TouchEventHandler<HTMLDivElement> = (e) => {
     touchStartX = e.nativeEvent.changedTouches[0].clientX;
@@ -121,33 +177,12 @@ const SelectGames = () => {
     }
   };
 
-  // const onMouseMove: MouseEventHandler<HTMLDivElement> = (e) => {
-  //   console.log("마우스 움직이는중");
-  //   if (scrollRef.current == null) return;
-
-  //   if (dragRef.current < 0) return;
-
-  //   const currTouchX = e.clientX;
-
-  //   if (touchStartX > currTouchX) {
-  //     // console.log("우파");
-  //     scrollRef.current.style.transform = `translateX(-${
-  //       langeRef.current[idx] + 8
-  //     }px)`;
-  //     // dragRef.current = -1;
-  //   } else if (touchStartX < currTouchX) {
-  //     // console.log("좌파");
-  //     scrollRef.current.style.transform = `translateX(-${
-  //       langeRef.current[idx] - 8
-  //     }px)`;
-  //     // dragRef.current = -1;
-  //   }
-  // };
-
   const onTouchEnd: TouchEventHandler<HTMLDivElement> = (e) => {
     touchEndX = e.nativeEvent.changedTouches[0].clientX;
     dragRef.current = -1;
     // if (touchStartX === touchEndX) return;
+    dispatch(setGameState({ gameTitle: undefined }));
+
     if (touchStartX > touchEndX) {
       handleSwipe(1);
     } else if (touchStartX < touchEndX) {
@@ -161,6 +196,7 @@ const SelectGames = () => {
     touchEndX = e.clientX;
     dragRef.current = -1;
     console.log("마우스 뗏다");
+    dispatch(setGameState({ gameTitle: undefined }));
     if (touchStartX > touchEndX) {
       handleSwipe(1);
     } else if (touchStartX < touchEndX) {
@@ -171,16 +207,21 @@ const SelectGames = () => {
   };
 
   const onClick = () => {
-    navigation("/" + games[idx].idx);
+    // dispatch(setChoiceTitle(games[idxsetGameState({gameTitle:undefined}))
+    dispatch(setGameState({ gameTitle: games[idx].title }));
+    // navigation("/games/" + games[idx].id);
   };
-  // 모바일 환경이 아닐때는 양 옆 클릭 이벤트나 방향키로 움직일 수 있게 해야할까 ?
-  // 테트리스, 뱅은 마우스 없이도 가능하게 해야함.
-  // 그러기 때문에 키보드 입력을 핸들링하여 동작하는 것
-  // 그럼 컴포넌트 분리?
 
   return (
-    <Container style={{ overflow: "hidden" }}>
+    <Container style={styles.container}>
       {/* <EmptyBox height={50} /> */}
+      <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
+        <Text.Regular_20>{"<= "}</Text.Regular_20>
+        <Text.Regular_20>{langueage.gameSelect[0]}</Text.Regular_20>
+        <EmptyBox height={35} />
+      </View>
+
+      {/* scroll View */}
       <View
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -189,30 +230,59 @@ const SelectGames = () => {
         // onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         ref={scrollRef}
-        style={{
-          flex: 1,
-          width: SCREEN_WIDTH,
-          flexDirection: "row",
-          cursor: "pointer",
-        }}
+        style={styles.scrollView}
       >
         {games.map((gameProp, index) => {
+          const selected = isFocused(idx, games.length, index);
+
           return (
             <GameCard
               img={gameProp.img}
               title={gameProp.title}
+              description={gameProp.description}
               key={index}
-              anythings={{
-                selected: index === idx,
-                scrolling: dragRef.current < 0,
-              }}
+              selected={selected}
+              choiceTitle={choiceTitle === gameProp.title}
             />
           );
         })}
       </View>
-      <ScrollView scrollDisenable horizontal></ScrollView>
+
+      <EmptyBox style={{ flex: 1 }} />
+      <BottomPrevNext style={{ flex: 1 }} />
+      <BottomModal visible={choiceTitle !== undefined} />
     </Container>
   );
 };
 
 export default SelectGames;
+
+const styles: { [key: string]: React.CSSProperties } = {
+  scrollView: {
+    flex: 1,
+    width: SCREEN_WIDTH,
+    flexDirection: "row",
+    cursor: "pointer",
+  },
+  container: { overflow: "hidden", padding: "30px 15px 30px 15px", flex: 1 },
+};
+
+// methods
+
+const isFocused = (idx: number, gamesLength: number, itemIndex: number) => {
+  let selected = false;
+  if (idx === itemIndex) {
+    selected = true;
+  } else if (
+    (idx === 2 || idx === gamesLength - 2) &&
+    (itemIndex === 2 || itemIndex === gamesLength - 2)
+  ) {
+    selected = true;
+  } else if (
+    (idx === 1 || idx === gamesLength - 3) &&
+    (itemIndex === 1 || itemIndex === gamesLength - 3)
+  ) {
+    selected = true;
+  }
+  return selected;
+};

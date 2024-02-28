@@ -1,15 +1,13 @@
 import styled, { keyframes } from "styled-components";
 import { View } from "../nativeView";
-import { Container, EmptyBox, SafeArea } from "../styles";
+import { Container } from "../styles";
 import { SCREEN_WIDTH } from "../configs/device";
 import { imgSrc } from "../assets/img";
-import { Text } from "../assets/fontStyles";
-import BottomNav from "../components/BottomNav";
 import Login from "../components/join/Login";
-import Hooks, * as hooks from "../hooks";
+
 import { useState } from "react";
 import SignUp from "../components/join/SignUp";
-import { Outlet, Route } from "react-router-dom";
+import { usePageState, useVisitedPage } from "../hooks/getVisitedPage";
 
 const BgImg = styled.img`
   width: ${SCREEN_WIDTH}px;
@@ -52,9 +50,9 @@ const AnimationView = styled(View)<{ visited: boolean }>`
 type PageStep = "login" | "signUp";
 
 function Join() {
-  const isVisited = Hooks.getVisitedPage.useVisitedPage();
+  const isVisited = useVisitedPage();
   const [step, setStep] = useState<PageStep>("login");
-
+  const pageState = usePageState();
   const handleStep = (type: PageStep) => {
     setStep(type);
   };

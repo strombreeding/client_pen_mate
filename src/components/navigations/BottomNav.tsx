@@ -1,28 +1,16 @@
 import styled from "styled-components";
-import { imgSrc } from "../assets/img";
-import { Pressable } from "../nativeView";
+import { imgSrc } from "../../assets/img";
+import { Pressable, View } from "../../nativeView";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/store";
-import { setNavTab } from "../store/slices/appState";
-import { NavTab } from "../types";
+import { AppDispatch, RootState } from "../../store/store";
+import { setNavTab } from "../../store/slices/appState";
+import { NavTab } from "../../types";
 import { useNavigate } from "react-router-dom";
-import { IOS, SCREEN_WIDTH } from "../configs/device";
-
-const Wrapper = styled.div`
-  min-width: 360px;
-  width: ${SCREEN_WIDTH}px;
-  position: relative;
-  background: rgba(0, 0, 0, 0.2);
-  background-blend-mode: overlay;
-  box-shadow: 0px 10px 30px rgba(41, 39, 130, 0.1),
-    inset 0px 1.5px 0.5px rgba(255, 255, 255, 0.5);
-  /* backdrop-filter: blur(40px); */
-  border-radius: 50px 50px 0px 0px;
-`;
+import { IOS, SCREEN_WIDTH } from "../../configs/device";
+import BottomLayer from "./BottomLayer";
 
 const IconWrapper = styled.div`
-  margin: 5% 5% ${IOS ? 50 : 30}px 5%;
-  width: 90%;
+  width: 100%;
   height: 40%;
   /* background-color: #ffffff9b; */
   display: flex;
@@ -36,10 +24,9 @@ const NavIcon = styled.img`
   cursor: pointer;
 `;
 
-const BottomNav = () => {
+function BottomNav() {
   const currentTab = useSelector((state: RootState) => state.appState.navTab);
   const dispatch = useDispatch<AppDispatch>();
-  const navigation = useNavigate();
   const navTab = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const type = e.currentTarget.id;
     // navigation(type);
@@ -47,7 +34,7 @@ const BottomNav = () => {
   };
 
   return (
-    <Wrapper>
+    <BottomLayer>
       <IconWrapper>
         <Pressable id="/" onClick={navTab}>
           <NavIcon
@@ -84,8 +71,8 @@ const BottomNav = () => {
           />
         </Pressable>
       </IconWrapper>
-    </Wrapper>
+    </BottomLayer>
   );
-};
+}
 
 export default BottomNav;

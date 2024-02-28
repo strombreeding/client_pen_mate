@@ -1,33 +1,64 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { View } from "../../nativeView";
 import { Container, EmptyBox } from "../../styles";
 import { Text } from "../../assets/fontStyles";
 import { SCREEN_WIDTH } from "../../configs/device";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 const toSmall = keyframes`
   from{
-    /* height: ${SCREEN_WIDTH * 0.68}px; */
     transform: scaleY(1);
   }
   to{
     transform: scaleY(0.8);
-    /* height: ${(SCREEN_WIDTH * 0.68) / 2}px; */
   }
   `;
-const toBig = keyframes`
+const toVerySmall = keyframes`
   from{
-    transform: scaleY(0.7);
-    /* height: ${(SCREEN_WIDTH * 0.68) / 2}px; */
+    transform: scale(0.8);
+    
+  }
+  to{
+    transform: scale(0);
+
+  }
+`;
+const toHalf = keyframes`
+    from{
+      top:0;
+      transform: scale(1);
+      opacity: 1;
+    }
+    to{
+      top: -10%;
+      transform: scale(5);
+      opacity: 0;
+    }
+`;
+const toBig = keyframes`
+    from{
+    transform: scaleY(0.8);
     
   }
   to{
     transform: scaleY(1);
-    /* height: ${SCREEN_WIDTH * 0.68}px; */
 
   }
 `;
+const antimationToHalf = css`
+  animation: ${toHalf} 0.3s linear forwards;
+`;
+const antimationToSmall = css`
+  animation: ${toVerySmall} 0.2s linear forwards;
+`;
+interface ICardLayerProps {
+  selected: boolean;
+  choiced: boolean;
+  state: "choice" | "wait";
+}
 
-const CardLayer = styled(View)<{ selected: boolean }>`
+const CardLayer = styled(View)<ICardLayerProps>`
   position: relative;
   min-width: ${SCREEN_WIDTH * 0.68}px;
   /* min-width: ${SCREEN_WIDTH * 0.68}px; */
@@ -44,9 +75,15 @@ const CardLayer = styled(View)<{ selected: boolean }>`
   background-color: rgba(255, 255, 255, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  animation: ${(props) => (props.selected ? {} : toSmall)} linear 0.25s forwards;
-  /* animation: ${(props) => props.selected !== true && toSmall} linear 0.3s; */
-  /* forwards; */
+  animation: ${(props) => (props.selected ? toBig : toSmall)} linear 0.25s
+    forwards;
+  /* ${(props) => props.choiced && `background-color:  #304FFE`}; */
+  ${(props) =>
+    props.state === "choice" && props.selected
+      ? antimationToHalf
+      : !props.selected && props.state === "choice"
+      ? antimationToSmall
+      : {}}
 `;
 
 const CardImg = styled.img`
@@ -54,13 +91,26 @@ const CardImg = styled.img`
   aspect-ratio: 1;
 `;
 
-const GameCard: React.FC<{ img: any; title: string; anythings?: any }> = ({
-  img,
-  title,
-  anythings,
-}) => {
+const GameCard: React.FC<{
+  img: any;
+  title: string | undefined;
+  selected: boolean;
+  choiceTitle: boolean;
+  description: string;
+}> = ({ img, title, selected, choiceTitle, description }) => {
+  // const [selected] = useState(focused ===index ||)
+  const gameState = useSelector(
+    (state: RootState) => state.gameState.status.gameTitle
+  );
+
+  console.log("카드컴포넌트", gameState);
   return (
-    <CardLayer style={{ cursor: "pointer" }} selected={anythings.selected}>
+    <CardLayer
+      style={{ cursor: "pointer" }}
+      selected={selected}
+      choiced={choiceTitle}
+      state={gameState === undefined ? "wait" : "choice"}
+    >
       <CardImg style={{ pointerEvents: "none" }} src={img} />
 
       <EmptyBox height={10} />
@@ -71,11 +121,11 @@ const GameCard: React.FC<{ img: any; title: string; anythings?: any }> = ({
         </View>
 
         <View>
-          <Text.Spo_Medium_14>안녕</Text.Spo_Medium_14>
+          <Text.Spo_Medium_14>{description}</Text.Spo_Medium_14>
         </View>
       </View>
     </CardLayer>
   );
 };
 
-export default React.memo(GameCard);
+export default GameCard;

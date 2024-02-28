@@ -9,8 +9,8 @@ import { Container } from "../styles";
 import styled from "styled-components";
 import * as utils from "../utils/index";
 import { MOBILE } from "../configs/device";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
 import { asyncSleep } from "../utils/timer";
 import { type SachunsungGameSetting, gamelevel } from "../types";
 import SelectLevel from "../components/games/sachunsung/SelectLevel";
@@ -21,11 +21,19 @@ import { RowBoard } from "../components/games/sachunsung/styledComponents";
 import UserBoard from "../components/games/sachunsung/UserBoard";
 import { Text } from "../assets/fontStyles";
 import GameBg from "../components/designs/GameBG";
+import { View } from "../nativeView";
+import { useAuthVisitPage, usePageState } from "../hooks/getVisitedPage";
+import { useNavigate } from "react-router-dom";
 // import { createBoard, findPathDFS } from "../utils";
 
 type IGameLevel = [];
 
 const SaChunSung = () => {
+  const pageState = usePageState(false);
+  const validateAuth = useAuthVisitPage();
+  const navigation = useNavigate();
+  const gameState = useSelector((state: RootState) => state.gameState.status);
+  console.log(gameState);
   const [aiBoard, setAiBoard] = useState([] as number[][]);
   const [board, setBoard] = useState([] as number[][]);
   const [complate, setComplate] = useState("");
@@ -61,9 +69,7 @@ const SaChunSung = () => {
   };
 
   return (
-    <Container>
-      <GameBg></GameBg>
-
+    <Container style={{ zIndex: 2 }}>
       <Text.SemiBold_32
         onClick={() => {
           if (isStarting === "START") {

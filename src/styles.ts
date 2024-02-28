@@ -126,15 +126,9 @@ export const EmptyBox = styled.div<{ height?: number; width?: number }>`
   width: ${(props) => props.width}px;
 `;
 
-export const SafeArea = styled.div<{ safearea: number[] }>`
+export const SafeArea = styled.div`
   display: flex;
   max-height: ${SCREEN_HEIGHT};
   flex-direction: column;
   align-items: center;
-  /* padding-top: ${(props) => props.safearea[0]}px;
-  padding-bottom: ${(props) => props.safearea[1]}px; */
-  /* margin-top: ${(props) => props.safearea[0]}px; */
-  /* margin-bottom: ${(props) => props.safearea[1]}px; */
-  /* background-color: white; */
-  /* background-color: #181a1b; */
 `;

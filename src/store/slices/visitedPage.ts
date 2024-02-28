@@ -2,24 +2,30 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface CounterState {
-  history: string[];
+  visitedPages: string[];
+  pageState: string[]; // 최대 2개 length
 }
 
 const initialState: CounterState = {
-  history: [],
+  visitedPages: [],
+  pageState: ["", ""],
 };
 
 const visitedPageSlice = createSlice({
   name: "visit",
   initialState,
   reducers: {
-    setPageHistory: (state, action: PayloadAction<string>) => {
-      console.log("셋!");
-      state.history = [...state.history, action.payload];
+    setVisitPage: (state, action: PayloadAction<string>) => {
+      state.visitedPages = [...state.visitedPages, action.payload];
+    },
+    setPageState: (state, action: PayloadAction<string>) => {
+      const prevPage = state.pageState[1];
+      const nextPage = action.payload;
+      state.pageState = [prevPage, nextPage];
     },
   },
 });
 
-export const { setPageHistory } = visitedPageSlice.actions;
+export const { setVisitPage, setPageState } = visitedPageSlice.actions;
 
 export default visitedPageSlice.reducer;

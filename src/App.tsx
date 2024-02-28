@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import Routers from "./Router";
 import { EmptyBox, GlobalStyle, SafeArea } from "./styles";
 import { SERVER_URI } from "./configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
-import { setSafeArea, showModal } from "./store/slices/appState";
+import { setSafeArea } from "./store/slices/appState";
 import { IOS, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
-import { View, Viewport } from "./nativeView";
+import { Viewport } from "./nativeView";
 import { imgSrc } from "./assets/img";
-import { colors } from "./assets/colors";
 import GameBg from "./components/designs/GameBG";
+import { usePageState } from "./hooks/getVisitedPage";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -24,16 +24,38 @@ import GameBg from "./components/designs/GameBG";
 // `;
 
 function App() {
-  const popupState = useSelector((state: RootState) => state.appState.popup);
-  const modalState = useSelector((state: RootState) => state.appState.modal);
+  const pageState = usePageState();
+
   const safeArea = useSelector((state: RootState) => state.appState.safeArea);
-  const receiveRef = useRef(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const bgImg = useSelector((state: RootState) => state.appState.bgImg);
+  const canPopstate = useSelector(
+    (state: RootState) => state.appState.canPopstateEvent
+  );
   console.log(SERVER_URI);
   console.log(window.innerHeight);
   console.log(window.innerWidth);
 
   const dispatch = useDispatch<AppDispatch>();
+  const choiceTitle = useSelector(
+    (state: RootState) => state.gameState.status.gameTitle
+  );
+  useEffect(() => {
+    // 여기서 리덕스로 히스토리를 잡아 그냥 계속.
+    const state = () => {
+      alert(canPopstate);
+      console.log("이건 메인APP", canPopstate);
+      if (canPopstate) {
+        window.history.go(0);
+      } else {
+        window.history.go(1);
+      }
+    };
+    window.addEventListener("popstate", state);
+
+    return () => {
+      window.removeEventListener("popstate", state);
+    };
+  }, []);
 
   useEffect(() => {
     const readDataFromReactNative = (event: MessageEvent<string>) => {
@@ -62,22 +84,37 @@ function App() {
     // return () =>
   }, []);
 
-  useEffect(() => {
-    const consoles = () => {
-      console.log("바뀐 path", window.location.pathname);
-    };
-    window.addEventListener("popstate", consoles);
+  // useEffect(() => {
+  //   const preventGoBack = () => {
+  //     console.log("popstate 이벤트 발생", canPopstate);
+  //     if (canPopstate) {
+  //       console.log("뒤로갈 수 있는 페이지");
+  //     } else {
+  //       console.log("뒤로갈 수 없는 페이지임니다!!");
+  //       window.history.pushState(null, "", window.location.href);
+  //     }
 
-    return () => window.removeEventListener("popstate", consoles);
-  }, []);
+  //     // console.log("ㅎㅇㅎㅇ");
+  //     // if (window.confirm("뒤로 가렽?")) {
+  //     //   console.log(window.history.state);
+  //     //   window.history.go(-1);
+  //     // } else {
+  //     //   console.log(window.history.state);
+  //     // }
+  //   };
+
+  //   window.addEventListener("popstate", preventGoBack);
+  //   return () => window.removeEventListener("popstate", preventGoBack);
+  // }, []);
 
   const canScroll = false;
   console.log(imgSrc.bg_game);
   return (
-    <SafeArea safearea={safeArea}>
-      <Viewport bgUrl={imgSrc.bg_viewport} />
+    <SafeArea>
+      <Viewport src={imgSrc.bg_viewport} />
 
       <Background>
+        <GameBg visible={bgImg !== undefined} src={bgImg} />
         <EmptyBox
           height={safeArea[0]}
           width={SCREEN_WIDTH}
@@ -93,7 +130,7 @@ function App() {
 /* 
 const 
 */
-const Background = styled.div<{ bg?: any }>`
+const Background = styled.div<{ bgImg?: string }>`
   position: relative;
   /* top: 0; */
   display: flex;
