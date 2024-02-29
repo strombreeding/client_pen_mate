@@ -1,10 +1,27 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { View } from "../../nativeView";
 import React from "react";
 
-const BottomBtnBox = styled(View)`
+const slideDown = keyframes`
+  from{
+    bottom: -1px;
+  }
+  to{
+    bottom: -300px;
+  }
+`;
+const slideUp = keyframes`
+  from{
+    bottom: -100px;
+  }
+  to{
+    bottom: -1px;
+  }
+`;
+
+const BottomBtnBox = styled(View)<{ visible: boolean }>`
   position: absolute;
-  bottom: -1px;
+  bottom: -300px;
   flex-direction: column;
   width: 100%;
   justify-content: space-between;
@@ -17,6 +34,8 @@ const BottomBtnBox = styled(View)`
   border-radius: 50px 50px 0px 0px;
   backdrop-filter: blur(10px) contrast(60%);
   -webkit-backdrop-filter: blur(10px) contrast(60%);
+  animation: ${(props) => (props.visible ? slideUp : slideDown)} linear 0.55s
+    forwards;
 `;
 
 const Layer = styled.div`
@@ -39,12 +58,14 @@ const Layer = styled.div`
 function BottomNavLayer({
   children,
   style,
+  visible,
 }: {
   children: React.ReactNode;
   style?: React.CSSProperties;
+  visible: boolean;
 }) {
   return (
-    <BottomBtnBox style={style}>
+    <BottomBtnBox style={style} visible={visible}>
       <Layer />
       {children}
     </BottomBtnBox>

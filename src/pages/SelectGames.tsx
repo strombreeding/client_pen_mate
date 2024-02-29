@@ -16,7 +16,11 @@ import { langueage } from "../configs/language";
 import BottomModal from "../components/games/BottomModal";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { GameTitle, setGameState } from "../store/slices/gameState";
+import {
+  GameTitle,
+  setGameSelectState,
+  setGameState,
+} from "../store/slices/gameState";
 import { setBgImg } from "../store/slices/appState";
 import { imgSrc } from "../assets/img";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
@@ -91,9 +95,13 @@ const SelectGames = () => {
 
   useEffect(() => {
     dispatch(setBgImg(imgSrc.bg_game));
+    dispatch(setGameSelectState("move"));
+    dispatch(setGameState({ gameTitle: undefined }));
     // dispatch(setCanPopstateEvent(false));
     return () => {
       dispatch(setBgImg(undefined));
+      dispatch(setGameSelectState("move"));
+      dispatch(setGameState({ gameTitle: undefined }));
     };
   }, []);
 
@@ -119,7 +127,7 @@ const SelectGames = () => {
     } else if (newIndex === 1) {
       moveToNthSlide(games.length - 3);
     }
-
+    dispatch(setGameSelectState("move"));
     setIdx((prev) => prev + direction);
     if (scrollRef.current !== null) {
       scrollRef.current.style.transition = "all 0.25s ease-in-out";
@@ -192,6 +200,7 @@ const SelectGames = () => {
   const onClick = () => {
     // dispatch(setChoiceTitle(games[idxsetGameState({gameTitle:undefined}))
     dispatch(setGameState({ gameTitle: games[idx].title }));
+    dispatch(setGameSelectState("choice"));
     // navigation("/games/" + games[idx].id);
   };
 
@@ -219,21 +228,14 @@ const SelectGames = () => {
           const selected = isFocused(idx, games.length, index);
 
           return (
-            <GameCard
-              img={gameProp.img}
-              title={gameProp.title}
-              description={gameProp.description}
-              key={index}
-              selected={selected}
-              choiceTitle={choiceTitle === gameProp.title}
-            />
+            <GameCard gameProps={gameProp} key={index} selected={selected} />
           );
         })}
       </View>
 
       <EmptyBox style={{ flex: 1 }} />
-      <BottomPrevNext style={{ flex: 1 }} />
-      <BottomModal visible={choiceTitle !== undefined} />
+      <BottomPrevNext style={{ flex: 1 }} visible={choiceTitle === undefined} />
+      {/* <BottomModal visible={choiceTitle !== undefined} /> */}
     </Container>
   );
 };

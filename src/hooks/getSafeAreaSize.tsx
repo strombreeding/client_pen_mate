@@ -1,11 +1,16 @@
+import { useEffect } from "react";
 import { IOS, MOBILE } from "../configs/device";
 
 export const useSafeAreaSize = () => {
   if (!MOBILE) return;
   let result;
   //   const dispatch = useDispatch<AppDispatch>();
-  //@ts-ignore
-  window.ReactNativeWebView.postMessage(message);
+  try {
+    // @ts-ignore
+    window.ReactNativeWebView.postMessage("init");
+  } catch (err: any) {
+    if (err.message.includes("postMessage")) console.error(err.message);
+  }
 
   const readDataFromReactNative = (event: MessageEvent<string>) => {
     if (typeof event.data === "string") {

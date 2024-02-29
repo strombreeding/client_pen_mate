@@ -34,7 +34,7 @@ function BottomNav() {
   };
 
   return (
-    <BottomLayer>
+    <BottomLayer visible={true}>
       <IconWrapper>
         <Pressable id="/" onClick={navTab}>
           <NavIcon

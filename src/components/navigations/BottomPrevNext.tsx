@@ -4,13 +4,13 @@ import { Pressable, View } from "../../nativeView";
 import { EmptyBox } from "../../styles";
 import BottomLayer from "./BottomLayer";
 import { useNavigate, useNavigation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
 import { setCanPopstateEvent } from "../../store/slices/appState";
 import { usePageState } from "../../hooks/getVisitedPage";
 import { useCustomNavi } from "../../utils/navigate";
 
-const PrevBtn = styled(Pressable)`
+export const PrevBtn = styled(Pressable)`
   flex: 1;
   border-radius: 50px;
   align-items: center;
@@ -28,9 +28,10 @@ function BottomPrevNext({
   visible,
 }: {
   style: React.CSSProperties;
-  visible?: boolean;
+  visible: boolean;
 }) {
   const pageState = usePageState();
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const goBack = () => {
@@ -39,7 +40,7 @@ function BottomPrevNext({
     navigate(pageState[0]);
   };
   return (
-    <BottomLayer style={style}>
+    <BottomLayer style={style} visible={visible}>
       <View style={styles.contentView}>
         <PrevBtn onClick={goBack}>
           <Text.Light_12>{"이전"}</Text.Light_12>

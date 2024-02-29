@@ -80,7 +80,7 @@ const SaChunSung = () => {
           }
         }}
       >
-        사천성 게임!
+        우주 고철장!
       </Text.SemiBold_32>
 
       {/* <div>
@@ -96,9 +96,9 @@ const SaChunSung = () => {
           onChange={(e) => setCols(Number(e.currentTarget.value))}
         />
       </div> */}
-      <RowBoard onClick={() => create()}>
+      {/* <RowBoard onClick={() => create()}>
         <Text.Light_20>게임판 생성!</Text.Light_20>
-      </RowBoard>
+      </RowBoard> */}
 
       {/* <RowBoard
         ref={createAIRef}

@@ -19,6 +19,7 @@ export type GameStatus = {
 };
 interface GameState {
   status: GameStatus;
+  selectState: "move" | "choice";
 }
 
 const initialState: GameState = {
@@ -28,6 +29,7 @@ const initialState: GameState = {
     bet: 0,
     matchType: "regular",
   },
+  selectState: "move",
 };
 
 const gameStateSlice = createSlice({
@@ -37,9 +39,13 @@ const gameStateSlice = createSlice({
     setGameState: (state, action: PayloadAction<GameStatus>) => {
       state.status = { ...state.status, ...action.payload };
     },
+
+    setGameSelectState: (state, action: PayloadAction<"move" | "choice">) => {
+      state.selectState = action.payload;
+    },
   },
 });
 
-export const { setGameState } = gameStateSlice.actions;
+export const { setGameState, setGameSelectState } = gameStateSlice.actions;
 
 export default gameStateSlice.reducer;
