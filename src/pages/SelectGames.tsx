@@ -26,6 +26,7 @@ import { imgSrc } from "../assets/img";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
 import { usePageState } from "../hooks/getVisitedPage";
 import axios from "axios";
+import { SERVER_URI } from "../configs/server";
 
 const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
@@ -61,7 +62,7 @@ const SelectGames = () => {
   const navigation = useNavigate();
 
   const req = async () => {
-    const res = await axios.get("http://localhost:8080/game");
+    const res = await axios.get(SERVER_URI + "game");
     const data = res.data.data;
     data[0].img = gameImg.junkyard;
     data[1].img = gameImg.tetris_img;
