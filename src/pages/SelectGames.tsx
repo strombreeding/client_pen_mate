@@ -62,7 +62,7 @@ const SelectGames = () => {
   const navigation = useNavigate();
 
   const req = async () => {
-    const res = await axios.get(SERVER_URI + "game");
+    const res = await axios.get("https://jinytree.store/api/" + "game");
     const data = res.data.data;
     data[0].img = gameImg.junkyard;
     data[1].img = gameImg.tetris_img;
