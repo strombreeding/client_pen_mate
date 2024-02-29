@@ -1,7 +1,6 @@
 export const SERVER_URI =
   process.env.REACT_APP_SERVER_URI == undefined
-    ? // ? "http://localhost:8080/"
-      "http://192.168.25.15:8080/"
+    ? "https://jinytree.store/api/"
     : process.env.REACT_APP_SERVER_URI;
 
 export const CLIENT_URI =
