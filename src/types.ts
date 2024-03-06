@@ -18,7 +18,7 @@ export type SignInFormData = {
 
 // max y = 9
 
-export type SachunsungGameSetting = {
+export type JunkwardGameSetting = {
   matchAI: boolean;
   level: string;
   intAI: number;

@@ -12,7 +12,9 @@ const UserBoard: FC<{
   setBoard: Dispatch<SetStateAction<number[][]>>;
   settingStep: number;
   complate: string;
-}> = ({ board, setBoard, settingStep, complate }) => {
+  setClearList: Dispatch<SetStateAction<string[]>>;
+  nowLevel: string;
+}> = ({ board, setBoard, settingStep, complate, setClearList, nowLevel }) => {
   const [firstItem, setFirstItem] = useState([-1, -1]);
   const [secondItem, setSecondItem] = useState([-1, -1]);
   const [step, setStep] = useState<"first" | "second">("first");
@@ -73,10 +75,7 @@ const UserBoard: FC<{
             (complate === JSON.stringify(board) && settingStep === 4) ||
             remainingPath == null
           ) {
-            alert(`
-            YOU WIN!!
-            ${userClickCnt.current / 2}번 클릭만에 클리어!`);
-            window.location.reload();
+            setClearList((prev) => [...prev, nowLevel]);
           }
         }
       } catch (err) {
@@ -87,7 +86,7 @@ const UserBoard: FC<{
     }
   };
   return (
-    <View style={{ position: "relative" }}>
+    <View style={{ position: "relative", zIndex: 1 }}>
       {board.map((item, i) => {
         // if (i === 0 || board.length - 1 === i) return;
         return (

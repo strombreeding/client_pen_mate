@@ -10,13 +10,13 @@ export type GameTitle =
   | "결투!"
   | undefined;
 export type GamePlayer = string | undefined;
-export type GameStatus = {
+export interface GameStatus {
   gameTitle?: GameTitle;
   cost?: number;
   player?: GamePlayer;
   matchType?: string;
   aiOption?: string;
-};
+}
 interface GameState {
   status: GameStatus;
   selectState: "move" | "choice";

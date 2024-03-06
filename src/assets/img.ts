@@ -60,4 +60,5 @@ export const imgSrc = {
   dm_26px: require("../assets/pngs/dm_26px.png"),
 
   slide_up: require("../assets/pngs/slide_up.png"),
+  timer: require("../assets/pngs/timer.png"),
 };

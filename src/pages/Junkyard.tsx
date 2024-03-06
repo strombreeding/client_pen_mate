@@ -3,22 +3,18 @@ import { Container, EmptyBox } from "../styles";
 import * as utils from "../utils/index";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { type SachunsungGameSetting } from "../types";
-import SelectLevel from "../components/games/junkyard/SelectLevel";
-import WithAiBot from "../components/games/junkyard/SelectWithAi";
-import SelectAiIntellect from "../components/games/junkyard/SelectAiIntellect";
-import AiBoard from "../components/games/junkyard/AiBoard";
+import type { JunkwardGameSetting } from "../types";
 import UserBoard from "../components/games/junkyard/UserBoard";
 import { Text } from "../assets/fontStyles";
 import { useAuthVisitPage, usePageState } from "../hooks/getVisitedPage";
 import { useNavigate } from "react-router-dom";
-import { setBgImg, setLoading } from "../store/slices/appState";
+import { setBgImg } from "../store/slices/appState";
 import { gameImg } from "../assets/gameImg";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
 import { history } from "../configs/history";
 import styled, { keyframes } from "styled-components";
-import { View } from "../nativeView";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../configs/device";
+import { Pressable, View } from "../nativeView";
+import { SCREEN_WIDTH } from "../configs/device";
 import { getAiInt } from "../components/games/junkyard/useful";
 import { createRandomLevel } from "../utils/saChunSungUtil";
 import Cookies from "js-cookie";
@@ -48,7 +44,7 @@ const initTitle = keyframes`
 const fadeOut = keyframes`
   from{
     background-color: #000000;
-    /* z-index:1000; */
+    z-index:1000;
   }
   to{
     background-color: rgba(0,0,0,0);
@@ -93,14 +89,24 @@ const BG = styled.div<AnimationState>`
   width: ${SCREEN_WIDTH}px;
   position: absolute;
   opacity: 1;
+  z-index: 1000;
   animation: ${(props) => (props.step === 2 ? fadeOut : {})}
     ${(props) => (props.step === 0 ? "1.5s" : "0.5s")} linear forwards;
 `;
 
-function BgView({ loading }: { loading: boolean }) {
+function BgView({
+  loading,
+  isContinue,
+}: {
+  loading: boolean;
+  isContinue: boolean;
+}) {
   const [step, setStep] = useState(-1);
   // 0 = 글자나타남  1= 글자위로 2 = 배경 투명
   useEffect(() => {
+    if (isContinue) {
+      setStep(2);
+    }
     if (loading === false) {
       if (step === 2) {
         return;
@@ -113,6 +119,7 @@ function BgView({ loading }: { loading: boolean }) {
       }
     }
   }, [step]);
+
   return (
     <BG step={step}>
       <Title step={step}>
@@ -121,32 +128,48 @@ function BgView({ loading }: { loading: boolean }) {
     </BG>
   );
 }
+
+interface InGameState extends GameStatus {
+  isStarting: boolean;
+  startTime: number;
+  clearList: string[];
+  board: number[][];
+  aiBoard: number[][];
+  level: string;
+  isContinue: boolean;
+}
+// type InGameState extend= GameStatus;
+let startY = 0;
+let endY = 0;
 function Junkyard() {
   const pageState = usePageState(false);
+  const navigation = useNavigate();
   const loading = useSelector((state: RootState) => state.appState.loading);
   const validateAuth = useAuthVisitPage();
-  const navigation = useNavigate();
+  const continueRef = useRef(false);
   const [aiBoard, setAiBoard] = useState([] as number[][]);
+  const [reward, setReward] = useState(0);
   const [board, setBoard] = useState([] as number[][]);
   const [complate, setComplate] = useState("");
   const [aiComplate, setAiComplate] = useState("");
   const [settingStep, setSettingStep] = useState(0);
   const [aiStatus, setAiStatus] = useState(false);
-  const [startTime, setStartTime] = useState(new Date());
-  const [onTimer, setOnTimer] = useState(false);
+  const [startTime, setStartTime] = useState(0);
+  const [tictoc, setTictoc] = useState(0);
   const [navVisble, setNavVisble] = useState(false);
-  const [gameSetting, setGameSetting] = useState<SachunsungGameSetting>({
+  const [gameSetting, setGameSetting] = useState<JunkwardGameSetting>({
     matchAI: false,
-    level: "8,9",
+    level: "0,0",
     // level: "3,4",
     intAI: 5,
   });
-  const [clearList, setClearList] = useState([]);
+  const [clearList, setClearList] = useState([] as string[]);
   const [isStarting, setIsStarting] = useState(false);
-
+  const [startBtnText, setStartBtnText] = useState("시작");
   const dispatch = useDispatch<AppDispatch>();
 
   const create = () => {
+    console.log(gameSetting.level);
     const [row, col] = gameSetting.level.split(",");
     const createdBoard = utils.saChunSung.createBoard(Number(row), Number(col));
     const boardToString = JSON.stringify(
@@ -163,39 +186,33 @@ function Junkyard() {
     setComplate(boardToString);
   };
 
-  const refreshAction = (e: BeforeUnloadEvent) => {
-    e.preventDefault();
-    e.returnValue = "";
-  };
-
   const gameInit = () => {
     const cookie = Cookies.get("ingame");
+    console.log(JSON.parse(cookie!));
     if (cookie == null) {
-      console.log("어디서 막혀?1");
       history.push("games");
-      console.log("어디서 막혀?2");
     } else {
-      console.log("어디서 막혀?3", cookie);
-      const gameInfo: GameStatus = JSON.parse(cookie);
+      const gameInfo: InGameState = JSON.parse(cookie);
+      const nowTime = Math.floor(new Date().getTime() / 1000);
       setGameSetting((prev) => ({
         ...prev,
         intAI: getAiInt(gameInfo.aiOption),
-        level: "3,4",
+        level: gameInfo.level == undefined ? "3,4" : gameInfo.level,
         matchAI: gameInfo.player !== "AI" ? false : true,
       }));
-      console.log("어디서 막혀?4");
+      setIsStarting(gameInfo.isStarting || false);
+      setStartTime(gameInfo.startTime || 0);
+      setTictoc(gameInfo.startTime - nowTime);
+      setClearList(gameInfo.clearList || []);
+      setBoard(gameInfo.board || []);
+      setAiBoard(gameInfo.aiBoard || []);
+      if (gameInfo.isContinue) {
+        continueRef.current = true;
+      }
     }
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setNavVisble(true);
-    }, 3000);
-    console.log(gameSetting);
-    // console.log(gameState);
-    gameInit();
-    console.log("시발");
-    dispatch(setBgImg(gameImg.junkward_bg));
     const unlistenHistoryEvent = history.listen(({ action }) => {
       if (action === "POP") {
         const confirm = window.confirm(
@@ -206,54 +223,175 @@ function Junkyard() {
           Cookies.remove("ingame");
           // navigation("/games", { replace: true });
         } else {
+          const getCookie = JSON.parse(Cookies.get("ingame")!);
+          const saveObj: InGameState = {
+            ...getCookie,
+            ...gameSetting,
+            board,
+            aiBoard,
+            clearList,
+            isStarting,
+            startTime,
+            isContinue: true,
+          };
+          Cookies.set("ingame", JSON.stringify(saveObj));
+
           window.history.forward();
         }
       }
     });
+    const refreshAction = (e: BeforeUnloadEvent) => {
+      const getCookie = JSON.parse(Cookies.get("ingame")!);
+      const saveObj: InGameState = {
+        ...getCookie,
+        ...gameSetting,
+        board,
+        aiBoard,
+        clearList,
+        isStarting,
+        startTime,
+        isContinue: true,
+      };
+      console.log(saveObj);
+
+      Cookies.set("ingame", JSON.stringify(saveObj));
+      e.preventDefault();
+      e.returnValue = "";
+    };
     window.addEventListener("beforeunload", refreshAction);
+    return () => {
+      unlistenHistoryEvent();
+      window.removeEventListener("beforeunload", refreshAction);
+    };
+  }, [board]);
+
+  useEffect(() => {
+    let slideDown: string | number | NodeJS.Timeout | undefined = undefined;
+    if (navVisble) {
+      slideDown = setTimeout(() => {
+        setNavVisble(false);
+      }, 7000);
+    }
+    return () => {
+      clearTimeout(slideDown);
+    };
+  }, [navVisble]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setNavVisble(true);
+    }, 3000);
+    // console.log(gameState);
+    gameInit();
+    console.log(board.length);
+
+    dispatch(setBgImg(gameImg.junkward_bg));
 
     return () => {
       dispatch(setBgImg(undefined));
-      unlistenHistoryEvent();
-      window.removeEventListener("beforeunload", refreshAction);
     };
   }, []);
 
   useEffect(() => {
-    const newLevel = createRandomLevel(clearList);
-    setGameSetting((prev) => ({ ...prev, level: newLevel }));
-    create();
+    if (!isStarting) return;
+    if (continueRef.current) {
+      continueRef.current = false;
+    } else {
+      const newLevel = createRandomLevel(clearList);
+      setGameSetting((prev) => ({ ...prev, level: newLevel }));
+      create();
+    }
 
     //
   }, [clearList]);
-  let startY = 0;
-  let endY = 0;
+
+  useEffect(() => {
+    if (Number(startBtnText) <= 3) {
+      setTimeout(() => {
+        if (startBtnText === "시작") {
+          setStartBtnText("3");
+        } else if (startBtnText === "3") {
+          setStartBtnText("2");
+        } else if (startBtnText === "2") {
+          setStartBtnText("1");
+        } else if (startBtnText === "1") {
+          const nowTime = Math.floor(new Date().getTime() / 1000);
+          const clearTime = Math.floor((new Date().getTime() + 60000) / 1000);
+          create();
+          setTictoc(clearTime - nowTime);
+          setStartTime(clearTime);
+          setIsStarting(true);
+        }
+      }, 1000);
+      return;
+    }
+  }, [startBtnText]);
+
+  useEffect(() => {
+    if (!isStarting) return;
+    if (tictoc <= 0) {
+      alert("리저트 페이지로 이동");
+      navigation("/games");
+    }
+    const timer = setTimeout(() => {
+      setTictoc(tictoc - 1);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isStarting, tictoc]);
+
   if (loading) return <></>;
   return (
     <Container style={{ flex: 1, justifyContent: "space-between" }}>
       <Title>
-        <Text.SemiBold_24 onClick={() => {}}>우주 고철장</Text.SemiBold_24>
+        <Text.SemiBold_24>우주 고철장</Text.SemiBold_24>
       </Title>
       <View
         style={{
-          flexDirection: "row",
           position: "absolute",
           top: 10,
           right: 10,
+          alignItems: "end",
         }}
       >
-        <Text.SemiBold_20>시발</Text.SemiBold_20>
+        <View style={{ flexDirection: "row" }}>
+          <img src={imgSrc.timer} style={{ width: 20, aspectRatio: 1 }} />
+          <EmptyBox width={3} />
+          <Text.SemiBold_20>
+            {isNaN(tictoc) || tictoc < 0 ? "" : tictoc}
+          </Text.SemiBold_20>
+        </View>
+        <EmptyBox height={15} />
+        <View style={{ flexDirection: "row" }}>
+          <img
+            src={imgSrc.atata_un}
+            style={{ width: 20, height: 20, marginTop: -3.5 }}
+          />
+          <Text.Light_16>{50}+</Text.Light_16>
+        </View>
       </View>
-      <BgView loading={false} />
+      <BgView loading={loading} isContinue={isStarting} />
       <EmptyBox height={60} />
-      <BgView loading={loading} />
-
-      <UserBoard
-        board={board}
-        setBoard={setBoard}
-        settingStep={settingStep}
-        complate={complate}
-      />
+      {board.length > 0 ? (
+        <UserBoard
+          board={board}
+          setBoard={setBoard}
+          settingStep={settingStep}
+          complate={complate}
+          nowLevel={gameSetting.level}
+          setClearList={setClearList}
+        />
+      ) : (
+        <StartBtn
+          onClick={() => {
+            setStartBtnText("3");
+            setNavVisble(false);
+          }}
+        >
+          <Text.Light_24>{startBtnText}</Text.Light_24>
+        </StartBtn>
+      )}
       {/* <AiBoard
         intAI={gameSetting.intAI}
         settingStep={settingStep}
@@ -299,5 +437,18 @@ function Junkyard() {
     </Container>
   );
 }
-
+const StartBtn = styled(Pressable)`
+  /* padding: "20px 40px 20px 40px"; */
+  position: absolute;
+  z-index: 1;
+  top: 45%;
+  width: 130px;
+  padding: 15px;
+  background-color: rgba(49, 80, 254, 0.3);
+  backdrop-filter: blur(4px) contrast(90%);
+  -webkit-backdrop-filter: blur(4px) contrast(90%);
+  display: flex;
+  text-align: center;
+  border-radius: 30px;
+`;
 export default Junkyard;
