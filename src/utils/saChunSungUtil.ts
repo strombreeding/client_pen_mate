@@ -428,3 +428,37 @@ export const remainingPathFinder = async (
     }
   }
 };
+
+export const createRandomLevel = (levelHistory: string[]) => {
+  const levelList = [
+    "3,4",
+    "3,6",
+    "3,8",
+    "4,4",
+    "4,5",
+    "4,6",
+    "4,7",
+    "4,8",
+    "5,4",
+    "5,6",
+    "5,8",
+    "6,6",
+    "6,7",
+    "6,8",
+    "7,6",
+    "7,8",
+    "8,7",
+    "8,8",
+    "8,9",
+  ];
+  const randomIdx = Math.floor(Math.random() * levelList.length);
+  while (true) {
+    if (levelHistory.includes(levelList[randomIdx])) {
+      const idx = levelHistory.indexOf(levelList[randomIdx]);
+      levelHistory.splice(idx, 1);
+      continue;
+    }
+    break;
+  }
+  return levelList[randomIdx];
+};

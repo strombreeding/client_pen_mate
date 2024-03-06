@@ -4,6 +4,9 @@ import { Container } from "../../styles";
 import { View } from "../../nativeView";
 import { Text } from "../../assets/fontStyles";
 import { imgSrc } from "../../assets/img";
+import { memo, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const bounce = keyframes`
     0%{
@@ -84,13 +87,15 @@ const Layer = styled(View)<{ loading: boolean }>`
   background-color: black;
   animation: ${(props) => (props.loading ? {} : fadeOut)} 1s linear forwards;
 `;
-function Loading({ loading }: { loading: boolean }) {
+function Loading() {
+  const loading = useSelector((state: RootState) => state.appState.loading);
+  useEffect(() => {}, []);
   return (
-    <Layer loading={loading} onClick={() => alert("시발럼아")}>
+    <Layer loading={loading}>
       <BgImg src={imgSrc.bg_login} />
       <Logo loading={loading} src={imgSrc.atata_join} />
     </Layer>
   );
 }
 
-export default Loading;
+export default memo(Loading);

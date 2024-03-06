@@ -4,6 +4,8 @@ import * as utils from "../../../utils";
 import { Text } from "../../../assets/fontStyles";
 import { gameImg } from "../../../assets/gameImg";
 import { url } from "inspector";
+import { SCREEN_WIDTH } from "../../../configs/device";
+import { View } from "../../../nativeView";
 
 const UserBoard: FC<{
   board: number[][];
@@ -14,8 +16,8 @@ const UserBoard: FC<{
   const [firstItem, setFirstItem] = useState([-1, -1]);
   const [secondItem, setSecondItem] = useState([-1, -1]);
   const [step, setStep] = useState<"first" | "second">("first");
+  const [keyPath, setKeyPath] = useState([] as number[][]);
   const userClickCnt = useRef(0);
-
   const clickCard = async (clicked: boolean, i: number, a: number) => {
     if (clicked) {
       console.log("1번분기");
@@ -56,18 +58,17 @@ const UserBoard: FC<{
           [i, a],
           board[firstItem[0]][firstItem[1]]
         );
-
         if (isPair) {
           board[firstItem[0]][firstItem[1]] = 0;
           board[i][a] = 0;
           const copy = JSON.parse(JSON.stringify(board));
-
+          setKeyPath(isPair);
           setBoard([...board]);
+          setTimeout(() => setKeyPath([]), 200);
           const remainingPath = await utils.saChunSung.remainingPathFinder(
             copy,
             "hint"
           );
-          console.log(remainingPath);
           if (
             (complate === JSON.stringify(board) && settingStep === 4) ||
             remainingPath == null
@@ -86,7 +87,7 @@ const UserBoard: FC<{
     }
   };
   return (
-    <div>
+    <View style={{ position: "relative" }}>
       {board.map((item, i) => {
         // if (i === 0 || board.length - 1 === i) return;
         return (
@@ -98,24 +99,31 @@ const UserBoard: FC<{
                 (i === secondItem[0] && a === secondItem[1])
                   ? true
                   : false;
+              const id = [i, a];
+              const process = keyPath.filter((path) => {
+                if (path[0] === id[0] && path[1] === id[1]) return true;
+              });
+              const isProcessed = process.length > 0 ? true : false;
+              //
               return (
                 <Card
                   key={a}
                   clicked={clicked}
+                  processed={isProcessed}
                   success={board[i][a] === 0 ? true : false}
                   onClick={() => {
                     clickCard(clicked, i, a);
                   }}
                 >
-                  <img
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      border: `solid 1px skyblue`,
-                      borderRadius: 5,
-                    }}
-                    src={gameImg[sourceName]}
-                  />
+                  {board[i][a] !== 0 && (
+                    <img
+                      style={{
+                        width: SCREEN_WIDTH * 0.0733,
+                        aspectRatio: "auto",
+                      }}
+                      src={gameImg[sourceName]}
+                    />
+                  )}
                   {/* <Text.Spo_Light_16>{num}</Text.Spo_Light_16> */}
                 </Card>
               );
@@ -123,7 +131,7 @@ const UserBoard: FC<{
           </RowBoard>
         );
       })}
-    </div>
+    </View>
   );
 };
 

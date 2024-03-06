@@ -15,7 +15,7 @@ import useDisablePinchZoom from "./hooks/disabledPinchZoom";
 import Background from "./pages/Background";
 import PublicPage from "./routes/PublicPage";
 import Main from "./pages/Main";
-import SaChunSung from "./pages/SaChunSung";
+import Junkyard from "./pages/Junkyard";
 import SelectGames from "./pages/SelectGames";
 import Join from "./pages/Join";
 import BangMain from "./pages/BangMain";
@@ -39,7 +39,7 @@ const Routers: React.FC = () => {
 
         {/* 게임 모음 */}
         <Route path="/games" element={<SelectGames />} />
-        <Route path="/games/sachunsung" element={<SaChunSung />} />
+        <Route path="/games/junkyard" element={<Junkyard />} />
         <Route path="/games/bang" element={<BangMain />} />
         <Route path="/games/tetris" element={<BangMain />} />
 

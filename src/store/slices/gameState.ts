@@ -5,17 +5,17 @@ export type GameTitle =
   | "Cosmic Junkyard"
   | "Gravity WorkShop"
   | "Bang!"
-  | "우주 고철장"
-  | "중력 작업장"
+  | "고철장"
+  | "작업장"
   | "결투!"
   | undefined;
-export type GamePlayer = "ai" | "2p" | "rank" | "bounties" | undefined;
-export type MatchType = "regular" | "oneShot";
+export type GamePlayer = string | undefined;
 export type GameStatus = {
   gameTitle?: GameTitle;
-  bet?: number;
+  cost?: number;
   player?: GamePlayer;
-  matchType?: MatchType;
+  matchType?: string;
+  aiOption?: string;
 };
 interface GameState {
   status: GameStatus;
@@ -26,7 +26,7 @@ const initialState: GameState = {
   status: {
     gameTitle: undefined,
     player: undefined,
-    bet: 0,
+    cost: 0,
     matchType: "regular",
   },
   selectState: "move",

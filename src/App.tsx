@@ -1,17 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Routers from "./Router";
 import { EmptyBox, GlobalStyle, SafeArea } from "./styles";
 import { SERVER_URI } from "./configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import styled from "styled-components";
-import { setSafeArea } from "./store/slices/appState";
-import { IOS, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
+import { setLoading, setSafeArea } from "./store/slices/appState";
+import { IOS, MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "./configs/device";
 import { Viewport } from "./nativeView";
 import { imgSrc } from "./assets/img";
 import GameBg from "./components/designs/GameBG";
 import { usePageState } from "./hooks/getVisitedPage";
 import { useSafeAreaSize } from "./hooks/getSafeAreaSize";
+import Loading from "./components/designs/Loading";
+import Cookies from "js-cookie";
+import BottomModal from "./components/games/BottomModal";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -27,6 +30,8 @@ import { useSafeAreaSize } from "./hooks/getSafeAreaSize";
 function App() {
   const pageState = usePageState();
 
+  const loading = useSelector((state: RootState) => state.appState.loading);
+  // useEffect(() => {}, [loading]);
   const bgImg = useSelector((state: RootState) => state.appState.bgImg);
   const canPopstate = useSelector(
     (state: RootState) => state.appState.canPopstateEvent
@@ -36,34 +41,18 @@ function App() {
   const safeArea = useSelector((state: RootState) => state.appState.safeArea);
   // const receiveRef = useRef(false);
   // const containerRef = useRef<HTMLDivElement>(null);
-  console.log(SERVER_URI);
-  console.log(window.innerHeight);
-  console.log(window.innerWidth);
+  // console.log(SERVER_URI);
+  // console.log(window.innerHeight);
+  // console.log(window.innerWidth);
   useSafeAreaSize();
   // const dispatch = useDispatch<AppDispatch>();
+  const [modal, setModal] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const choiceTitle = useSelector(
     (state: RootState) => state.gameState.status.gameTitle
   );
-  useEffect(() => {
-    // 여기서 리덕스로 히스토리를 잡아 그냥 계속.
-    const state = () => {
-      console.log("이건 메인APP", canPopstate);
-      // if (canPopstate) {
-      window.history.pushState({}, "", pageState[0]);
-      window.history.go(0);
-      // } else {
-      // window.history.pushState({}, "", pageState[1]);
-      // window.history.go(1);
-      // }
-    };
-    window.addEventListener("popstate", state);
 
-    return () => {
-      window.removeEventListener("popstate", state);
-    };
-  }, []);
   useEffect(() => {
     const readDataFromReactNative = (event: MessageEvent<string>) => {
       if (typeof event.data === "string") {
@@ -75,13 +64,6 @@ function App() {
         }
       }
     };
-
-    //   if (IOS) {
-    //     window.addEventListener("message", readDataFromReactNative);
-    //   } else if (!IOS) {
-    //     //@ts-ignore
-    //     document.addEventListener("message", readDataFromReactNative);
-    //   }
 
     if (IOS) {
       window.addEventListener("message", readDataFromReactNative);
@@ -98,42 +80,16 @@ function App() {
     // return () =>
   }, []);
 
-  // useEffect(() => {
-  //   const preventGoBack = () => {
-  //     console.log("popstate 이벤트 발생", canPopstate);
-  //     if (canPopstate) {
-  //       console.log("뒤로갈 수 있는 페이지");
-  //     } else {
-  //       console.log("뒤로갈 수 없는 페이지임니다!!");
-  //       window.history.pushState(null, "", window.location.href);
-  //     }
-
-  //     // console.log("ㅎㅇㅎㅇ");
-  //     // if (window.confirm("뒤로 가렽?")) {
-  //     //   console.log(window.history.state);
-  //     //   window.history.go(-1);
-  //     // } else {
-  //     //   console.log(window.history.state);
-  //     // }
-  //   };
-
-  //   window.addEventListener("popstate", preventGoBack);
-  //   return () => window.removeEventListener("popstate", preventGoBack);
-  //   return () => {
-  //     //@ts-ignore
-  //     document.removeEventListener("message", readDataFromReactNative);
-  //     window.removeEventListener("message", readDataFromReactNative);
-  //   };
-  //   // return () =>
-  // }, []);
-
   const canScroll = false;
-  console.log(imgSrc.bg_game);
+
+  console.log("로딩", loading);
   return (
     <SafeArea>
       <Viewport src={imgSrc.bg_viewport} />
 
       <Background>
+        <Loading />
+
         <GameBg visible={bgImg !== undefined} src={bgImg} />
         <EmptyBox
           height={safeArea[0]}
@@ -142,6 +98,7 @@ function App() {
         />
         <GlobalStyle canScroll={canScroll} />
         <Routers />
+        <BottomModal setVisible={setModal} visible={modal} />
       </Background>
     </SafeArea>
   );

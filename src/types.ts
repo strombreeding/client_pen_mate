@@ -10,18 +10,17 @@ export type SignInFormData = {
   interested?: string[];
 };
 
-export enum gamelevel {
-  BEGINNER = "3,4", // 4 까지
-  FRESHMAN = "6,6", // 6까지
-  SOPHOMORE = "9,8", // 8
-  JUNIOR = "12,10", //
-  SENIOR = "15,12",
-  HARD = "18,12",
-}
+// max x = 8
+/* 
+"3,4/3,6/3,8/4,4/4,5/4,6/4,7/4,8/5,4/5,6/5,8/6,6/6,7/6,8/7,6/7,8/8,7/8,8/8,9"
+
+*/
+
+// max y = 9
 
 export type SachunsungGameSetting = {
   matchAI: boolean;
-  level: gamelevel;
+  level: string;
   intAI: number;
 };
 

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, type FC } from "react";
-import { SachunsungGameSetting, gamelevel } from "../../../types";
+import { SachunsungGameSetting } from "../../../types";
 import { Text } from "../../../assets/fontStyles";
 
 const SelectLevel: FC<{
@@ -8,7 +8,7 @@ const SelectLevel: FC<{
 }> = ({ setGameSetting, setSettingStep }) => {
   return (
     <div>
-      <>
+      {/* <>
         <Text.Spo_Medium_16>난이도</Text.Spo_Medium_16>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Text.Spo_Medium_12
@@ -88,7 +88,7 @@ const SelectLevel: FC<{
             HARD
           </Text.Spo_Medium_12>
         </div>
-      </>
+      </> */}
     </div>
   );
 };

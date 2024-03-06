@@ -8,7 +8,7 @@ const SelectAiIntellect: FC<{
 }> = ({ setGameSetting, setSettingStep }) => {
   return (
     <>
-      <div>AI Intellect </div>
+      {/* <div>AI Intellect </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div
           style={{
@@ -54,7 +54,7 @@ const SelectAiIntellect: FC<{
         >
           <Text.Spo_Medium_16>GOD</Text.Spo_Medium_16>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

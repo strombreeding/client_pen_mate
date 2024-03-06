@@ -4,8 +4,8 @@ import { Text } from "../../assets/fontStyles";
 import { langueage } from "../../configs/language";
 import { EmptyBox } from "../../styles";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { SCREEN_HEIGHT } from "../../configs/device";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../configs/device";
 import { setGameState } from "../../store/slices/gameState";
 import { imgSrc } from "../../assets/img";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import { AppDispatch, RootState } from "../../store/store";
 
 interface IBottomModalProps {
   visible: boolean;
+  setVisible: Dispatch<SetStateAction<boolean>>;
 }
 
 const fadeIn = keyframes`
@@ -25,6 +26,7 @@ const fadeIn = keyframes`
     bottom:${SCREEN_HEIGHT / 3}px;
     opacity: 1;
     height: auto;
+    /* z-index: -1000; */
   }
 `;
 
@@ -34,6 +36,7 @@ const fadeOut = keyframes`
     bottom:${SCREEN_HEIGHT / 3}px;
 
     height: auto;
+    
 
   }
   to{
@@ -41,14 +44,15 @@ const fadeOut = keyframes`
 
     opacity: 0;
     height: 0;
+    /* z-index: 1000; */
 
   }
 `;
 const PopupLayer = styled(View)<{ visible?: boolean }>`
-  position: absolute;
-  max-height: ${SCREEN_HEIGHT}px;
+  position: fixed;
   flex-direction: column;
-  width: 100%;
+  left: 15px;
+  right: 15px;
   justify-content: space-between;
   padding: 25px 20px 25px 20px;
   border-radius: 50px 50px 50px 50px;
@@ -79,10 +83,9 @@ const Layer = styled.div`
 
   will-change: transform;
 `;
-function BottomModal({ visible }: IBottomModalProps) {
+function BottomModal({ visible, setVisible }: IBottomModalProps) {
   const [viewHeight, setViewHeight] = useState(0);
-  const navigation = useNavigate();
-  const gameState = useSelector((state: RootState) => state.gameState.status);
+  const [toggle, setToggle] = useState(visible);
   const dispatch = useDispatch<AppDispatch>();
   const scrollViewHeight = useRef<HTMLDivElement | null>(null);
 
@@ -95,16 +98,12 @@ function BottomModal({ visible }: IBottomModalProps) {
   }, []);
 
   const goBack = () => {
-    if (visible) {
-      setTimeout(() => {
-        dispatch(setGameState({ gameTitle: undefined }));
-      }, 200);
-      return;
-    }
+    setToggle(false);
+    return;
   };
 
   return (
-    <PopupLayer ref={scrollViewHeight} visible={visible}>
+    <PopupLayer ref={scrollViewHeight} visible={toggle}>
       <Layer />
       <View
         style={{
@@ -114,7 +113,7 @@ function BottomModal({ visible }: IBottomModalProps) {
           alignItems: "center",
         }}
       >
-        <Text.SemiBold_32>{gameState.gameTitle}</Text.SemiBold_32>
+        <Text.SemiBold_32>{"ㅋㅋ"}</Text.SemiBold_32>
         <EmptyBox height={20} />
       </View>
       <ScrollView

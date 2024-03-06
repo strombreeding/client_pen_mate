@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import { NavTab, SignInFormData } from "../../types";
 import { Dispatch, SetStateAction } from "react";
+import Cookies from "js-cookie";
 
 interface AppState {
   popup: boolean;
@@ -13,8 +14,9 @@ interface AppState {
   keyboardHeight: number;
   safeArea: number[];
   navTab: string;
-  canPopstateEvent: boolean;
+  canPopstateEvent: string | undefined;
   bgImg: string | undefined;
+  loading: boolean;
 }
 
 const initialState: AppState = {
@@ -23,8 +25,9 @@ const initialState: AppState = {
   keyboardHeight: 0,
   safeArea: [0, 0],
   navTab: window.location.pathname,
-  canPopstateEvent: true,
+  canPopstateEvent: Cookies.get("canPopstate"),
   bgImg: undefined,
+  loading: false,
 };
 
 const appState = createSlice({
@@ -48,12 +51,15 @@ const appState = createSlice({
       state.navTab = action.payload;
     },
 
-    setCanPopstateEvent: (state, action: PayloadAction<boolean>) => {
+    setCanPopstateEvent: (state, action: PayloadAction<string | undefined>) => {
       state.canPopstateEvent = action.payload;
     },
 
     setBgImg: (state, action: PayloadAction<string | undefined>) => {
       state.bgImg = action.payload;
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
   },
 });
@@ -66,6 +72,7 @@ export const {
   setNavTab,
   setCanPopstateEvent,
   setBgImg,
+  setLoading,
 } = appState.actions;
 
 export default appState.reducer;

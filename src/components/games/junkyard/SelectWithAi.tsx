@@ -8,7 +8,7 @@ const WithAiBot: FC<{
 }> = ({ setGameSetting, setSettingStep }) => {
   return (
     <>
-      <Text.Spo_Medium_12>YOU vs AI</Text.Spo_Medium_12>
+      {/* <Text.Spo_Medium_12>YOU vs AI</Text.Spo_Medium_12>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <Text.Spo_Medium_12
           style={{ margin: 20 }}
@@ -35,7 +35,7 @@ const WithAiBot: FC<{
           {" "}
           Im Chicken
         </Text.Spo_Medium_12>
-      </div>
+      </div> */}
     </>
   );
 };

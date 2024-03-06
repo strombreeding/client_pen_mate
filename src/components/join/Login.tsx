@@ -14,7 +14,6 @@ function Login({ step }: { step: string }) {
       // 예제 코드에서는 비동기 작업을 실행하는 것으로 보이지만 주석 처리되어 있습니다.
       // const res = await getOauthUrl(platform);
       // window.location.href = res;
-      // window.sessionStorage.setItem("Login", "1");
       alert(`${platform} SDK 로그인`);
       window.location.href = "/home";
       return true;

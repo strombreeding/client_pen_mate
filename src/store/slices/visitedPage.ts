@@ -7,7 +7,7 @@ interface CounterState {
 }
 
 const initialState: CounterState = {
-  visitedPages: [],
+  visitedPages: ["/"],
   pageState: ["", ""],
 };
 

@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { MOBILE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../../configs/device";
-import { imgSrc } from "../../assets/img";
-import { Fragment, useEffect, useState } from "react";
-import Loading from "./Loading";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../configs/device";
+import { Fragment, memo, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { setLoading } from "../../store/slices/appState";
 
 // Linear Gradient 스타일
 const LinearBackground = styled.div`
@@ -33,7 +34,7 @@ const CenteredImage = styled.img<{ visible: boolean }>`
   margin: 0 auto; /* 가운데 정렬을 위한 스타일 */
   opacity: 1; /* 이미지의 투명도 */
   /* z-index: 0; */
-  background-size: cover;
+  background-size: contain;
   background-position: center;
 `;
 
@@ -44,18 +45,24 @@ const GameBg: React.FC<{
   visible: boolean;
   src: string | undefined;
 }> = ({ children, visible, src }) => {
-  const [loading, setLoading] = useState(true);
+  // const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    console.log("로딩시작");
+    if (!src) return;
+    dispatch(setLoading(true));
+  }, [src]);
+
   const onLoad = () => {
-    setTimeout(() => setLoading(false), 300);
+    console.log("로딩종료");
+    setTimeout(() => dispatch(setLoading(false)), 1500);
   };
 
+  const onLoadStart = () => {};
+
   if (!src) return <></>;
-  return (
-    <Fragment>
-      <Loading loading={loading} />
-      <CenteredImage visible={visible} src={src} onLoad={onLoad} />
-    </Fragment>
-  );
+
+  return <CenteredImage visible={visible} src={src} onLoad={onLoad} />;
 };
 
-export default GameBg;
+export default memo(GameBg);

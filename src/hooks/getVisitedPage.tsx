@@ -2,11 +2,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { setPageState, setVisitPage } from "../store/slices/visitedPage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setCanPopstateEvent } from "../store/slices/appState";
+import Cookies from "js-cookie";
 
 export const useVisitedPage = () => {
   const path = window.location.pathname;
+  const cookieName = "history";
+  const cookie = JSON.parse(Cookies.get(cookieName)!);
   const dispath = useDispatch<AppDispatch>();
   const visitedPages = useSelector(
     (state: RootState) => state.visitedPage.visitedPages
@@ -18,39 +21,24 @@ export const useVisitedPage = () => {
   }
 };
 
-export const usePageState = (canPopState?: boolean) => {
-  if (canPopState == null) canPopState = true;
-
-  const dispatch = useDispatch<AppDispatch>();
-
+export const usePageState = (zz?: boolean) => {
+  const cookieName = "history";
   const path = window.location.pathname;
-  const storageData = window.localStorage.getItem("history");
-  const history = storageData ? JSON.parse(storageData) : ["/", path];
-
-  const reduxHistory = useSelector(
-    (state: RootState) => state.visitedPage.pageState
-  );
-  // console.log("시발", reduxHistory);
-  // console.log(history);
-  if (history[1] === path) return history;
-
-  history[0] = history[1];
-  history[1] = path;
-  window.localStorage.setItem("history", JSON.stringify(history));
-
-  // dispatch(setPageState(path));
-  if (!canPopState) {
-    dispatch(setCanPopstateEvent(false));
-  }
-  return history;
+  const cookie = JSON.parse(Cookies.get(cookieName)!);
+  if (cookie[1] === path) return;
+  cookie[0] = cookie[1];
+  cookie[1] = path;
+  Cookies.set(cookieName, JSON.stringify(cookie));
+  console.log(cookie);
+  return cookie;
 };
 
 export const useAuthVisitPage = () => {
   const gameState = useSelector((state: RootState) => state.gameState.status);
   const navigation = useNavigate();
   useEffect(() => {
-    if (gameState.gameTitle === undefined) {
-      navigation("/games");
-    }
+    // if (gameState.gameTitle === undefined) {
+    //   navigation("/games");
+    // }
   }, []);
 };

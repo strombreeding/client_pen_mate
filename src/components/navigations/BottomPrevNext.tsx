@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { setCanPopstateEvent } from "../../store/slices/appState";
 import { usePageState } from "../../hooks/getVisitedPage";
-import { useCustomNavi } from "../../utils/navigate";
+import { useEffect } from "react";
 
 export const PrevBtn = styled(Pressable)`
   flex: 1;
@@ -26,28 +26,39 @@ export const PrevBtn = styled(Pressable)`
 function BottomPrevNext({
   style,
   visible,
+  prevText,
+  nextText,
+  nextAction,
+  prevAction,
 }: {
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
   visible: boolean;
+  prevText?: string;
+  nextText?: string;
+  nextAction?: () => void;
+  prevAction?: () => void;
 }) {
-  const pageState = usePageState();
-
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const goBack = () => {
-    console.log(pageState);
-    dispatch(setCanPopstateEvent(true));
-    navigate(pageState[0]);
-  };
+  const pageState = usePageState();
+  const dispatch = useDispatch<AppDispatch>();
+
+  if (prevAction == null) {
+    prevAction = function () {
+      window.history.back();
+    };
+  }
+  if (prevText == null) prevText = "이전";
+  if (nextText == null) nextText = "스토어";
+
   return (
     <BottomLayer style={style} visible={visible}>
       <View style={styles.contentView}>
-        <PrevBtn onClick={goBack}>
-          <Text.Light_12>{"이전"}</Text.Light_12>
+        <PrevBtn onClick={prevAction}>
+          <Text.Light_12>{prevText}</Text.Light_12>
         </PrevBtn>
         <EmptyBox width={5} />
-        <PrevBtn>
-          <Text.Light_12>gd</Text.Light_12>
+        <PrevBtn onClick={nextAction}>
+          <Text.Light_12>{nextText}</Text.Light_12>
         </PrevBtn>
       </View>
     </BottomLayer>

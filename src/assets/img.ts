@@ -58,4 +58,6 @@ export const imgSrc = {
   arrow_right_26px: require("../assets/pngs/arrow_right_26px.png"),
   bell_26px: require("../assets/pngs/bell_26px.png"),
   dm_26px: require("../assets/pngs/dm_26px.png"),
+
+  slide_up: require("../assets/pngs/slide_up.png"),
 };

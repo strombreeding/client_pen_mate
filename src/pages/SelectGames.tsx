@@ -1,6 +1,7 @@
 import {
   MouseEventHandler,
   TouchEventHandler,
+  memo,
   useEffect,
   useRef,
   useState,
@@ -8,9 +9,8 @@ import {
 import { Text } from "../assets/fontStyles";
 import { View } from "../nativeView";
 import { Container, EmptyBox } from "../styles";
-import GameCard from "../components/designs/Card";
 import { SCREEN_WIDTH } from "../configs/device";
-import { useNavigate } from "react-router-dom";
+import { useBlocker, useNavigate } from "react-router-dom";
 import { gameImg } from "../assets/gameImg";
 import { langueage } from "../configs/language";
 import BottomModal from "../components/games/BottomModal";
@@ -21,12 +21,14 @@ import {
   setGameSelectState,
   setGameState,
 } from "../store/slices/gameState";
-import { setBgImg } from "../store/slices/appState";
+import { setBgImg, setLoading } from "../store/slices/appState";
 import { imgSrc } from "../assets/img";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
 import { usePageState } from "../hooks/getVisitedPage";
 import axios from "axios";
 import { SERVER_URI } from "../configs/server";
+import GameCard from "../components/games/card/Card";
+import Cookies from "js-cookie";
 
 const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
@@ -46,8 +48,12 @@ export interface GameProps {
   img: string;
 }
 
+type Tx = {
+  retry: () => void;
+};
 const SelectGames = () => {
   const pageState = usePageState();
+
   const [ready, setReady] = useState(false);
   const [games, setGames] = useState<GameProps[]>([{}, {}, {}] as GameProps[]);
   const [idx, setIdx] = useState(2);
@@ -62,15 +68,15 @@ const SelectGames = () => {
   const navigation = useNavigate();
 
   const req = async () => {
-    const res = await axios.get("https://jinytree.store/api/" + "game");
-    const data = res.data.data;
+    dispatch(setLoading(true));
+    const res = await axios.get(SERVER_URI + "game");
+    const data = res.data.result;
     data[0].img = gameImg.junkyard;
     data[1].img = gameImg.tetris_img;
     data[2].img = gameImg.bang_img;
     const startData = data[0];
     const endData = data[data.length - 1];
     const newList = [startData, endData, ...data, startData, endData];
-    console.log(newList);
     let subLange = initOffsetX;
     const lange = newList.map((game, i) => {
       if (i === 0) return subLange - caculMoveValue;
@@ -84,17 +90,12 @@ const SelectGames = () => {
     setScrollSection(lange);
     setGames(newList);
     setReady(true);
+    setTimeout(() => dispatch(setLoading(false)), 300);
   };
 
   useEffect(() => {
     req();
 
-    return () => {
-      console.log("언마운트");
-    };
-  }, []);
-
-  useEffect(() => {
     dispatch(setBgImg(imgSrc.bg_game));
     dispatch(setGameSelectState("move"));
     dispatch(setGameState({ gameTitle: undefined }));
@@ -109,6 +110,8 @@ const SelectGames = () => {
   useEffect(() => {
     if (scrollRef.current === null) return;
     scrollRef.current.style.transform = `translateX(-${scrollSection[idx]}px)`;
+    // scrollRef.current.style.transition = "all 0.15s ease-in-out";
+    dragRef.current = -1;
   }, [idx, ready]);
 
   const moveToNthSlide = (index: number) => {
@@ -117,7 +120,7 @@ const SelectGames = () => {
       if (scrollRef.current !== null) {
         scrollRef.current.style.transition = "";
       }
-    }, 250);
+    }, 100);
   };
 
   const handleSwipe = (direction: number) => {
@@ -131,21 +134,28 @@ const SelectGames = () => {
     dispatch(setGameSelectState("move"));
     setIdx((prev) => prev + direction);
     if (scrollRef.current !== null) {
-      scrollRef.current.style.transition = "all 0.25s ease-in-out";
+      scrollRef.current.style.transition = "all 0.15s ease-in-out";
     }
   };
 
+  const gameSelectState = useSelector(
+    (state: RootState) => state.gameState.selectState
+  );
   const onTouchStart: TouchEventHandler<HTMLDivElement> = (e) => {
+    if (gameSelectState === "choice") return;
     touchStartX = e.nativeEvent.changedTouches[0].clientX;
     dragRef.current = scrollSection[idx];
   };
 
   const onMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
+    if (gameSelectState === "choice") return;
     touchStartX = e.clientX;
     dragRef.current = scrollSection[idx];
   };
 
   const onTouchMove: TouchEventHandler<HTMLDivElement> = (e) => {
+    if (gameSelectState === "choice") return;
+
     if (scrollRef.current == null) return;
 
     if (dragRef.current < 0) return;
@@ -156,14 +166,14 @@ const SelectGames = () => {
       scrollRef.current.style.transform = `translateX(-${
         scrollSection[idx] + 8
       }px)`;
-      scrollRef.current.style.transition = "all 0.25s ease-in-out";
+      // scrollRef.current.style.transition = "all 0.15s ease-in-out";
 
       // dragRef.current = -1;
     } else if (touchStartX < currTouchX) {
       scrollRef.current.style.transform = `translateX(-${
         scrollSection[idx] - 8
       }px)`;
-      scrollRef.current.style.transition = "all 0.25s ease-in-out";
+      // scrollRef.current.style.transition = "all 0.15s ease-in-out";
 
       // dragRef.current = -1;
     }
@@ -171,13 +181,13 @@ const SelectGames = () => {
 
   const onTouchEnd: TouchEventHandler<HTMLDivElement> = (e) => {
     touchEndX = e.nativeEvent.changedTouches[0].clientX;
-    dragRef.current = -1;
+    // dragRef.current = -1;
     // if (touchStartX === touchEndX) return;
     dispatch(setGameState({ gameTitle: undefined }));
 
-    if (touchStartX > touchEndX) {
+    if (touchStartX - touchEndX > 10 && gameSelectState === "move") {
       handleSwipe(1);
-    } else if (touchStartX < touchEndX) {
+    } else if (touchStartX - touchEndX < -10 && gameSelectState === "move") {
       handleSwipe(-1);
     } else {
       onClick();
@@ -186,12 +196,14 @@ const SelectGames = () => {
 
   const onMouseUp: MouseEventHandler<HTMLDivElement> = (e) => {
     touchEndX = e.clientX;
-    dragRef.current = -1;
+    // dragRef.current = -1;
     console.log("마우스 뗏다");
     dispatch(setGameState({ gameTitle: undefined }));
-    if (touchStartX > touchEndX) {
+    // if (touchStartX > touchEndX) {
+    if (touchStartX - touchEndX > 10 && gameSelectState === "move") {
       handleSwipe(1);
-    } else if (touchStartX < touchEndX) {
+    } else if (touchStartX - touchEndX < -10 && gameSelectState === "move") {
+      // } else if (touchStartX < touchEndX) {
       handleSwipe(-1);
     } else {
       onClick();
@@ -200,17 +212,38 @@ const SelectGames = () => {
 
   const onClick = () => {
     // dispatch(setChoiceTitle(games[idxsetGameState({gameTitle:undefined}))
-    dispatch(setGameState({ gameTitle: games[idx].title }));
+    dispatch(
+      setGameState({
+        gameTitle: games[idx].title,
+        matchType: games[idx].matchType[0],
+        cost: games[idx].cost,
+        player: games[idx].player[0],
+      })
+    );
     dispatch(setGameSelectState("choice"));
     // navigation("/games/" + games[idx].id);
   };
 
-  if (!ready) return <></>;
   return (
     <Container style={styles.container}>
       {/* <EmptyBox height={50} /> */}
       <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
-        <Text.Regular_20>{langueage.gameSelect[0]}</Text.Regular_20>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text.Regular_20>{langueage.gameSelect[0]}</Text.Regular_20>
+          <View style={{ flexDirection: "row" }}>
+            <img
+              src={imgSrc.atata_un}
+              style={{ width: 20, height: 20, marginTop: -3 }}
+            />
+            <Text.Spo_Medium_16>{100}</Text.Spo_Medium_16>
+          </View>
+        </View>
         <EmptyBox height={35} />
       </View>
 
@@ -241,7 +274,7 @@ const SelectGames = () => {
   );
 };
 
-export default SelectGames;
+export default memo(SelectGames);
 
 const styles: { [key: string]: React.CSSProperties } = {
   scrollView: {

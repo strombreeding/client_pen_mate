@@ -1,13 +1,14 @@
 import styled, { keyframes } from "styled-components";
 import { View } from "../../nativeView";
-import React from "react";
+import React, { useRef } from "react";
+import { SCREEN_WIDTH } from "../../configs/device";
 
 const slideDown = keyframes`
   from{
-    bottom: -1px;
+    bottom: 0px;
   }
   to{
-    bottom: -300px;
+    bottom: -100px;
   }
 `;
 const slideUp = keyframes`
@@ -15,15 +16,15 @@ const slideUp = keyframes`
     bottom: -100px;
   }
   to{
-    bottom: -1px;
+    bottom: 0px;
   }
 `;
 
 const BottomBtnBox = styled(View)<{ visible: boolean }>`
-  position: absolute;
+  position: fixed;
   bottom: -300px;
   flex-direction: column;
-  width: 100%;
+  width: ${SCREEN_WIDTH}px;
   justify-content: space-between;
   padding: 25px 20px 25px 20px;
   border-radius: 50px 50px 0px 0px;
@@ -47,7 +48,7 @@ const Layer = styled.div`
   left: 0;
   right: 0;
   border-radius: 50px 50px 0 0;
-  width: 100%;
+  width: ${SCREEN_WIDTH}px;
   height: 100%;
   /* backdrop-filter: blur(10px) contrast(50%);
     -webkit-backdrop-filter: blur(10px) contrast(60%); */

@@ -5,11 +5,13 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import "./index.css";
+import Cookies from "js-cookie";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
+Cookies.set("history", JSON.stringify(["/", window.location.pathname]));
 root.render(
   <Provider store={store}>
     <App />

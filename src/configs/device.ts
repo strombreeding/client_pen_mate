@@ -5,9 +5,7 @@ import { RootState } from "../store/store";
 export const MOBILE = isMobile;
 
 // export const SCREEN_HEIGHT = window.innerHeight;
-export const SCREEN_HEIGHT = MOBILE
-  ? window.innerHeight
-  : window.innerHeight * 0.845;
+export const SCREEN_HEIGHT = MOBILE ? window.innerHeight : window.innerHeight;
 // export const SCREEN_HEIGHT = MOBILE ? window.innerHeight : 850;
 export const SCREEN_WIDTH = MOBILE ? window.innerWidth : 360;
 
