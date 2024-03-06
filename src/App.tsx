@@ -15,6 +15,8 @@ import { useSafeAreaSize } from "./hooks/getSafeAreaSize";
 import Loading from "./components/designs/Loading";
 import Cookies from "js-cookie";
 import BottomModal from "./components/games/BottomModal";
+import useDefaultBrowser from "./hooks/useDefaultBrowser";
+import KakaoInAppBrowserDetect from "./KakaoInAppBrowserDetect";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -29,7 +31,7 @@ import BottomModal from "./components/games/BottomModal";
 
 function App() {
   const pageState = usePageState();
-
+  useDefaultBrowser();
   const loading = useSelector((state: RootState) => state.appState.loading);
   // useEffect(() => {}, [loading]);
   const bgImg = useSelector((state: RootState) => state.appState.bgImg);
@@ -84,23 +86,25 @@ function App() {
 
   console.log("로딩", loading);
   return (
-    <SafeArea>
-      <Viewport src={imgSrc.bg_viewport} />
+    <KakaoInAppBrowserDetect>
+      <SafeArea>
+        <Viewport src={imgSrc.bg_viewport} />
 
-      <Background>
-        <Loading />
+        <Background>
+          <Loading />
 
-        <GameBg visible={bgImg !== undefined} src={bgImg} />
-        <EmptyBox
-          height={safeArea[0]}
-          width={SCREEN_WIDTH}
-          style={{ zIndex: 100 }}
-        />
-        <GlobalStyle canScroll={canScroll} />
-        <Routers />
-        <BottomModal setVisible={setModal} visible={modal} />
-      </Background>
-    </SafeArea>
+          <GameBg visible={bgImg !== undefined} src={bgImg} />
+          <EmptyBox
+            height={safeArea[0]}
+            width={SCREEN_WIDTH}
+            style={{ zIndex: 100 }}
+          />
+          <GlobalStyle canScroll={canScroll} />
+          <Routers />
+          <BottomModal setVisible={setModal} visible={modal} />
+        </Background>
+      </SafeArea>
+    </KakaoInAppBrowserDetect>
   );
 }
 
