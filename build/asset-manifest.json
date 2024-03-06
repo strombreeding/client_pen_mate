@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.425d37d2.css",
-    "main.js": "/static/js/main.6c3ca923.js",
+    "main.js": "/static/js/main.5c8176fa.js",
     "static/js/787.a5c12ccf.chunk.js": "/static/js/787.a5c12ccf.chunk.js",
     "static/media/SpoqaHanSansNeoLight.ttf": "/static/media/SpoqaHanSansNeoLight.71d8174224ae0bcbefb2.ttf",
     "static/media/SpoqaHanSansNeoRegular.ttf": "/static/media/SpoqaHanSansNeoRegular.95ececb5af85b0f66467.ttf",
@@ -10,6 +10,7 @@
     "static/media/esamanruLight.ttf": "/static/media/esamanruLight.1a23dac524c974b50bdf.ttf",
     "static/media/esamanruMedium.ttf": "/static/media/esamanruMedium.5092051bd2ced1c65f91.ttf",
     "static/media/esamanruBold.ttf": "/static/media/esamanruBold.3ac1cd467bc52467f216.ttf",
+    "static/media/junkward_bg.png": "/static/media/junkward_bg.ef1c7559bd61af12ae5d.png",
     "static/media/backgroundImage.png": "/static/media/backgroundImage.c7c19ab410a3c6d9b36d.png",
     "static/media/junkyard.png": "/static/media/junkyard.464e824045edaa8de70b.png",
     "static/media/bg_game.png": "/static/media/bg_game.09077d9e48a664be4c29.png",
@@ -18,23 +19,24 @@
     "static/media/polygon_en.png": "/static/media/polygon_en.75f9debb4b74785e0dbd.png",
     "static/media/sachunsung.png": "/static/media/sachunsung.eb3d91c6b1bec1526fec.png",
     "static/media/tetris_img.png": "/static/media/tetris_img.4515575574ae9acdbe43.png",
-    "static/media/junkyard_ico_1.png": "/static/media/junkyard_ico_1.dc18684d4909ba7454bf.png",
-    "static/media/junkyard_ico_8.png": "/static/media/junkyard_ico_8.0974413943cad9b461d9.png",
-    "static/media/junkyard_ico_7.png": "/static/media/junkyard_ico_7.81837324019c66752ad3.png",
-    "static/media/junkyard_ico_2.png": "/static/media/junkyard_ico_2.26d5af3d32c6787bde63.png",
     "static/media/backgroundStars.png": "/static/media/backgroundStars.314b7d07c5ec115a38d9.png",
-    "static/media/junkyard_ico_3.png": "/static/media/junkyard_ico_3.aaa6928ddbf7ccce67c3.png",
-    "static/media/junkyard_ico_5.png": "/static/media/junkyard_ico_5.624eb5b598d0326c7f4a.png",
-    "static/media/junkyard_ico_6.png": "/static/media/junkyard_ico_6.2a96999b1961e424f7f2.png",
-    "static/media/junkyard_ico_4.png": "/static/media/junkyard_ico_4.0ea6f30991093ef5ce9a.png",
+    "static/media/junkyard_ico_1-removebg-preview.png": "/static/media/junkyard_ico_1-removebg-preview.a5afa7029a59cd8228b4.png",
+    "static/media/junkyard_ico_8-removebg-preview.png": "/static/media/junkyard_ico_8-removebg-preview.ba194ae805df14753bf0.png",
+    "static/media/junkyard_ico_7-removebg-preview.png": "/static/media/junkyard_ico_7-removebg-preview.86ccd777b81ecb894ba8.png",
+    "static/media/timer.png": "/static/media/timer.94df23dc180f91e374d4.png",
+    "static/media/junkyard_ico_2-removebg-preview.png": "/static/media/junkyard_ico_2-removebg-preview.89d244900bc45c667ee8.png",
+    "static/media/junkyard_ico_5-removebg-preview.png": "/static/media/junkyard_ico_5-removebg-preview.ed7d318ef0e02fe38dbe.png",
+    "static/media/junkyard_ico_6-removebg-preview.png": "/static/media/junkyard_ico_6-removebg-preview.af99c3ea4134faa7e69f.png",
+    "static/media/junkyard_ico_3-removebg-preview.png": "/static/media/junkyard_ico_3-removebg-preview.00312fcaa591de3e50ba.png",
+    "static/media/junkyard_ico_4-removebg-preview.png": "/static/media/junkyard_ico_4-removebg-preview.9ff515c55f578686d775.png",
     "static/media/atata_join.png": "/static/media/atata_join.a9f187aa4ce20b7cea28.png",
     "index.html": "/index.html",
     "main.425d37d2.css.map": "/static/css/main.425d37d2.css.map",
-    "main.6c3ca923.js.map": "/static/js/main.6c3ca923.js.map",
+    "main.5c8176fa.js.map": "/static/js/main.5c8176fa.js.map",
     "787.a5c12ccf.chunk.js.map": "/static/js/787.a5c12ccf.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.425d37d2.css",
-    "static/js/main.6c3ca923.js"
+    "static/js/main.5c8176fa.js"
   ]
 }
