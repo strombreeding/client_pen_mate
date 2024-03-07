@@ -7,7 +7,8 @@ export const MOBILE = isMobile;
 // export const SCREEN_HEIGHT = window.innerHeight;
 export const SCREEN_HEIGHT = MOBILE ? window.innerHeight : window.innerHeight;
 // export const SCREEN_HEIGHT = MOBILE ? window.innerHeight : 850;
-export const SCREEN_WIDTH = MOBILE ? window.innerWidth : 360;
+export const SCREEN_WIDTH =
+  MOBILE && window.innerWidth < 600 ? window.innerWidth : 400;
 
 export const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 // const isAndroid = /Android/.test(navigator.userAgent);

@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { View } from "../nativeView";
-import { Container } from "../styles";
+import { Container, EmptyBox } from "../styles";
 import { SCREEN_WIDTH } from "../configs/device";
 import { imgSrc } from "../assets/img";
 import Login from "../components/join/Login";
@@ -10,6 +10,7 @@ import SignUp from "../components/join/SignUp";
 import { usePageState, useVisitedPage } from "../hooks/getVisitedPage";
 
 const BgImg = styled.img`
+  position: fixed;
   width: ${SCREEN_WIDTH}px;
   height: ${SCREEN_WIDTH * 0.6}px;
 `;
@@ -24,14 +25,29 @@ const slide_up_logo = keyframes`
     scale: 0.5;
   }
 `;
+
+const down_logo = keyframes`
+  from{
+    top:40%
+    
+  }
+  to{
+    top:200px;
+    transform: scale(0.4);
+  }
+`;
 const Logo = styled.img<{ visited: boolean }>`
+  position: fixed;
   width: ${SCREEN_WIDTH * 0.4}px;
   height: ${SCREEN_WIDTH * 0.4613}px;
   position: absolute;
-  top: 60%;
+  top: 40%;
   transform: scale(0.5);
-  animation: ${(props) => (props.visited ? {} : slide_up_logo)} linear forwards
-    0.3s;
+  animation: ${down_logo} linear 0.5s forwards;
+  /* transform: scale(0.5); */
+  /* animation: ${(props) =>
+    props.visited ? {} : slide_up_logo} linear forwards
+    0.3s; */
 `;
 
 const fadeIn = keyframes`
@@ -43,40 +59,50 @@ const fadeIn = keyframes`
   }
 `;
 const AnimationView = styled(View)<{ visited: boolean }>`
-  opacity: ${(props) => (!props.visited ? 0 : 1)};
-  animation: ${(props) => !props.visited && fadeIn} linear 1s forwards;
+  display: flex;
+  /* opacity: ${(props) => (!props.visited ? 0 : 1)}; */
+  animation: ${fadeIn} linear 0.5s forwards;
 `;
 
-type PageStep = "login" | "signUp";
-
+const BgView = styled(View)`
+  position: fixed;
+  align-items: center;
+  z-index: 2;
+`;
 function Join() {
   const isVisited = useVisitedPage();
-  const [step, setStep] = useState<PageStep>("login");
+  const [step, setStep] = useState<string>(window.location.pathname);
   const pageState = usePageState();
-  const handleStep = (type: PageStep) => {
+  const handleStep = (type: string) => {
     setStep(type);
   };
   // safeArea 영역이 잡히는데 어떻게하지..
 
   return (
-    <Container style={{ justifyContent: "space-between" }}>
-      <View style={{ alignItems: "center", zIndex: 2 }}>
-        <BgImg src={imgSrc.bg_login} />
-        <Logo visited={isVisited} src={imgSrc.atata_join} />
-      </View>
+    <Container style={{ flex: 1, justifyContent: "space-between" }}>
+      <BgImg src={imgSrc.bg_login} />
+      {/* <BgView> */}
+      <Logo visited={isVisited} src={imgSrc.atata_join} />
+      {/* </BgView> */}
 
+      <EmptyBox height={10} />
+      <EmptyBox height={10} />
+      <EmptyBox height={10} />
+      <EmptyBox height={10} />
+      <EmptyBox height={10} />
       <AnimationView
-        visited={isVisited}
+        visited={!isVisited}
         style={{ width: "100%", alignItems: "center", marginTop: 20 }}
       >
-        {step === "login" ? (
-          <SignUp step={step} />
+        {step === "/login" ? (
+          <Login step={step} />
         ) : (
           // ? <Login step={step} />
           // : <SignUp step={step} />}
-          <Login step={step} />
+          <SignUp step={step} />
         )}
       </AnimationView>
+      <EmptyBox height={10} />
 
       {/* <BottomNav /> */}
       {/* <EmptyBox height={50} /> */}

@@ -11,14 +11,8 @@ export const useVisitedPage = () => {
   const cookieName = "history";
   const cookie = JSON.parse(Cookies.get(cookieName)!);
   const dispath = useDispatch<AppDispatch>();
-  const visitedPages = useSelector(
-    (state: RootState) => state.visitedPage.visitedPages
-  );
-  if (visitedPages.includes(path)) {
-    return true;
-  } else {
-    return false;
-  }
+
+  return true;
 };
 
 export const usePageState = (zz?: boolean) => {

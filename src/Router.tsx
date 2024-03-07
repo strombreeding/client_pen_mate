@@ -19,29 +19,40 @@ import Junkyard from "./pages/Junkyard";
 import SelectGames from "./pages/SelectGames";
 import Join from "./pages/Join";
 import BangMain from "./pages/BangMain";
+import Reward from "./pages/Reward";
+import PrivatePage from "./routes/PrivatePage";
 
 const Routers: React.FC = () => {
   useDisablePinchZoom();
   return (
     <BrowserRouter>
       <Routes>
-        {/* 바텀네비스택 */}
+        {/* 로그인이 필요한 페이지 */}
+        <Route element={<PrivatePage />}>
+          <Route path="/" element={<Main />} />
+          <Route path="/ranking" element={<Main />} />
+          <Route path="/store" element={<Main />} />
+          <Route path="/profile" element={<Main />} />
 
-        <Route path="/" element={<Main />} />
-        <Route path="/ranking" element={<Main />} />
-        <Route path="/store" element={<Main />} />
-        <Route path="/profile" element={<Main />} />
+          {/* 게임 모음 */}
+          <Route path="/games" element={<SelectGames />} />
+          <Route path="/games/junkyard" element={<Junkyard />} />
+          <Route path="/games/bang" element={<BangMain />} />
+          <Route path="/games/tetris" element={<BangMain />} />
+          <Route path="/games/reward" element={<Reward />} />
+        </Route>
 
-        <Route path="/join" element={<Join />} />
+        {/* 로그인 시 접근이 불가능한 페이지 */}
+        <Route element={<PublicPage />}>
+          {/* <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} /> */}
+          <Route path="/join" element={<Join />} />
+          <Route path="/login" element={<Join />} />
+          <Route path="/social/kakao" element={<SocialTerminel />} />
+        </Route>
+
         {/* <Route element={<PublicPage />}> */}
         {/* <Route path="/edit-avatar" element={<EditAvatar />} /> */}
-        <Route path="/social/kakao" element={<SocialTerminel />} />
-
-        {/* 게임 모음 */}
-        <Route path="/games" element={<SelectGames />} />
-        <Route path="/games/junkyard" element={<Junkyard />} />
-        <Route path="/games/bang" element={<BangMain />} />
-        <Route path="/games/tetris" element={<BangMain />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

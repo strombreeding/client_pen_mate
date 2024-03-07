@@ -30,6 +30,7 @@ function BottomPrevNext({
   nextText,
   nextAction,
   prevAction,
+  justHome,
 }: {
   style?: React.CSSProperties;
   visible: boolean;
@@ -37,6 +38,7 @@ function BottomPrevNext({
   nextText?: string;
   nextAction?: () => void;
   prevAction?: () => void;
+  justHome?: boolean;
 }) {
   const navigate = useNavigate();
   const pageState = usePageState();
@@ -50,17 +52,28 @@ function BottomPrevNext({
   if (prevText == null) prevText = "이전";
   if (nextText == null) nextText = "스토어";
 
+  const goHome = () => {
+    navigate("/", { replace: true });
+  };
   return (
     <BottomLayer style={style} visible={visible}>
-      <View style={styles.contentView}>
-        <PrevBtn onClick={prevAction}>
-          <Text.Light_12>{prevText}</Text.Light_12>
-        </PrevBtn>
-        <EmptyBox width={5} />
-        <PrevBtn onClick={nextAction}>
-          <Text.Light_12>{nextText}</Text.Light_12>
-        </PrevBtn>
-      </View>
+      {justHome ? (
+        <View style={styles.contentView}>
+          <PrevBtn onClick={goHome}>
+            <Text.Light_12>{"처음으로"}</Text.Light_12>
+          </PrevBtn>
+        </View>
+      ) : (
+        <View style={styles.contentView}>
+          <PrevBtn onClick={prevAction}>
+            <Text.Light_12>{prevText}</Text.Light_12>
+          </PrevBtn>
+          <EmptyBox width={5} />
+          <PrevBtn onClick={nextAction}>
+            <Text.Light_12>{nextText}</Text.Light_12>
+          </PrevBtn>
+        </View>
+      )}
     </BottomLayer>
   );
 }

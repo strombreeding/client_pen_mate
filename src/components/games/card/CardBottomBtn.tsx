@@ -18,7 +18,7 @@ import axios from "axios";
 import { SERVER_URI } from "../../../configs/server";
 import Shake from "../../animations/Shake";
 import LoadingLottie from "../../LoadingLottie";
-import Cookies from "js-cookie";
+import { setEncryptedCookie } from "../../../utils/cookies";
 
 function CardBottomBtn({
   setSpecial,
@@ -39,7 +39,7 @@ function CardBottomBtn({
       console.log(res.data.result);
       navigation(`/games/${gameProps.id}`);
       const cookieData = { ...gameState, id: res.data.result.id };
-      Cookies.set("ingame", JSON.stringify(cookieData));
+      setEncryptedCookie("ingame", cookieData);
     } catch (err: any) {
       if (err.message === "NOT ENOUGH") {
         setEnough("포인트가 부족합니다!");

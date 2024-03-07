@@ -20,6 +20,8 @@ import { createRandomLevel } from "../utils/saChunSungUtil";
 import Cookies from "js-cookie";
 import { GameStatus } from "../store/slices/gameState";
 import { imgSrc } from "../assets/img";
+import { decrypt, encrypt } from "../utils/crypto";
+import { getDecryptedCookie, setEncryptedCookie } from "../utils/cookies";
 // import { createBoard, findPathDFS } from "../utils";
 
 type IGameLevel = [];
@@ -130,6 +132,7 @@ function BgView({
 }
 
 interface InGameState extends GameStatus {
+  id: string;
   isStarting: boolean;
   startTime: number;
   clearList: string[];
@@ -158,6 +161,7 @@ function Junkyard() {
   const [tictoc, setTictoc] = useState(0);
   const [navVisble, setNavVisble] = useState(false);
   const [gameSetting, setGameSetting] = useState<JunkwardGameSetting>({
+    id: "",
     matchAI: false,
     level: "0,0",
     // level: "3,4",
@@ -187,15 +191,15 @@ function Junkyard() {
   };
 
   const gameInit = () => {
-    const cookie = Cookies.get("ingame");
-    console.log(JSON.parse(cookie!));
+    const cookie = getDecryptedCookie("ingame");
     if (cookie == null) {
-      history.push("games");
+      history.push("/games");
     } else {
-      const gameInfo: InGameState = JSON.parse(cookie);
+      const gameInfo: InGameState = cookie;
       const nowTime = Math.floor(new Date().getTime() / 1000);
       setGameSetting((prev) => ({
         ...prev,
+        id: gameInfo.id,
         intAI: getAiInt(gameInfo.aiOption),
         level: gameInfo.level == undefined ? "3,4" : gameInfo.level,
         matchAI: gameInfo.player !== "AI" ? false : true,
@@ -212,71 +216,7 @@ function Junkyard() {
     }
   };
 
-  useEffect(() => {
-    const unlistenHistoryEvent = history.listen(({ action }) => {
-      if (action === "POP") {
-        const confirm = window.confirm(
-          "포인트를 잃어버립니다. 나가시겠습니까?"
-        );
-        if (confirm) {
-          history.push("/games");
-          Cookies.remove("ingame");
-          // navigation("/games", { replace: true });
-        } else {
-          const getCookie = JSON.parse(Cookies.get("ingame")!);
-          const saveObj: InGameState = {
-            ...getCookie,
-            ...gameSetting,
-            board,
-            aiBoard,
-            clearList,
-            isStarting,
-            startTime,
-            isContinue: true,
-          };
-          Cookies.set("ingame", JSON.stringify(saveObj));
-
-          window.history.forward();
-        }
-      }
-    });
-    const refreshAction = (e: BeforeUnloadEvent) => {
-      const getCookie = JSON.parse(Cookies.get("ingame")!);
-      const saveObj: InGameState = {
-        ...getCookie,
-        ...gameSetting,
-        board,
-        aiBoard,
-        clearList,
-        isStarting,
-        startTime,
-        isContinue: true,
-      };
-      console.log(saveObj);
-
-      Cookies.set("ingame", JSON.stringify(saveObj));
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    window.addEventListener("beforeunload", refreshAction);
-    return () => {
-      unlistenHistoryEvent();
-      window.removeEventListener("beforeunload", refreshAction);
-    };
-  }, [board]);
-
-  useEffect(() => {
-    let slideDown: string | number | NodeJS.Timeout | undefined = undefined;
-    if (navVisble) {
-      slideDown = setTimeout(() => {
-        setNavVisble(false);
-      }, 7000);
-    }
-    return () => {
-      clearTimeout(slideDown);
-    };
-  }, [navVisble]);
-
+  // init 이펙트
   useEffect(() => {
     setTimeout(() => {
       setNavVisble(true);
@@ -289,9 +229,67 @@ function Junkyard() {
 
     return () => {
       dispatch(setBgImg(undefined));
+      Cookies.remove("ingame");
     };
   }, []);
 
+  // 문제 풀때마다 쿠키에 게임상태를 저장하는 이펙트
+  // + 뒤로가기, 새로고침 등의 페이지전환 처리
+  useEffect(() => {
+    const getCookie = getDecryptedCookie("ingame");
+    const saveObj: InGameState = {
+      ...getCookie,
+      ...gameSetting,
+      board,
+      aiBoard,
+      clearList,
+      isStarting,
+      startTime,
+      isContinue: true,
+    };
+    setEncryptedCookie("ingame", saveObj);
+    console.log("쿠키업뎃!", saveObj);
+    const unlistenHistoryEvent = history.listen(({ action }) => {
+      if (action === "POP") {
+        const confirm = window.confirm(
+          "포인트를 잃어버립니다. 나가시겠습니까?"
+        );
+        if (confirm) {
+          // Cookies.remove("ingame");
+          history.push("/games");
+          // navigation("/games", { replace: true });
+        } else {
+          window.history.forward();
+        }
+      }
+    });
+    const refreshAction = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("pagehide", refreshAction);
+    window.addEventListener("beforeunload", refreshAction);
+    return () => {
+      unlistenHistoryEvent();
+      window.addEventListener("pagehide", refreshAction);
+      window.removeEventListener("beforeunload", refreshAction);
+    };
+  }, [board]);
+
+  // 바텀 네비 제어
+  useEffect(() => {
+    let slideDown: string | number | NodeJS.Timeout | undefined = undefined;
+    if (navVisble) {
+      slideDown = setTimeout(() => {
+        setNavVisble(false);
+      }, 7000);
+    }
+    return () => {
+      clearTimeout(slideDown);
+    };
+  }, [navVisble]);
+
+  // 클리어시 다음 board 생성까지의 이펙트
   useEffect(() => {
     if (!isStarting) return;
     if (continueRef.current) {
@@ -305,6 +303,7 @@ function Junkyard() {
     //
   }, [clearList]);
 
+  // 시작 버튼 이후 게임판 생성까지의 이펙트
   useEffect(() => {
     if (Number(startBtnText) <= 3) {
       setTimeout(() => {
@@ -327,15 +326,21 @@ function Junkyard() {
     }
   }, [startBtnText]);
 
+  // 타이머 제어 및 타임아웃 이후 이펙트
   useEffect(() => {
     if (!isStarting) return;
+    // if (tictoc > 0) {
     if (tictoc <= 0) {
       alert("리저트 페이지로 이동");
-      navigation("/games");
+      console.log(getDecryptedCookie("ingame"));
+      navigation("/games/reward", {
+        replace: true,
+        state: { data: getDecryptedCookie("ingame") },
+      });
     }
     const timer = setTimeout(() => {
       setTictoc(tictoc - 1);
-    }, 1000);
+    }, 50);
     return () => {
       clearTimeout(timer);
     };

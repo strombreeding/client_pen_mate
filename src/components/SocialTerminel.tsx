@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SERVER_URI } from "../configs/server";
 import { Container } from "../styles";
@@ -15,14 +15,19 @@ const SocialTerminel: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const req = async () => {
     const res = await axios.post(SERVER_URI + "social/oauth", { code });
-
-    if (res.data.data === "sign-up") {
-      dispatch(setLoginState(true));
-      navigate("/sign-up?step=0", { replace: true });
-    }
+    console.log(res);
+    const resData = res.data.data;
+    navigate(resData.result, {
+      state: { id: resData.id, email: resData.email },
+    });
+    // if (res.data.data === "sign-up") {
+    //   dispatch(setLoginState(true));
+    //   navigate("/sign-up?step=0", { replace: true });
+    // }
   };
-  req();
-
+  useEffect(() => {
+    req();
+  }, []);
   //   navigate("/", { replace: true });
   return <Container></Container>;
 };

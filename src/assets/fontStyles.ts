@@ -73,6 +73,11 @@ export const Text = {
     white-space: pre-line;
     color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
   `,
+  Regular_36: styled(esamanru)<{ color?: string }>`
+    font-size: 36px;
+    white-space: pre-line;
+    color: ${(props) => (props.color != null ? props.color : "#FFFFFF")};
+  `,
   Regular_32: styled(esamanru)<{ color?: string }>`
     font-size: 32px;
     white-space: pre-line;

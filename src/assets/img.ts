@@ -2,6 +2,7 @@ export const imgSrc = {
   bg_login: require("../assets/pngs/backgroundStars.png"),
   bg_viewport: require("../assets/pngs/backgroundImage.png"),
   bg_game: require("../assets/pngs/bg_game.png"),
+  bg_reward: require("../assets/pngs/bg_reward.png"),
 
   atata_join: require("../assets/pngs/atata_join.png"),
 
@@ -56,9 +57,12 @@ export const imgSrc = {
   /* 26px */
   arrow_left_26px: require("../assets/pngs/arrow_left_26px.png"),
   arrow_right_26px: require("../assets/pngs/arrow_right_26px.png"),
+  right_arrow: require("../assets/pngs/right_arrow.png"),
   bell_26px: require("../assets/pngs/bell_26px.png"),
   dm_26px: require("../assets/pngs/dm_26px.png"),
 
   slide_up: require("../assets/pngs/slide_up.png"),
   timer: require("../assets/pngs/timer.png"),
+  star: require("../assets/pngs/star.png"),
+  close: require("../assets/pngs/close.png"),
 };

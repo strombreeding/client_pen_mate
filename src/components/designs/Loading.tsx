@@ -30,7 +30,7 @@ const bounce = keyframes`
 `;
 
 const fadeOut = keyframes`
-  0%{
+  /* 0%{
     opacity: 1;
     display: flex;
   }
@@ -51,17 +51,42 @@ const fadeOut = keyframes`
     opacity: 0.1;
     display: flex;
     
-  }
-  100%{
+  } */
+  /* 100%{
     opacity: 0;
     display: none;
     z-index: -10000;
+  } */
+  from{
+    background-color: rgba(0,0,0,1);
+  }
+  to{
+    background-color: rgba(0,0,0,0);
+    z-index: -1000;
   }
 `;
-
-const BgImg = styled.img`
+const fadeIn = keyframes`
+  from{
+    opacity: 0;
+    display: flex;
+  }
+  to{
+    opacity: 1;
+    display: flex;
+  }
+`;
+const hide = keyframes`
+  0%{
+    display: none;
+  }
+  100%{
+    display: none;
+  }
+`;
+const BgImg = styled.img<{ loading: boolean }>`
   width: ${SCREEN_WIDTH}px;
   height: ${SCREEN_WIDTH * 0.6}px;
+  animation: ${(props) => (props.loading ? {} : hide)} 0.25s linear forwards;
 `;
 const Logo = styled.img<{ loading: boolean }>`
   /* display: ${(props) => (props.loading ? "" : "none")}; */
@@ -70,7 +95,7 @@ const Logo = styled.img<{ loading: boolean }>`
   position: absolute;
   top: 40%;
   transform: scale(0.5);
-  animation: ${(props) => (props.loading ? bounce : fadeOut)} 1s linear;
+  animation: ${(props) => (props.loading ? bounce : hide)} 1s linear;
   animation-iteration-count: infinite;
 `;
 
@@ -83,16 +108,16 @@ const Layer = styled(View)<{ loading: boolean }>`
   width: ${SCREEN_WIDTH}px;
   align-items: center;
   z-index: 10000;
-  background-color: linear-gradient(180deg, #000000 22.92%, #3500a6 100%);
   background-color: black;
-  animation: ${(props) => (props.loading ? {} : fadeOut)} 1s linear forwards;
+  animation: ${(props) => (props.loading ? {} : fadeOut)} 0.25s linear forwards;
 `;
 function Loading() {
   const loading = useSelector((state: RootState) => state.appState.loading);
   useEffect(() => {}, []);
+  console.log(loading, "로딩");
   return (
     <Layer loading={loading}>
-      <BgImg src={imgSrc.bg_login} />
+      <BgImg loading={loading} src={imgSrc.bg_login} />
       <Logo loading={loading} src={imgSrc.atata_join} />
     </Layer>
   );

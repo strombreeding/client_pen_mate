@@ -6,16 +6,26 @@ import { imgSrc } from "../../assets/img";
 import { colors } from "../../assets/colors";
 import { EmptyBox } from "../../styles";
 import { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { setBgImg, setLoading } from "../../store/slices/appState";
+import { getOauthUrl } from "../../apis/login/read";
+import { useNavigate } from "react-router-dom";
 
 type SocialPlatform = "kakao" | "apple" | "google";
 function Login({ step }: { step: string }) {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigate();
   const onPress = useCallback(
     (platform: SocialPlatform) => async () => {
       // 예제 코드에서는 비동기 작업을 실행하는 것으로 보이지만 주석 처리되어 있습니다.
-      // const res = await getOauthUrl(platform);
-      // window.location.href = res;
-      alert(`${platform} SDK 로그인`);
-      window.location.href = "/home";
+      const res = await getOauthUrl(platform);
+      console.log(res);
+      // navigation(res);
+      window.location.href = res;
+
+      // alert(`${platform} SDK 로그인`);
+      // window.location.href = "/home";
       return true;
     },
     []
@@ -27,7 +37,7 @@ function Login({ step }: { step: string }) {
         alignItems: "center",
       }}
     >
-      <Text.Spo_Medium_16>소셜로그인 후 랭킹에 참여하세요</Text.Spo_Medium_16>
+      <Text.Spo_Medium_20>소셜로그인 후 랭킹에 참여하세요</Text.Spo_Medium_20>
       <EmptyBox height={20} />
       <SocialLoginBtn onClick={onPress("kakao")} bgcolor="#FEE500">
         <BtnIcon src={imgSrc.kakao} />

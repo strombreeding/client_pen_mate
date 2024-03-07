@@ -55,7 +55,7 @@ const GameBg: React.FC<{
 
   const onLoad = () => {
     console.log("로딩종료");
-    setTimeout(() => dispatch(setLoading(false)), 1500);
+    setTimeout(() => dispatch(setLoading(false)), 600);
   };
 
   const onLoadStart = () => {};
