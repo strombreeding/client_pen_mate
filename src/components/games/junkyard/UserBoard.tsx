@@ -120,7 +120,10 @@ const UserBoard: FC<{
                         width: SCREEN_WIDTH * 0.0733,
                         aspectRatio: "auto",
                       }}
-                      src={gameImg[sourceName]}
+                      src={
+                        //@ts-ignore
+                        gameImg[sourceName]
+                      }
                     />
                   )}
                   {/* <Text.Spo_Light_16>{num}</Text.Spo_Light_16> */}

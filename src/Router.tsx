@@ -21,6 +21,7 @@ import Join from "./pages/Join";
 import BangMain from "./pages/BangMain";
 import Reward from "./pages/Reward";
 import PrivatePage from "./routes/PrivatePage";
+import Test from "./pages/Test";
 
 const Routers: React.FC = () => {
   useDisablePinchZoom();
@@ -51,6 +52,7 @@ const Routers: React.FC = () => {
           <Route path="/social/kakao" element={<SocialTerminel />} />
         </Route>
 
+        <Route path="/test" element={<Test />} />
         {/* <Route element={<PublicPage />}> */}
         {/* <Route path="/edit-avatar" element={<EditAvatar />} /> */}
 
