@@ -17,6 +17,7 @@ interface AppState {
   canPopstateEvent: string | undefined;
   bgImg: string | undefined;
   loading: boolean;
+  canScroll: boolean;
 }
 
 const initialState: AppState = {
@@ -28,6 +29,7 @@ const initialState: AppState = {
   canPopstateEvent: Cookies.get("canPopstate"),
   bgImg: undefined,
   loading: false,
+  canScroll: true,
 };
 
 const appState = createSlice({
@@ -61,6 +63,9 @@ const appState = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    setCanScroll: (state, action: PayloadAction<boolean>) => {
+      state.canScroll = action.payload;
+    },
   },
 });
 
@@ -73,6 +78,7 @@ export const {
   setCanPopstateEvent,
   setBgImg,
   setLoading,
+  setCanScroll,
 } = appState.actions;
 
 export default appState.reducer;

@@ -82,7 +82,7 @@ function App() {
     // return () =>
   }, []);
 
-  const canScroll = false;
+  const canScroll = useSelector((state: RootState) => state.appState.canScroll);
 
   console.log("로딩", loading);
   return (

@@ -52,6 +52,7 @@ table {
 	border-spacing: 0;
 }
 * {
+  overflow: ${(props) => (props.canScroll ? "auto" : "hidden")};
   overscroll-behavior: none;
   box-sizing: border-box;
   user-select: none; /* 표준 속성 */
