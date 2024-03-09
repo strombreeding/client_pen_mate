@@ -8,6 +8,7 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../configs/device";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { setCanPopstateEvent, setCanScroll } from "../store/slices/appState";
+import BangBoard from "../components/games/bang/Board";
 
 interface ICharProps {
   imgSrc: string;
@@ -18,7 +19,7 @@ interface ICharProps {
 }
 
 const DEFAULT_IMAGE_SIZE = {};
-const emptyVal = (width: number) => -((width - width * 0.625) / 2);
+export const emptyVal = (width: number) => -((width - width * 0.625) / 2);
 
 const Char = styled.div<{ data: ICharProps }>`
   position: fixed;
@@ -48,6 +49,11 @@ const RightChar = styled.div<{ data: ICharProps }>`
 function Test() {
   const [aState, setAState] = useState();
   const [bState, setBState] = useState();
+  const [board, setBoard] = useState([
+    [0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 2],
+    [0, 0, 0, 0, 0, 0],
+  ]);
   const [obj, setObj] = useState<ICharProps>({
     imgSrc: gameImg.bounti_stand_left,
     width: SCREEN_WIDTH * 0.2222,
@@ -184,61 +190,7 @@ function Test() {
       }}
     >
       <RightChar ref={divRef} data={obj}></RightChar>
-      <RightChar
-        ref={divRef}
-        data={obj}
-        style={{
-          right:
-            emptyVal(obj.width) +
-            -emptyVal(obj.width) / 3 +
-            obj.width * 0.75 * 1,
-          backgroundColor: "pink",
-        }}
-      ></RightChar>
-      <RightChar
-        ref={divRef}
-        data={obj}
-        style={{
-          right:
-            emptyVal(obj.width) +
-            -emptyVal(obj.width) / 3 +
-            obj.width * 0.75 * 2,
-          backgroundColor: "blue",
-        }}
-      ></RightChar>
-      <RightChar
-        ref={divRef}
-        data={obj}
-        style={{
-          right:
-            emptyVal(obj.width) +
-            -emptyVal(obj.width) / 3 +
-            obj.width * 0.75 * 3,
-          backgroundColor: "green",
-        }}
-      ></RightChar>
-      <RightChar
-        ref={divRef}
-        data={obj}
-        style={{
-          right:
-            emptyVal(obj.width) +
-            -emptyVal(obj.width) / 3 +
-            obj.width * 0.75 * 4,
-          backgroundColor: "yellow",
-        }}
-      ></RightChar>
-      <RightChar
-        ref={divRef}
-        data={obj}
-        style={{
-          right:
-            emptyVal(obj.width) +
-            -emptyVal(obj.width) / 3 +
-            obj.width * 0.75 * 5,
-          backgroundColor: "purple",
-        }}
-      ></RightChar>
+      <BangBoard board={board} obj={obj} />
       {/* <Char2
         ref={divRef}
         data={{ ...obj, imgSrc: gameImg.left_cowboy }}
