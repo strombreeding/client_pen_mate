@@ -113,6 +113,15 @@ function Test() {
         imgSrc: gameImg.bounti_atk_right_3x2,
       }));
       animationRef.current = requestAnimationFrame(jump);
+    } else if (action === "walk") {
+      setObj((prev) => ({
+        ...prev,
+        width: 128,
+        cols: 4,
+        rows: 1,
+        imgSrc: gameImg.bounti_walk_right_1x4,
+      }));
+      animationRef.current = requestAnimationFrame(jump);
     }
     return () => {
       if (animationRef.current) {
@@ -153,6 +162,15 @@ function Test() {
         }}
       >
         <Text.Regular_36>점프!</Text.Regular_36>
+      </Pressable>
+      <Pressable
+        style={{ backgroundColor: "red" }}
+        onClick={() => {
+          console.log("눌리긴해?");
+          setAction("walk");
+        }}
+      >
+        <Text.Regular_36>걷기</Text.Regular_36>
       </Pressable>
       <Pressable
         style={{ backgroundColor: "red" }}

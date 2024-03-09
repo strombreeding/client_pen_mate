@@ -25,6 +25,10 @@ export const gameImg = {
   bounti_atk_right_3x2: require("../assets/gameAssets/bounti_atk_right_3x2.png"),
   cow_atk_left_1x3: require("../assets/gameAssets/cow_atk_left_1x3.png"),
   cow_atk_right_1x3: require("../assets/gameAssets/cow_atk_right_1x3.png"),
+  bounti_walk_left_1x4: require("../assets/gameAssets/bounti_walk_left_1x4.png"),
+  bounti_walk_right_1x4: require("../assets/gameAssets/bounti_walk_right_1x4.png"),
+  cow_walk_left_1x4: require("../assets/gameAssets/cow_walk_left_1x4.png"),
+  cow_walk_right_1x4: require("../assets/gameAssets/cow_walk_right_1x4.png"),
 
   cow_stand_right: require("../assets/gameAssets/cow_stand_right.png"),
   cow_stand_left: require("../assets/gameAssets/cow_stand_left.png"),
