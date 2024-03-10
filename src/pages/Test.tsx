@@ -17,6 +17,7 @@ import { colors } from "../assets/colors";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
 import BottomModal from "../components/games/BottomModal";
 import { time } from "console";
+import { SOCKET_URI } from "../configs/server";
 
 interface ICharProps {
   imgSrc: string;
@@ -437,7 +438,7 @@ function Test() {
         onClick={() => {
           //   socket;
           setSocket(
-            io(`${"http://192.168.55.72:8000"}`, {
+            io(`${SOCKET_URI}`, {
               transports: ["websocket"],
             })
           );
