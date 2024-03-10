@@ -3,6 +3,7 @@ export const SERVER_URI =
     ? "http://localhost:8080/"
     : process.env.REACT_APP_SERVER_URI;
 
+// export const SOCKET_URI = "http://socket.jinytree.store/";
 export const SOCKET_URI =
   process.env.REACT_APP_SOCEKT_URI == undefined
     ? "http://localhost:8000/"
