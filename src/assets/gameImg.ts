@@ -3,6 +3,7 @@ interface gameAssets {
 }
 export const gameImg = {
   // export const gameAssets: gameAssets = {
+  target: require("../assets/gameAssets/target.png"),
   junkyard_ico_1: require("../assets/gameAssets/junkyard_ico_1-removebg-preview.png"),
   junkyard_ico_2: require("../assets/gameAssets/junkyard_ico_2-removebg-preview.png"),
   junkyard_ico_3: require("../assets/gameAssets/junkyard_ico_3-removebg-preview.png"),
@@ -34,4 +35,7 @@ export const gameImg = {
   cow_stand_left: require("../assets/gameAssets/cow_stand_left.png"),
   bounti_stand_right: require("../assets/gameAssets/bounti_stand_right.png"),
   bounti_stand_left: require("../assets/gameAssets/bounti_stand_left.png"),
+
+  action_jump: require("../assets/gameAssets/action_jump.png"),
+  action_atk: require("../assets/gameAssets/action_atk.png"),
 };

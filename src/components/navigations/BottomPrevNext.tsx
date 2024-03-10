@@ -16,6 +16,7 @@ export const PrevBtn = styled(Pressable)`
   align-items: center;
   justify-content: center;
   padding: 16px 12px 17px 11px;
+  min-height: 60px;
   /* height: 60px; */
   background-color: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -31,6 +32,7 @@ function BottomPrevNext({
   nextAction,
   prevAction,
   justHome,
+  rightBtnColor,
 }: {
   style?: React.CSSProperties;
   visible: boolean;
@@ -39,6 +41,7 @@ function BottomPrevNext({
   nextAction?: () => void;
   prevAction?: () => void;
   justHome?: boolean;
+  rightBtnColor?: string;
 }) {
   const navigate = useNavigate();
   const pageState = usePageState();
@@ -69,7 +72,10 @@ function BottomPrevNext({
             <Text.Light_12>{prevText}</Text.Light_12>
           </PrevBtn>
           <EmptyBox width={5} />
-          <PrevBtn onClick={nextAction}>
+          <PrevBtn
+            style={{ backgroundColor: rightBtnColor || "auto" }}
+            onClick={nextAction}
+          >
             <Text.Light_12>{nextText}</Text.Light_12>
           </PrevBtn>
         </View>
