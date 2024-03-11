@@ -58,9 +58,8 @@ const RightChar = styled.div<{ data: ICharProps }>`
     ${(props) => props.data.width * 0.625 * props.data.rows}px;
   background-color: red;
 `;
-
-let peerConnection = new RTCPeerConnection();
-let myDataChannel: RTCDataChannel;
+// let peerConnection = new RTCPeerConnection();
+// let myDataChannel.current: RTCDataChannel;
 function Test() {
   const [nowAction, setNowAction] = useState<IWillAction[]>([
     { action: "", path: [] },
@@ -102,28 +101,27 @@ function Test() {
   const divRef = useRef<HTMLDivElement | null>(null);
   const animationRef = useRef(-1);
 
-  const [channel, setChannel] = useState<RTCDataChannel>();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    peerConnection.addEventListener("icecandidate", (e) => {
-      console.log("아이스브레이킹!!", e);
-    });
     dispatch(setCanScroll(false));
     return () => {
       dispatch(setCanScroll(true));
       // connection.removeEventListener("icecandidate", co);
     };
   }, []);
+  const myDataChannel = useRef<RTCDataChannel>();
+  const [peerConnection, setPeerConnection] = useState<RTCPeerConnection>();
+  // const [myDataChannel.current, setMyDataChannel.current] = useState<RTCDataChannel>();
   const targetActionRef = useRef("");
   useEffect(() => {
     console.log("소켓변경감지");
-
+    setPeerConnection(new RTCPeerConnection());
+    if (!peerConnection) return;
     if (socket == null) return;
     const handleIce = (data: RTCPeerConnectionIceEvent) => {
       socket.emit("ice", data.candidate, matchId.current);
     };
-    peerConnection = new RTCPeerConnection();
 
     socket.emit("joinQueue");
 
@@ -147,8 +145,10 @@ function Test() {
 
     // 먼저 수락을 누른 브라우저가 오퍼를 만들어서 후클릭 브라우저에 전달함
     socket.on("welcome", async () => {
-      myDataChannel = peerConnection.createDataChannel("chat");
-      myDataChannel.addEventListener("message", (event) => {
+      myDataChannel.current = peerConnection.createDataChannel("chat");
+      console.log(myDataChannel.current.readyState);
+
+      myDataChannel.current.addEventListener("message", (event) => {
         console.log("A", event.data);
         // if (event.data === "준비완료") {
         //   setTargetReady(true);
@@ -178,8 +178,9 @@ function Test() {
     // 먼저 누른 브라우저의 오퍼를 받음
     socket.on("offer", async (offer) => {
       peerConnection.addEventListener("datachannel", (event) => {
-        myDataChannel = event.channel;
-        myDataChannel.addEventListener("message", (event) => {
+        myDataChannel.current = event.channel;
+        console.log(myDataChannel.current.readyState);
+        myDataChannel.current.addEventListener("message", (event) => {
           console.log("B", event.data);
           // if (event.data === "준비완료") {
           //   setTargetReady(true);
@@ -258,6 +259,9 @@ function Test() {
 
   useEffect(() => {
     const random = Math.random() * (7 - 0.3) + 0.3;
+    if (myDataChannel.current) {
+      console.log(myDataChannel.current.readyState);
+    }
     if (ready && targetReady === "notYet") {
       sendData(`first/${random}`)();
     } else if (ready && targetReady === "already") {
@@ -274,8 +278,11 @@ function Test() {
   }, [ready, targetReady, socket]);
 
   const sendData = (data: any) => () => {
-    if (!myDataChannel) return;
-    myDataChannel.send(data);
+    if (myDataChannel.current) {
+      console.log(myDataChannel.current.readyState);
+    }
+    if (!myDataChannel.current) return;
+    myDataChannel.current.send(data);
   };
 
   // useEffect(() => {
