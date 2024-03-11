@@ -124,6 +124,7 @@ function Test() {
     if (!peerConnection) return;
     if (socket == null) return;
     const handleIce = (data: RTCPeerConnectionIceEvent) => {
+      console.log("아이스브레이킹");
       socket.emit("ice", data.candidate, matchId.current);
     };
 
@@ -286,9 +287,9 @@ function Test() {
   const sendData = (data: any) => () => {
     if (myDataChannel.current) {
       console.log(myDataChannel.current.readyState);
+      if (!myDataChannel.current.readyState) return;
+      myDataChannel.current.send(data);
     }
-    if (!myDataChannel.current) return;
-    myDataChannel.current.send(data);
   };
 
   // useEffect(() => {

@@ -23,3 +23,5 @@ export const iceServers: RTCIceServer[] = [
     credential: process.env.REACT_APP_TURN_PW!,
   },
 ];
+
+console.log(iceServers);
