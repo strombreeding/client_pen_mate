@@ -162,7 +162,9 @@ function Test() {
         }
         if (event.data.includes("second")) {
           setTargetReady("done");
-          console.log("내가 두번째다~");
+          cntRef.current = event.data.split("/")[1];
+
+          console.log("두번째가 준비완료함", event.data.split("/")[1]);
           return;
         }
         if (event.data === "회피") {
@@ -197,7 +199,7 @@ function Test() {
             setTargetReady("done");
             cntRef.current = event.data.split("/")[1];
 
-            console.log("내가 두번째다~");
+            console.log("두번째가 준비완료함", event.data.split("/")[1]);
             return;
           }
           if (event.data === "회피") {
@@ -265,10 +267,10 @@ function Test() {
     if (ready && targetReady === "notYet") {
       sendData(`first/${random}`)();
     } else if (ready && targetReady === "already") {
-      console.log("늦은놈이 보내는 거");
+      console.log("늦은놈이 보내는 거", random);
+      cntRef.current = random;
       sendData(`second/${random}`)();
       setTargetReady("done");
-      cntRef.current = random;
     }
     if (ready && targetReady === "done") {
       zz();
