@@ -8,6 +8,10 @@ import { colors } from "../../../assets/colors";
 import { gameImg } from "../../../assets/gameImg";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../configs/device";
 import BottomPrevNext from "../../navigations/BottomPrevNext";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
+import { setNowAction, setReady } from "../../../store/slices/bangState";
+import { setStep } from "../../../store/slices/signUp";
 interface ICharProps {
   imgSrc: string;
   width: number;
@@ -79,30 +83,24 @@ const RowView = styled.div<{ data: ICharProps }>`
 function ControllBoard({
   obj,
   board,
-  setBoard,
-  nowAction,
-  setNowAction,
   player,
-  step,
-  setStep,
-  setReady,
 }: {
   obj: ICharProps;
   board: number[][];
   setBoard: Dispatch<SetStateAction<number[][]>>;
   player: string;
-  nowAction: IWillAction[];
-  setNowAction: Dispatch<SetStateAction<IWillAction[]>>;
-  step: number;
-  setStep: Dispatch<SetStateAction<number>>;
-  setReady: Dispatch<SetStateAction<boolean>>;
 }) {
   const boardXSize = [1, 2, 3];
   const boardYSize = [1, 2, 3, 4, 5, 6];
+  const nowAction = useSelector(
+    (state: RootState) => state.bangState.nowAction
+  );
+  const ready = useSelector((state: RootState) => state.bangState.ready);
+  const step = useSelector((state: RootState) => state.bangState.step);
   const [copyPath] = useState([nowAction[0].path, nowAction[1].path]);
   const [canMove, setCanMove] = useState([] as number[][]);
   const [modal, setModal] = useState(true);
-  const width = obj.height;
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getPosition = (board: number[][]) => {
       board.map((list, x) => {
@@ -130,7 +128,7 @@ function ControllBoard({
 
   return (
     <>
-      <View style={{ width: "100%", position: "relative" }}>
+      <View style={{ width: "100%", position: "absolute", opacity: 0.8 }}>
         {boardXSize.map((empty, x) => (
           <RowView data={obj}>
             {boardYSize.map((useless, y) => {
@@ -234,8 +232,8 @@ function ControllBoard({
                     onClick={() => {
                       const copy = [...nowAction];
                       copy[step].path = [x, y];
-                      setStep(step + 1);
-                      setNowAction(copy);
+                      dispatch(setStep(step + 1));
+                      dispatch(setNowAction(copy));
                       if (step < 1) {
                         setModal(true);
                       }
@@ -255,8 +253,8 @@ function ControllBoard({
                     onClick={() => {
                       const copy = [...nowAction];
                       copy[step].path = [x, y];
-                      setStep(step + 1);
-                      setNowAction(copy);
+                      dispatch(setStep(step + 1));
+                      dispatch(setNowAction(copy));
                       if (step < 1) {
                         setModal(true);
                       }
@@ -273,8 +271,8 @@ function ControllBoard({
                     onClick={() => {
                       const copy = [...nowAction];
                       copy[step].path = [x, y];
-                      setStep(step + 1);
-                      setNowAction(copy);
+                      dispatch(setStep(step + 1));
+                      dispatch(setNowAction(copy));
                       if (step < 1) {
                         setModal(true);
                       }
@@ -289,8 +287,8 @@ function ControllBoard({
                     onClick={() => {
                       const copy = [...nowAction];
                       copy[step].path = [x, y];
-                      setStep(step + 1);
-                      setNowAction(copy);
+                      dispatch(setStep(step + 1));
+                      dispatch(setNowAction(copy));
                       if (step < 1) {
                         setModal(true);
                       }
@@ -306,44 +304,7 @@ function ControllBoard({
           </RowView>
         ))}
       </View>
-      {modal && (
-        <ActionContainer obj={obj}>
-          <ActionBtn
-            style={{
-              display:
-                nowAction[0].action === "공격" || nowAction[1].action === "공격"
-                  ? "none"
-                  : "flex",
-            }}
-            onClick={() => {
-              const copy = [...nowAction];
-              copy[step].action = "공격";
-              setNowAction(copy);
-              setModal(false);
-              // setStep(step+1)
-            }}
-          >
-            <ActionImg src={gameImg.action_atk} />
-          </ActionBtn>
-          <ActionBtn
-            style={{
-              display:
-                nowAction[0].action === "회피" || nowAction[1].action === "회피"
-                  ? "none"
-                  : "flex",
-            }}
-            onClick={() => {
-              const copy = [...nowAction];
-              copy[step].action = "회피";
-              setNowAction(copy);
-              setModal(false);
-              // setStep(step+1)
-            }}
-          >
-            <ActionImg src={gameImg.action_jump} />
-          </ActionBtn>
-        </ActionContainer>
-      )}
+
       <BottomPrevNext
         rightBtnColor="rgba(145, 255, 0, 0.797)"
         visible={
@@ -351,72 +312,36 @@ function ControllBoard({
           // nowAction[0].action !== "" && nowAction[1].action !== "" && step >= 2
         }
         prevAction={() => {
-          setStep(0);
+          dispatch(setStep(0));
           setModal(true);
-          setReady(false);
-          setNowAction([
-            {
-              action: "",
-              path: [],
-            },
-            {
-              action: "",
-              path: [],
-            },
-            {
-              action: "",
-              path: [],
-            },
-          ]);
+          dispatch(setReady(false));
+          dispatch(
+            setNowAction([
+              {
+                action: "",
+                path: [],
+              },
+              {
+                action: "",
+                path: [],
+              },
+              {
+                action: "",
+                path: [],
+              },
+            ])
+          );
         }}
         prevText={"초기화"}
         nextAction={() => {
-          setReady(true);
+          dispatch(setReady(true));
         }}
         nextText={"준비완료"}
       />
     </>
   );
 }
-const ActionContainer = styled(View)<{ obj: ICharProps }>`
-  position: absolute;
-  height: ${SCREEN_HEIGHT};
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-around;
-  align-items: center;
-  /* border: 0.5px solid rgba(255, 255, 255, 0.5); */
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px) contrast(90%);
-  -webkit-backdrop-filter: blur(2px) contrast(90%);
-  z-index: 100;
-`;
 
-const ActionBtn = styled(Pressable)`
-  display: flex;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  /* background-color: rgba(0, 0, 0, 0.8); */
-  background-color: rgba(145, 255, 0, 0.797);
-
-  border-radius: 100px;
-  padding: 10px;
-  margin: ${SCREEN_WIDTH * 0.08}px;
-  /* backdrop-filter: blur(15px) contrast(100%);
-  -webkit-backdrop-filter: blur(15px) contrast(40%); */
-  /* width: ${SCREEN_WIDTH * 0.4}px;
-  height: ${SCREEN_WIDTH * 0.4}px; */
-  align-items: center;
-  justify-content: center;
-`;
-
-const ActionImg = styled.img`
-  width: ${SCREEN_WIDTH * 0.2777777777777778}px;
-  height: ${SCREEN_WIDTH * 0.2777777777777778}px;
-`;
 export default ControllBoard;
 
 // 0,1 에서 0,2 으로 이동하면

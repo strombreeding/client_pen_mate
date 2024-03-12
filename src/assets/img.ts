@@ -3,6 +3,8 @@ export const imgSrc = {
   bg_viewport: require("../assets/pngs/backgroundImage.png"),
   bg_game: require("../assets/pngs/bg_game.png"),
   bg_reward: require("../assets/pngs/bg_reward.png"),
+  btn_hexagon_green: require("../assets/pngs/btn_hexagon_green.png"),
+  btn_hexagon_yellow: require("../assets/pngs/btn_hexagon_yellow.png"),
 
   atata_join: require("../assets/pngs/atata_join.png"),
 
@@ -11,6 +13,8 @@ export const imgSrc = {
   atata_atcive: require("../assets/pngs/atata_active.png"),
   heart_un: require("../assets/pngs/heart_un.png"),
   heart_active: require("../assets/pngs/heart_active.png"),
+  sub_health: require("../assets/pngs/sub_health.png"),
+  out: require("../assets/pngs/out.png"),
 
   home_un: require("../assets/pngs/home_un.png"),
   home_active: require("../assets/pngs/home_active.png"),
@@ -65,4 +69,6 @@ export const imgSrc = {
   timer: require("../assets/pngs/timer.png"),
   star: require("../assets/pngs/star.png"),
   close: require("../assets/pngs/close.png"),
+  sound_un_mute: require("../assets/pngs/sound_un_mute.png"),
+  sound_mute: require("../assets/pngs/sound_mute.png"),
 };

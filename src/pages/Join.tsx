@@ -8,6 +8,8 @@ import Login from "../components/join/Login";
 import { useState } from "react";
 import SignUp from "../components/join/SignUp";
 import { usePageState, useVisitedPage } from "../hooks/getVisitedPage";
+import SoundPressable from "../components/designs/SoundPressable";
+import { Text } from "../assets/fontStyles";
 
 const BgImg = styled.img`
   position: fixed;
@@ -84,7 +86,6 @@ function Join() {
       {/* <BgView> */}
       <Logo visited={isVisited} src={imgSrc.atata_join} />
       {/* </BgView> */}
-
       <EmptyBox height={10} />
       <EmptyBox height={10} />
       <EmptyBox height={10} />

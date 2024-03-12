@@ -8,7 +8,7 @@ import UserBoard from "../components/games/junkyard/UserBoard";
 import { Text } from "../assets/fontStyles";
 import { useAuthVisitPage, usePageState } from "../hooks/getVisitedPage";
 import { useNavigate } from "react-router-dom";
-import { setBgImg } from "../store/slices/appState";
+import { setBgImg, setBgm } from "../store/slices/appState";
 import { gameImg } from "../assets/gameImg";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
 import { history } from "../configs/history";
@@ -22,6 +22,7 @@ import { GameStatus } from "../store/slices/gameState";
 import { imgSrc } from "../assets/img";
 import { decrypt, encrypt } from "../utils/crypto";
 import { getDecryptedCookie, setEncryptedCookie } from "../utils/cookies";
+import { allBgm } from "../assets/sound";
 // import { createBoard, findPathDFS } from "../utils";
 
 type IGameLevel = [];
@@ -224,11 +225,13 @@ function Junkyard() {
     // console.log(gameState);
     gameInit();
     console.log(board.length);
-
+    console.log("십쉐야");
+    dispatch(setBgm(allBgm.junkyard));
     dispatch(setBgImg(gameImg.junkward_bg));
 
     return () => {
       dispatch(setBgImg(undefined));
+      dispatch(setBgm(allBgm.home));
       Cookies.remove("ingame");
     };
   }, []);
@@ -255,8 +258,10 @@ function Junkyard() {
           "포인트를 잃어버립니다. 나가시겠습니까?"
         );
         if (confirm) {
-          // Cookies.remove("ingame");
+          Cookies.remove("ingame");
+          Cookies.remove("mute");
           history.push("/games");
+          navigation("/games", { replace: true });
           // navigation("/games", { replace: true });
         } else {
           window.history.forward();
@@ -266,6 +271,7 @@ function Junkyard() {
     const refreshAction = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = "";
+      Cookies.remove("mute");
     };
     window.addEventListener("pagehide", refreshAction);
     window.addEventListener("beforeunload", refreshAction);
@@ -273,6 +279,7 @@ function Junkyard() {
       unlistenHistoryEvent();
       window.addEventListener("pagehide", refreshAction);
       window.removeEventListener("beforeunload", refreshAction);
+      Cookies.remove("mute");
     };
   }, [board]);
 

@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { emptyVal } from "../../../pages/Test";
 import { View } from "../../../nativeView";
 import { useEffect, useState } from "react";
+import { gameImg } from "../../../assets/gameImg";
+import { url } from "inspector";
 interface ICharProps {
   imgSrc: string;
   width: number;
@@ -16,7 +18,9 @@ const RightChar = styled.div<{ data: ICharProps; stand: number }>`
   width: ${(props) => props.data.width}px;
   height: ${(props) => props.data.width * 0.625}px;
   /* background-image: url(${(props) => props.data.imgSrc}); */
-  border: 1px solid black;
+  background-image: url(${gameImg.tile4});
+  /* background-image: url(${gameImg.tile2}); */
+  /* background-image: url(${gameImg.mars_tile}); */
   background-color: ${(props) =>
     props.stand === 1 ? "red" : props.stand === 2 ? "blue" : "pink"};
   background-size: ${(props) => props.data.width * props.data.cols}px
@@ -53,8 +57,8 @@ function CharBoard({ obj, board }: { obj: ICharProps; board: number[][] }) {
     <View
       style={{
         width: "100%",
-        backgroundColor: "purple",
-        height: obj.width * 0.625 * boardXSize.length + 50,
+        backgroundColor: "#9B5127",
+        // height: obj.width * 0.625 * boardXSize.length + 50,
         position: "relative",
       }}
     >
@@ -63,21 +67,7 @@ function CharBoard({ obj, board }: { obj: ICharProps; board: number[][] }) {
           {boardYSize.map((useless, y) => {
             const xy = [x, y];
 
-            return (
-              <RightChar
-                data={obj}
-                stand={board[x][y]}
-                style={
-                  {
-                    // right:
-                    //   emptyVal(obj.width) +  // 최소한의 캐릭터 히트박스
-                    //   -emptyVal(obj.width) / 3 + // 처음 여유값
-                    //   obj.width * 0.75 * y, // 이동하려는 값
-                    // zIndex: board[x][y] > 0 ? 0 : 1,
-                  }
-                }
-              />
-            );
+            return <RightChar data={obj} stand={board[x][y]} />;
           })}
         </RowView>
       ))}

@@ -36,3 +36,5 @@ export type NavTab = "home" | "ranking" | "store" | "profile";
 //   matchType: string[];
 //   player: string[];
 // }
+
+export type BangTargetReadt = "notYet" | "already" | "done";

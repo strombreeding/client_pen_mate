@@ -145,8 +145,7 @@ const toBigger = keyframes`
       min-height: ${SCREEN_WIDTH * 0.832}px;
     }
     to{
-    transform: scale(1.40);
-      /* min-height: ${SCREEN_HEIGHT / 1.8}px; */
+    transform: scale(1.30);
       min-height: ${SCREEN_HEIGHT / 2}px;
     }
 `;

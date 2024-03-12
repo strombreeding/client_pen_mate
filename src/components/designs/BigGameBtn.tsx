@@ -5,6 +5,8 @@ import styled, { keyframes } from "styled-components";
 import { BtnStatus } from "../../types";
 import { MOBILE, SCREEN_WIDTH } from "../../configs/device";
 import { useNavigate } from "react-router-dom";
+import { useAudio } from "../../hooks/useAudio";
+import { allSfx } from "../../assets/sound";
 
 const BtnContainer = styled.div<{ status: BtnStatus }>`
   transform: scale(${(props) => (props.status === "pressed" ? 1.03 : 1)});
@@ -33,9 +35,13 @@ const BigGameBtn = () => {
     if (status !== "disabled") setStatus("default");
   };
 
+  const clickAudio = useAudio(allSfx.click);
   const navigation = useNavigate();
   const onPress = () => {
-    navigation("/games");
+    clickAudio.play();
+    setTimeout(() => {
+      navigation("/games");
+    }, 200);
   };
 
   return (

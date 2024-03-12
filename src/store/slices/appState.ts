@@ -7,6 +7,7 @@ import {
 import { NavTab, SignInFormData } from "../../types";
 import { Dispatch, SetStateAction } from "react";
 import Cookies from "js-cookie";
+import { allBgm } from "../../assets/sound";
 
 interface AppState {
   popup: boolean;
@@ -18,6 +19,8 @@ interface AppState {
   bgImg: string | undefined;
   loading: boolean;
   canScroll: boolean;
+  bgm: string;
+  mute: boolean;
 }
 
 const initialState: AppState = {
@@ -30,6 +33,8 @@ const initialState: AppState = {
   bgImg: undefined,
   loading: false,
   canScroll: true,
+  bgm: allBgm.home,
+  mute: Cookies.get("mute") === "false" ? false : true,
 };
 
 const appState = createSlice({
@@ -66,6 +71,14 @@ const appState = createSlice({
     setCanScroll: (state, action: PayloadAction<boolean>) => {
       state.canScroll = action.payload;
     },
+
+    setBgm: (state, action: PayloadAction<string>) => {
+      state.bgm = action.payload;
+    },
+
+    setMute: (state, action: PayloadAction<boolean>) => {
+      state.mute = action.payload;
+    },
   },
 });
 
@@ -79,6 +92,8 @@ export const {
   setBgImg,
   setLoading,
   setCanScroll,
+  setBgm,
+  setMute,
 } = appState.actions;
 
 export default appState.reducer;

@@ -1,5 +1,6 @@
 import {
   MouseEventHandler,
+  SetStateAction,
   TouchEventHandler,
   memo,
   useEffect,
@@ -29,6 +30,11 @@ import axios from "axios";
 import { SERVER_URI } from "../configs/server";
 import GameCard from "../components/games/card/Card";
 import Cookies from "js-cookie";
+import { allSfx } from "../assets/sound";
+import { useAudio } from "../hooks/useAudio";
+import MatchingModal from "../components/games/bang/detail/MatchingModal";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { Socket } from "socket.io-client";
 
 const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
@@ -53,7 +59,11 @@ type Tx = {
 };
 const SelectGames = () => {
   const pageState = usePageState();
-
+  const slideAudio = useAudio(allSfx.slide);
+  const clickAudio = useAudio(allSfx.click);
+  const matchStart = useSelector(
+    (state: RootState) => state.bangState.matchStart
+  );
   const [ready, setReady] = useState(false);
   const [games, setGames] = useState<GameProps[]>([{}, {}, {}] as GameProps[]);
   const [idx, setIdx] = useState(2);
@@ -62,11 +72,10 @@ const SelectGames = () => {
     (state: RootState) => state.gameState.status.gameTitle
   );
   const dispatch = useDispatch<AppDispatch>();
-
   const dragRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const navigation = useNavigate();
-
+  useEffect(() => {}, []);
   const req = async () => {
     dispatch(setLoading(true));
     const res = await axios.get(SERVER_URI + "game");
@@ -187,9 +196,12 @@ const SelectGames = () => {
 
     if (touchStartX - touchEndX > 10 && gameSelectState === "move") {
       handleSwipe(1);
+      slideAudio.play();
     } else if (touchStartX - touchEndX < -10 && gameSelectState === "move") {
       handleSwipe(-1);
+      slideAudio.play();
     } else {
+      clickAudio.play();
       onClick();
     }
   };
@@ -202,10 +214,13 @@ const SelectGames = () => {
     // if (touchStartX > touchEndX) {
     if (touchStartX - touchEndX > 10 && gameSelectState === "move") {
       handleSwipe(1);
+      slideAudio.play();
     } else if (touchStartX - touchEndX < -10 && gameSelectState === "move") {
       // } else if (touchStartX < touchEndX) {
       handleSwipe(-1);
+      slideAudio.play();
     } else {
+      clickAudio.play();
       onClick();
     }
   };
@@ -268,7 +283,12 @@ const SelectGames = () => {
       </View>
 
       <EmptyBox style={{ flex: 1 }} />
-      <BottomPrevNext style={{ flex: 1 }} visible={choiceTitle === undefined} />
+      <BottomPrevNext
+        style={{ flex: 1 }}
+        prevAction={() => navigation("/", { replace: true })}
+        visible={choiceTitle === undefined}
+      />
+      <MatchingModal />
       {/* <BottomModal visible={choiceTitle !== undefined} /> */}
     </Container>
   );

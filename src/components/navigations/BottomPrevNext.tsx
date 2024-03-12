@@ -8,7 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { setCanPopstateEvent } from "../../store/slices/appState";
 import { usePageState } from "../../hooks/getVisitedPage";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { allSfx } from "../../assets/sound";
+import { useAudio } from "../../hooks/useAudio";
 
 export const PrevBtn = styled(Pressable)`
   flex: 1;
@@ -43,37 +45,94 @@ function BottomPrevNext({
   justHome?: boolean;
   rightBtnColor?: string;
 }) {
+  const [nextBtnClick, setNextBtnClick] = useState(false);
+  const [prevBtnClick, setPrevBtnClick] = useState(false);
   const navigate = useNavigate();
   const pageState = usePageState();
   const dispatch = useDispatch<AppDispatch>();
+  const prevRef = useRef<HTMLDivElement | null>(null);
+  const nextRef = useRef<HTMLDivElement | null>(null);
+  const nextAudio = useAudio(allSfx.click);
+  const prevAudio = useAudio(allSfx.back);
 
   if (prevAction == null) {
     prevAction = function () {
-      window.history.back();
+      prevAudio.play();
+      setTimeout(() => {
+        window.history.back();
+      }, 150);
     };
   }
   if (prevText == null) prevText = "이전";
   if (nextText == null) nextText = "스토어";
 
   const goHome = () => {
-    navigate("/", { replace: true });
+    prevAudio.play();
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 150);
   };
+
+  const pressDown = (type: "prev" | "next") => () => {
+    if (type === "next") {
+      setNextBtnClick(true);
+    } else {
+      setPrevBtnClick(true);
+    }
+  };
+  const pressUp = (type: "prev" | "next") => () => {
+    if (type === "next") {
+      nextAudio.play();
+      setNextBtnClick(false);
+    } else {
+      setPrevBtnClick(false);
+    }
+  };
+
   return (
     <BottomLayer style={style} visible={visible}>
       {justHome ? (
         <View style={styles.contentView}>
-          <PrevBtn onClick={goHome}>
+          <PrevBtn
+            ref={nextRef}
+            onTouchStart={pressDown("prev")}
+            onTouchEnd={pressUp("prev")}
+            onMouseDown={pressDown("prev")}
+            onMouseUp={pressUp("prev")}
+            onClick={goHome}
+            style={{
+              opacity: prevBtnClick ? 0.7 : 1,
+            }}
+          >
             <Text.Light_12>{"처음으로"}</Text.Light_12>
           </PrevBtn>
         </View>
       ) : (
         <View style={styles.contentView}>
-          <PrevBtn onClick={prevAction}>
+          <PrevBtn
+            ref={prevRef}
+            onClick={prevAction}
+            onTouchStart={pressDown("prev")}
+            onTouchEnd={pressUp("prev")}
+            onMouseDown={pressDown("prev")}
+            onMouseUp={pressUp("prev")}
+            style={{
+              opacity: prevBtnClick ? 0.7 : 1,
+            }}
+          >
             <Text.Light_12>{prevText}</Text.Light_12>
           </PrevBtn>
           <EmptyBox width={5} />
           <PrevBtn
-            style={{ backgroundColor: rightBtnColor || "auto" }}
+            ref={nextRef}
+            onTouchStart={pressDown("next")}
+            onTouchEnd={pressUp("next")}
+            onMouseDown={pressDown("next")}
+            onMouseUp={pressUp("next")}
+            style={{
+              backgroundColor: rightBtnColor || "auto",
+              opacity: nextBtnClick ? 0.7 : 1,
+            }}
             onClick={nextAction}
           >
             <Text.Light_12>{nextText}</Text.Light_12>

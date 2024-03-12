@@ -19,6 +19,7 @@ import { SERVER_URI } from "../../../configs/server";
 import Shake from "../../animations/Shake";
 import LoadingLottie from "../../LoadingLottie";
 import { setEncryptedCookie } from "../../../utils/cookies";
+import { setMatchStart } from "../../../store/slices/bangState";
 
 function CardBottomBtn({
   setSpecial,
@@ -30,6 +31,9 @@ function CardBottomBtn({
   const [enough, setEnough] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
+  const matchStart = useSelector(
+    (state: RootState) => state.bangState.matchStart
+  );
   const dispatch = useDispatch<AppDispatch>();
   const gameState = useSelector((state: RootState) => state.gameState.status);
   const gameCreateReq = async () => {
@@ -50,7 +54,15 @@ function CardBottomBtn({
       setLoading(false);
     }
   };
-
+  const matchFound = useSelector(
+    (state: RootState) => state.bangState.matchFound
+  );
+  const bangMatch = () => {
+    dispatch(setMatchStart(true));
+  };
+  const bangCancelMatch = () => {
+    dispatch(setMatchStart(false));
+  };
   return (
     <>
       {enough.length > 0 && (
@@ -69,19 +81,32 @@ function CardBottomBtn({
         <PrevBtn
           style={{ height: 50 }}
           onClick={() => {
+            if (gameState.gameTitle === "결투!" && matchStart) {
+              bangCancelMatch();
+              return;
+            }
             dispatch(setGameState({ gameTitle: undefined }));
             dispatch(setGameSelectState("move"));
             setSpecial(true);
           }}
         >
-          <Text.Light_12>{"이전"}</Text.Light_12>
+          <Text.Light_12>{matchStart ? "취소" : "이전"}</Text.Light_12>
         </PrevBtn>
         <EmptyBox width={5} />
         <PrevBtn
           style={{ backgroundColor: colors.Main_Button1, height: 50 }}
-          onClick={gameCreateReq}
+          onClick={() => {
+            if (gameState.gameTitle === "결투!") {
+              setMatchStart(true);
+              bangMatch();
+            } else {
+              gameCreateReq();
+            }
+          }}
         >
-          <Text.Light_12>시작</Text.Light_12>
+          <Text.Light_12>
+            {gameState.gameTitle === "결투!" ? "매칭" : "시작"}
+          </Text.Light_12>
           <View
             style={{
               flexDirection: "row",

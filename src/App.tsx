@@ -17,6 +17,7 @@ import Cookies from "js-cookie";
 import BottomModal from "./components/games/BottomModal";
 import useDefaultBrowser from "./hooks/useDefaultBrowser";
 import KakaoInAppBrowserDetect from "./KakaoInAppBrowserDetect";
+import AudioComponent from "./components/Audio";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -81,7 +82,18 @@ function App() {
     };
     // return () =>
   }, []);
+  useEffect(() => {
+    window.addEventListener("beforeunload", function (event) {
+      // 이벤트 핸들러에서 사용자에게 경고 메시지를 표시할 수 있습니다.
+      const cookies = Cookies.get(); // 모든 쿠키를 가져옵니다.
+      for (const cookie in cookies) {
+        Cookies.remove(cookie); // 각 쿠키를 삭제합니다.
+      }
+      // event.returnValue = ""; // Chrome에서는 이 값을 설정해야 경고 메시지가 표시됩니다.
+    });
+  }, []);
 
+  const mute = useSelector((state: RootState) => state.appState.mute);
   const canScroll = useSelector((state: RootState) => state.appState.canScroll);
 
   console.log("로딩", loading);
@@ -91,6 +103,7 @@ function App() {
         <Viewport src={imgSrc.bg_viewport} />
 
         <Background>
+          <AudioComponent />
           <Loading />
 
           <GameBg visible={bgImg !== undefined} src={bgImg} />

@@ -3,6 +3,9 @@ interface gameAssets {
 }
 export const gameImg = {
   // export const gameAssets: gameAssets = {
+
+  action_btn: require("../assets/gameAssets/action_btn.png"),
+
   target: require("../assets/gameAssets/target.png"),
   junkyard_ico_1: require("../assets/gameAssets/junkyard_ico_1-removebg-preview.png"),
   junkyard_ico_2: require("../assets/gameAssets/junkyard_ico_2-removebg-preview.png"),
@@ -38,4 +41,14 @@ export const gameImg = {
 
   action_jump: require("../assets/gameAssets/action_jump.png"),
   action_atk: require("../assets/gameAssets/action_atk.png"),
+
+  bg_bang_tile: require("../assets/gameAssets/bg_bang_tile.png"),
+  bg_bang: require("../assets/gameAssets/bg_bang.png"),
+  bg_bang2: require("../assets/gameAssets/bg_bang2.png"),
+  mars_tile: require("../assets/gameAssets/mars_tile.png"),
+  tile2: require("../assets/gameAssets/tile2.png"),
+  tile3: require("../assets/gameAssets/tile3.png"),
+  tile4: require("../assets/gameAssets/tile4.png"),
+  sun1: require("../assets/gameAssets/sun1.png"),
+  sun2: require("../assets/gameAssets/sun2.png"),
 };

@@ -1,3 +1,7 @@
+뱅 ㅂ비지
+<a href="https://www.freepik.com/free-vector/game-seamless-ground-underground-layer-with-sand-hills-soil-ground-grass-field-stone-clay-surface-various-natural-textures-land-cross-sections-cartoon-vector-illustration-set_67808148.htm#from_view=detail_alsolike">Image by upklyak on Freepik</a>
+<a href="https://www.freepik.com/free-vector/different-planet-textures-set_36433950.htm#fromView=search&page=1&position=8&uuid=37bc2c5d-9464-4399-bf66-88f8760a451f">Image by brgfx on Freepik</a>
+<a href="https://www.freepik.com/free-vector/game-ground-textures_13050184.htm#fromView=search&page=1&position=20&uuid=fd7ff2a3-c41f-425f-9955-b62894678f49">Image by macrovector on Freepik</a>
 <a href="https://kr.freepik.com/icon/up_5505360#fromView=search&page=2&position=74&uuid=dceca99a-04b5-4c51-908d-20c548215bf1">Ramy W. 제작 아이콘</a>
 
 우주 반물질 아이콘 <a href="https://kr.freepik.com/free-vector/alien-space-planets-cartoon-design-elements-set_33946999.htm#fromView=search&page=1&position=3&uuid=ddd3e801-e0a4-4c69-875b-717f88f881da">작가 upklyak 출처 Freepik</a>
@@ -16,3 +20,20 @@
 
 회피 이미지
 <a href="https://www.freepik.com/free-vector/flat-design-hiking-element-set_144642751.htm#fromView=search&page=3&position=43&uuid=c4d35e33-9678-472a-a0b0-84e59c5a227c">Image by freepik</a>
+
+액션 버튼
+<a href="https://www.freepik.com/free-vector/realistic-silver-frame-design_21697604.htm#fromView=search&page=1&position=3&uuid=c2f3e12e-1eed-425c-8013-7b484bf53666">Image by freepik</a>
+<a href="https://www.freepik.com/free-vector/hexagon-shaped-icon-buttons_19376816.htm#fromView=search&page=1&position=0&uuid=26b5f6cf-44e2-4e05-8cdb-027128ec24cf">Image by brgfx on Freepik</a>
+<a href="https://www.freepik.com/icon/shield_13198088#fromView=search&page=1&position=17&uuid=142bf3d9-e397-43ec-95f3-d07183757314">Icon by Vector Stall</a>
+SFX
+https://soundbible.com/search.php?q=touch
+
+SFX & BGM
+openGameArt.org
+NenadSimic
+VWolfdog
+CleytonKauffman
+Ulrich Metzner (Submitted by qubodup)
+
+Insydnis
+Brandon Morris (Submitted by HaelDB)
