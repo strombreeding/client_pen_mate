@@ -22,9 +22,10 @@ import { allBgm } from "../assets/sound";
 import SoundPressable from "../components/designs/SoundPressable";
 import Inventory from "../components/games/bang/Inventory";
 import PlayerInterface from "../components/games/bang/PlayerStatus";
+import { colors } from "../assets/colors";
 
 export interface IMessageProps {
-  type: "first" | "second" | "회피" | "상대능력" | "지연율리턴" | "";
+  type: "first" | "second" | "회피" | "상대능력" | "chat" | "";
   data: any;
 }
 export type Ablilty = {
@@ -35,8 +36,13 @@ export type Ablilty = {
 };
 type StepProps = "action" | "first" | "second" | "final" | "ready" | "init";
 export interface IStatusProps {
-  me: { health: number; nickname: string };
-  you: { health: number; nickname: string };
+  me: IStatusDetail;
+  you: IStatusDetail;
+}
+export interface IStatusDetail {
+  health: number;
+  nickname: string;
+  subHealth: number;
 }
 export interface ItemProps {
   itemImg?: string;
@@ -67,16 +73,31 @@ const Out = styled.img`
   text-align: start;
 `;
 
+const peerConnection = new RTCPeerConnection({
+  iceServers: iceServers,
+});
+
 function Bang() {
-  const [peerConnection] = useState<RTCPeerConnection>(
-    new RTCPeerConnection({
-      iceServers: iceServers,
-    })
-  );
+  // const [peerConnection] = useState<RTCPeerConnection>(
+  //   new RTCPeerConnection({
+  //     iceServers: iceServers,
+  //   })
+  // );
   const [modal, setModal] = useState(false);
   const [player, setPlayer] = useState<"A" | "B">("A");
+  const [text, setText] = useState("");
+  const [aChat, setAChat] = useState([] as string[]);
+  const [bChat, setBChat] = useState([] as string[]);
+
   const [obj, setObj] = useState<ICharProps>({
     imgSrc: gameImg.cow_stand_right,
+    width: SCREEN_WIDTH * 0.2222,
+    height: 0,
+    cols: 1,
+    rows: 1,
+  });
+  const [bObj, setBObj] = useState<ICharProps>({
+    imgSrc: gameImg.cow_stand_left,
     width: SCREEN_WIDTH * 0.2222,
     height: 0,
     cols: 1,
@@ -95,8 +116,8 @@ function Bang() {
     skil: [],
   });
   const [status, setStatus] = useState<IStatusProps>({
-    me: { health: ability.health, nickname: "easynee_" },
-    you: { health: tartgetAbility.health, nickname: "bounti" },
+    me: { health: ability.health, nickname: "easynee_", subHealth: 0 },
+    you: { health: tartgetAbility.health, nickname: "bounti", subHealth: 0 },
   });
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0],
@@ -167,6 +188,20 @@ function Bang() {
             subHealth: recieve.data.subHealth,
           },
         }));
+      }
+
+      if (recieve.type === "chat") {
+        if (player === "A") {
+          const newChat = [...aChat];
+          if (newChat.length >= 1) newChat.shift();
+          newChat.push(recieve.data);
+          setAChat(newChat);
+        } else {
+          const newChat = [...bChat];
+          if (newChat.length >= 1) newChat.shift();
+          newChat.push(recieve.data);
+          setBChat(newChat);
+        }
       }
       // 회피자의 회피액션 수신하여 REF로 반영
       //   if (recieve.type === "회피") {
@@ -264,6 +299,33 @@ function Bang() {
     }
   };
 
+  useEffect(() => {
+    if (aChat.length >= 1) {
+      const timer = setTimeout(() => {
+        const newChat = [...aChat];
+        newChat.shift();
+        setAChat(newChat);
+      }, 2000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [aChat]);
+  useEffect(() => {
+    if (bChat.length >= 1) {
+      const timer = setTimeout(() => {
+        const newChat = [...bChat];
+        newChat.shift();
+        setBChat(newChat);
+      }, 2000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [bChat]);
+
   return (
     <Container style={{ flex: 1, position: "relative" }}>
       <View
@@ -313,7 +375,14 @@ function Bang() {
           position: "relative",
         }}
       >
-        <CharBoard obj={obj} board={board} />
+        <CharBoard
+          obj={obj}
+          bObj={bObj}
+          board={board}
+          aChat={aChat}
+          bChat={bChat}
+          player={player}
+        />
         {(step === "final" || step === "second" || step === "first") && (
           <ControllBoard
             obj={obj}
@@ -325,33 +394,50 @@ function Bang() {
       </View>
 
       <BottomInterface>
-        <EmptyBox height={30} />
-        <BottomInterfaceBox>
-          {/* A플레이어 */}
-          <PlayerInterface
-            player={player}
-            status={status}
-            ability={ability}
-            tartgetAbility={tartgetAbility}
-            type={"A"}
+        <EmptyBox height={10} />
+        <form style={{ display: "flex", flexDirection: "row" }}>
+          <ChatInput
+            type="text"
+            placeholder="Chat..."
+            maxLength={30}
+            value={text}
+            onChange={(e) => setText(e.currentTarget.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // Enter 키의 기본 동작 방지
+                if (player === "A") {
+                  const newChat = [...aChat];
+                  if (newChat.length >= 2) {
+                    newChat.shift();
+                  }
+                  newChat.push(text);
+                  sendData({
+                    type: "chat",
+                    data: text,
+                  })();
+                  setText("");
+                  setAChat(newChat);
+                } else if (player === "B") {
+                  const newChat = [...bChat];
+                  if (newChat.length >= 2) {
+                    newChat.shift();
+                  }
+                  newChat.push(text);
+                  sendData({
+                    type: "chat",
+                    data: text,
+                  })();
+                  setText("");
+                  setBChat(newChat);
+                }
+              }
+            }}
           />
-
-          {/* 배팅금액 */}
-          <View>
-            <Text.Light_32>500</Text.Light_32>
-          </View>
-
-          {/* B플레이어 */}
-          <PlayerInterface
-            player={player}
-            status={status}
-            ability={ability}
-            tartgetAbility={tartgetAbility}
-            type={"B"}
-          />
-        </BottomInterfaceBox>
+          <PrevBtn style={{ padding: 5, minHeight: 30 }}>
+            <Text.Spo_Light_12>Send</Text.Spo_Light_12>
+          </PrevBtn>
+        </form>
         <EmptyBox height={30} />
-        <Text.Light_20>gd</Text.Light_20>
       </BottomInterface>
 
       {modal && (step === "final" || step === "second" || step === "first") && (
@@ -371,15 +457,30 @@ function Bang() {
     </Container>
   );
 }
+const ChatInput = styled.input`
+  padding: 0px;
+  background-color: transparent;
+  border-color: transparent;
+  border-bottom-color: ${colors.White};
+  text-align: start;
+  outline: none;
+  caret-color: white;
+  color: white;
+  font-family: "esamanruLight";
+`;
 const BottomInterface = styled(View)`
   background-color: #9b5127;
   width: 100%;
   flex: 1;
   align-items: center;
+  ::placeholder {
+    color: white;
+  }
 `;
 const BottomInterfaceBox = styled(View)`
   width: 95%;
   background-color: "grey";
+  height: 80px;
   padding: 10px;
   border: 1px solid black;
   flex-direction: row;

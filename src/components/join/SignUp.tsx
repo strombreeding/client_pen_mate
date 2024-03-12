@@ -41,12 +41,12 @@ const Input = styled.input`
   background-color: transparent;
   border-color: transparent;
   border-bottom-color: #c1c1c1;
+  text-align: start;
   outline: none;
   caret-color: #c1c1c1;
   color: white;
   font-family: Roboto;
   font-size: 16px;
-  text-align: start;
 `;
 
 const Form = styled.form<{ shake: boolean }>`

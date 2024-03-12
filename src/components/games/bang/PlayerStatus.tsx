@@ -36,10 +36,10 @@ function PlayerInterface({
       </View>
       <View style={{ flexDirection: "row" }}>
         {player === type
-          ? Array(ability.subHealth)
+          ? Array(status.me.subHealth)
               .fill(0)
               .map(() => <img src={imgSrc.sub_health} style={{ width: 15 }} />)
-          : Array(ability.subHealth)
+          : Array(status.you.subHealth)
               .fill(0)
               .map(() => <img src={imgSrc.sub_health} style={{ width: 15 }} />)}
       </View>
