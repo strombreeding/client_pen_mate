@@ -94,10 +94,13 @@ function CardBottomBtn({
         </PrevBtn>
         <EmptyBox width={5} />
         <PrevBtn
-          style={{ backgroundColor: colors.Main_Button1, height: 50 }}
+          style={{
+            backgroundColor: colors.Main_Button1,
+            height: 50,
+            opacity: matchStart ? 0.5 : 1,
+          }}
           onClick={() => {
-            if (gameState.gameTitle === "결투!") {
-              setMatchStart(true);
+            if (gameState.gameTitle === "결투!" && !matchStart) {
               bangMatch();
             } else {
               gameCreateReq();

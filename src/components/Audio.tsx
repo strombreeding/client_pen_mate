@@ -32,7 +32,6 @@ function AudioComponent() {
     if (!audio || mute) return;
 
     audio.autoplay = true;
-    console.log(audio.currentTime);
     if (audio.src !== nowBgm) {
       audio.src = nowBgm;
     }

@@ -10,12 +10,14 @@ interface ISoundPressableProps {
   pressDownStyle?: React.CSSProperties;
   pressUpStyle?: React.CSSProperties;
   children?: React.ReactNode;
+  scaleBtn?: boolean;
 }
 function SoundPressable({
   style,
   onClick,
   pressDownStyle,
   children,
+  scaleBtn,
 }: ISoundPressableProps) {
   const [isPressed, setIsPressed] = useState(false);
   const buttonRef = useRef<HTMLDivElement | null>(null);
@@ -38,6 +40,21 @@ function SoundPressable({
   const pressUp = () => {
     setIsPressed(false);
   };
+  if (scaleBtn) {
+    return (
+      <Pressable
+        ref={buttonRef}
+        onClick={onClick}
+        onTouchStart={pressDown}
+        onMouseDown={pressDown}
+        onTouchEnd={pressUp}
+        onMouseUp={pressUp}
+        style={isPressed ? { ...style, transform: "scale(0.9)" } : style}
+      >
+        {children}
+      </Pressable>
+    );
+  }
   return (
     <PrevBtn
       ref={buttonRef}

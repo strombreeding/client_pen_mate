@@ -3,7 +3,7 @@ import { Pressable, ScrollView, View } from "../../../nativeView";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../configs/device";
 import { Text } from "../../../assets/fontStyles";
 import { EmptyBox } from "../../../styles";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
   Ablilty,
   IMessageProps,
@@ -64,6 +64,7 @@ function Inventory({
   setStatus,
   setTerminel,
 }: InventoryProps) {
+  const [cnt, setCnt] = useState(16);
   const [checkItem, setCheckItem] = useState<number[]>([]);
   const [inventory, setInventory] = useState([
     {
@@ -91,8 +92,92 @@ function Inventory({
       skil: "확산",
     },
   ] as ItemProps[]);
+  const clearItem = (item: ItemProps, index: number) => () => {
+    const newBag = [...bag];
+    newBag.splice(index, 1);
+    newBag.push({});
+    setBag([...newBag]);
+    const newCheckItem = [...checkItem];
+    newCheckItem.splice(index, 1);
+    const newAbility = { ...ability };
+    if (item.type === "atk") {
+      newAbility.atk = newAbility.atk - item.cost!;
+    } else if (item.type === "util") {
+      newAbility.subHealth = newAbility.subHealth - item.cost!;
+    }
+    if (item.skil != null) {
+      const skilIdx = ability.skil.indexOf(item.skil);
+      newAbility.skil.splice(skilIdx, 1);
+      console.log(item.skil, skilIdx);
+    }
+    console.log(item.skil);
+    console.log(item);
+
+    setAbility({ ...newAbility });
+    setCheckItem([...newCheckItem]);
+  };
+  const itemUse = (item: ItemProps, index: number) => () => {
+    if (checkItem.includes(index)) return;
+    if (bag[2].itemImg != undefined) return;
+    const current = bag.filter((item, a) => Object.values(item).length > 1);
+    console.log(current.length);
+    const newBag = [...bag];
+    const newIdx = current.length;
+    newBag[newIdx] = {
+      cnt: item.cnt,
+      cost: item.cost,
+      description: item.description,
+      itemImg: item.itemImg,
+      type: item.type,
+      skil: item.skil,
+    };
+    const newAbility = { ...ability };
+    if (item.type === "atk") {
+      newAbility.atk = newAbility.atk + item.cost!;
+    } else if (item.type === "util") {
+      newAbility.subHealth = newAbility.subHealth + item.cost!;
+    }
+    if (item.skil) {
+      newAbility.skil.push(item.skil!);
+    }
+    console.log(item.skil);
+    setAbility({ ...newAbility });
+    setCheckItem([...checkItem, index]);
+    setBag([...newBag]);
+  };
+
+  const initDone = () => {
+    const dataObj = {
+      ...ability,
+    };
+    sendData({ type: "상대능력", data: dataObj })();
+    setStatus((prev) => ({
+      ...prev,
+      me: {
+        ...prev.me,
+        health: dataObj.health,
+        subHealth: dataObj.subHealth,
+      },
+    }));
+    setTerminel((prev) => ({ ...prev, me: "initDone" }));
+  };
+
+  useEffect(() => {
+    if (cnt !== 0) {
+      const timeout = setTimeout(() => {
+        setCnt(cnt - 1);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    } else if (cnt === 0) {
+      initDone();
+    }
+  }, [cnt]);
+
+  useEffect(() => {});
   return (
     <InitModal>
+      <Text.SemiBold_32>{cnt}</Text.SemiBold_32>
       <Text.Light_32>장착</Text.Light_32>
       <View style={{ flexDirection: "row", flex: 1 }}>
         {bag.map((item, index) => {
@@ -106,31 +191,7 @@ function Inventory({
               ) : (
                 <>
                   <Pressable
-                    onClick={() => {
-                      const newBag = [...bag];
-                      newBag.splice(index, 1);
-                      newBag.push({});
-                      setBag([...newBag]);
-                      const newCheckItem = [...checkItem];
-                      newCheckItem.splice(index, 1);
-                      const newAbility = { ...ability };
-                      if (item.type === "atk") {
-                        newAbility.atk = newAbility.atk - item.cost!;
-                      } else if (item.type === "util") {
-                        newAbility.subHealth =
-                          newAbility.subHealth - item.cost!;
-                      }
-                      if (item.skil != null) {
-                        const skilIdx = ability.skil.indexOf(item.skil);
-                        newAbility.skil.splice(skilIdx, 1);
-                        console.log(item.skil, skilIdx);
-                      }
-                      console.log(item.skil);
-                      console.log(item);
-
-                      setAbility({ ...newAbility });
-                      setCheckItem([...newCheckItem]);
-                    }}
+                    onClick={clearItem(item, index)}
                     style={{ position: "absolute", top: 0, right: 0 }}
                   >
                     <img src={imgSrc.close} width={20} />
@@ -150,37 +211,7 @@ function Inventory({
             return (
               <ItemSlot
                 style={checkItem.includes(index) ? { opacity: 0.3 } : {}}
-                onClick={() => {
-                  if (checkItem.includes(index)) return;
-                  if (bag[2].itemImg != undefined) return;
-                  const current = bag.filter(
-                    (item, a) => Object.values(item).length > 1
-                  );
-                  console.log(current.length);
-                  const newBag = [...bag];
-                  const newIdx = current.length;
-                  newBag[newIdx] = {
-                    cnt: item.cnt,
-                    cost: item.cost,
-                    description: item.description,
-                    itemImg: item.itemImg,
-                    type: item.type,
-                    skil: item.skil,
-                  };
-                  const newAbility = { ...ability };
-                  if (item.type === "atk") {
-                    newAbility.atk = newAbility.atk + item.cost!;
-                  } else if (item.type === "util") {
-                    newAbility.subHealth = newAbility.subHealth + item.cost!;
-                  }
-                  if (item.skil) {
-                    newAbility.skil.push(item.skil!);
-                  }
-                  console.log(item.skil);
-                  setAbility({ ...newAbility });
-                  setCheckItem([...checkItem, index]);
-                  setBag([...newBag]);
-                }}
+                onClick={itemUse(item, index)}
               >
                 <ItemImg src={item.itemImg} />
                 <Text.Light_12
@@ -239,23 +270,7 @@ function Inventory({
         </View>
       </View>
       <EmptyBox height={20} />
-      <SoundPressable
-        onClick={() => {
-          const dataObj = {
-            ...ability,
-          };
-          sendData({ type: "상대능력", data: dataObj })();
-          setStatus((prev) => ({
-            ...prev,
-            me: {
-              ...prev.me,
-              health: dataObj.health,
-              subHealth: dataObj.subHealth,
-            },
-          }));
-          setTerminel((prev) => ({ ...prev, me: "initDone" }));
-        }}
-      >
+      <SoundPressable onClick={initDone}>
         <Text.Light_24>정비 완료</Text.Light_24>
       </SoundPressable>
     </InitModal>

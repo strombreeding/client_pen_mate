@@ -75,56 +75,31 @@ function MatchingModal({}) {
     //  peerConnection
     if (socket == null) return;
 
-    // 함수 정의 목록
-
-    /* ice이벤트 발생시 핸들러 */
-    const handleIce = (data: RTCPeerConnectionIceEvent) => {
-      socket.emit("ice", data.candidate, matchId);
-    };
-
-    const handleData = (event: MessageEvent<string>) => {
-      // 선준비 여부 , 상대방의 액션 목록, 상대방의 보드
-      const recieve: IMessageProps = JSON.parse(event.data);
-
-      if (recieve.type === "first") {
-        dispatch(setActionWait(recieve.data));
-        dispatch(setTargetReady("already"));
-        return;
-      }
-
-      // 내가 후순위 준비하는 경우
-      if (recieve.type === "second") {
-        dispatch(setTargetReady("done"));
-        dispatch(setActionWait(recieve.data));
-        return;
-      }
-
-      // 회피자의 회피액션 수신하여 REF로 반영
-      //   if (recieve.type === "회피") {
-      //     targetActionRef.current = "회피";
-      //   }
-    };
-
     /* 소켓에서 매칭 되었을때 타이머와 모달을 생성 */
     const matchFound = (id: string) => {
       dispatch(setMatchFound(true));
       dispatch(setMatchId(id));
       const timeoutId = setTimeout(() => {
-        alert("타임아웃");
-        dispatch(setMatchFound(false));
         socket.emit("cancelMatch", matchId);
-        socket.disconnect();
+        dispatch(setMatchFound(false));
+        dispatch(setMatchStart(false));
+        setTimeout(() => {
+          socket.disconnect();
+        }, 1000);
       }, 5000);
       dispatch(setMatchTimer(timeoutId));
     };
 
     /* 상대방에 의해 매칭이 취소된 경우에 새롭게 큐를 잡아줌 */
     const cancelMatch = () => {
+      console.log("안들어와");
       setTimeout(() => socket.emit("joinQueue"), 1000);
       clearTimeout(matchTimer!);
       setClicked(false);
       dispatch(setMatchFound(false));
       dispatch(setMatchId(""));
+
+      // dispatch(setMatchStart(false));
       dispatch(setMatchTimer(null));
     };
 
@@ -159,6 +134,9 @@ function MatchingModal({}) {
         transports: ["websocket"],
       })
     );
+    return () => {
+      setSocket(null);
+    };
   }, [matchStart]);
   return (
     <ModalContainer visible={matchFound}>

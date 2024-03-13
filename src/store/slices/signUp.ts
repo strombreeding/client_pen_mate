@@ -39,6 +39,6 @@ const signUpSlice = createSlice({
   },
 });
 
-export const { editSignUpData, setStep } = signUpSlice.actions;
+export const { editSignUpData } = signUpSlice.actions;
 
 export default signUpSlice.reducer;

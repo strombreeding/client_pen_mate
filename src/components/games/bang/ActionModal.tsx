@@ -3,7 +3,7 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../configs/device";
 import { Pressable, View } from "../../../nativeView";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
-import { setNowAction } from "../../../store/slices/bangState";
+import { setActionModal, setNowAction } from "../../../store/slices/bangState";
 import { Dispatch, SetStateAction } from "react";
 import { gameImg } from "../../../assets/gameImg";
 
@@ -45,48 +45,55 @@ const ActionBtn = styled(Pressable)`
 const ActionImg = styled.img`
   width: ${SCREEN_WIDTH * 0.2777777777777778}px;
   height: ${SCREEN_WIDTH * 0.2777777777777778}px;
+  margin-top: -5px;
 `;
-function ActionModal({
-  setModal,
-}: {
-  setModal: Dispatch<SetStateAction<boolean>>;
-}) {
+function ActionModal({ prevFirstAction }: { prevFirstAction: string }) {
   const nowAction = useSelector(
     (state: RootState) => state.bangState.nowAction
   );
+  const actionModal = useSelector(
+    (state: RootState) => state.bangState.actionModal
+  );
   const step = useSelector((state: RootState) => state.bangState.step);
   const dispatch = useDispatch<AppDispatch>();
+
+  if (!actionModal) return <></>;
   return (
     <ActionContainer>
       <ActionBtn
         style={{
           display:
-            nowAction[0].action === "공격" || nowAction[1].action === "공격"
+            prevFirstAction === "공격"
+              ? "none"
+              : nowAction[0].action === "공격" || nowAction[1].action === "공격"
               ? "none"
               : "flex",
         }}
         onClick={() => {
-          const copy = [...nowAction];
-          copy[step].action = "공격";
+          const copy = JSON.parse(JSON.stringify(nowAction));
+          copy[step].action = "공격"; // 문제 발생 코드
           dispatch(setNowAction(copy));
-          setModal(false);
+          dispatch(setActionModal(false));
           // setStep(step+1)
         }}
       >
-        <ActionImg src={gameImg.action_atk} />
+        <ActionImg src={gameImg.target} />
       </ActionBtn>
       <ActionBtn
         style={{
           display:
-            nowAction[0].action === "회피" || nowAction[1].action === "회피"
+            prevFirstAction === "회피"
+              ? "none"
+              : nowAction[0].action === "회피" || nowAction[1].action === "회피"
               ? "none"
               : "flex",
         }}
         onClick={() => {
-          const copy = [...nowAction];
+          const copy = JSON.parse(JSON.stringify(nowAction));
           copy[step].action = "회피";
-          setNowAction(copy);
-          setModal(false);
+          dispatch(setNowAction(copy));
+          dispatch(setActionModal(false));
+
           // setStep(step+1)
         }}
       >

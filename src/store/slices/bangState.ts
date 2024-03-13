@@ -23,6 +23,7 @@ interface SocketState {
   // step: StepProps;
   step: number;
   gameStatus: StepProps;
+  actionModal: boolean;
 }
 
 const initialState: SocketState = {
@@ -41,6 +42,7 @@ const initialState: SocketState = {
   ],
   step: 0,
   gameStatus: "init",
+  actionModal: false,
 };
 
 const bangSlice = createSlice({
@@ -84,6 +86,9 @@ const bangSlice = createSlice({
     setStep: (state, action: PayloadAction<number>) => {
       state.step = action.payload;
     },
+    setActionModal: (state, action: PayloadAction<boolean>) => {
+      state.actionModal = action.payload;
+    },
   },
 });
 
@@ -98,6 +103,7 @@ export const {
   setTargetReady,
   setNowAction,
   setStep,
+  setActionModal,
 } = bangSlice.actions;
 
 export default bangSlice.reducer;

@@ -3,8 +3,10 @@ export const imgSrc = {
   bg_viewport: require("../assets/pngs/backgroundImage.png"),
   bg_game: require("../assets/pngs/bg_game.png"),
   bg_reward: require("../assets/pngs/bg_reward.png"),
+
   btn_hexagon_green: require("../assets/pngs/btn_hexagon_green.png"),
   btn_hexagon_yellow: require("../assets/pngs/btn_hexagon_yellow.png"),
+  btn_hexagon_blue: require("../assets/pngs/btn_hexagon_blue.png"),
 
   atata_join: require("../assets/pngs/atata_join.png"),
 

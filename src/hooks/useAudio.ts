@@ -14,7 +14,6 @@ export const useAudio = (src: string) => {
     setNewAudio(newAudio);
 
     return () => {
-      console.log("이가ㅓ?");
       if (newAudio) {
         newAudio.load(); // 오디오 리로드
       }

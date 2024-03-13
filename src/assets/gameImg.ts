@@ -5,6 +5,7 @@ export const gameImg = {
   // export const gameAssets: gameAssets = {
 
   action_btn: require("../assets/gameAssets/action_btn.png"),
+  empty: require("../assets/gameAssets/empty.png"),
 
   target: require("../assets/gameAssets/target.png"),
   junkyard_ico_1: require("../assets/gameAssets/junkyard_ico_1-removebg-preview.png"),
