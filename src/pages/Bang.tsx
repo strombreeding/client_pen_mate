@@ -116,8 +116,8 @@ function Bang() {
     skil: [],
   });
   const [status, setStatus] = useState<IStatusProps>({
-    me: { health: ability.health, nickname: "easynee_", subHealth: 0 },
-    you: { health: tartgetAbility.health, nickname: "bounti", subHealth: 0 },
+    me: { health: ability.health, nickname: "나", subHealth: 0 },
+    you: { health: tartgetAbility.health, nickname: "상대", subHealth: 0 },
   });
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0],
@@ -191,16 +191,20 @@ function Bang() {
       }
 
       if (recieve.type === "chat") {
-        if (player === "A") {
-          const newChat = [...aChat];
-          if (newChat.length >= 1) newChat.shift();
-          newChat.push(recieve.data);
-          setAChat(newChat);
-        } else {
+        const targetPlayer = recieve.data.split("·")[0];
+        const text = recieve.data.split("·")[1];
+        if (targetPlayer === "B") {
+          // 내가 A고 상대한테 왔을때 상대는 B니까 B를 바꿔야함
           const newChat = [...bChat];
           if (newChat.length >= 1) newChat.shift();
-          newChat.push(recieve.data);
+          newChat.push(text);
           setBChat(newChat);
+        } else if (targetPlayer === "A") {
+          // 내가 B인데 상대한테 채팅이 왔으면 A임
+          const newChat = [...aChat];
+          if (newChat.length >= 1) newChat.shift();
+          newChat.push(text);
+          setAChat(newChat);
         }
       }
       // 회피자의 회피액션 수신하여 REF로 반영
@@ -255,6 +259,7 @@ function Bang() {
           시그널 상태 : ${peerConnection.signalingState}
           커넥션 상태 : ${peerConnection.connectionState}
           아이스 상태 : ${peerConnection.iceConnectionState}
+          플레이어 선정 : ${player}
         `);
     };
 
@@ -413,7 +418,7 @@ function Bang() {
                   newChat.push(text);
                   sendData({
                     type: "chat",
-                    data: text,
+                    data: player + "·" + text,
                   })();
                   setText("");
                   setAChat(newChat);
@@ -425,7 +430,7 @@ function Bang() {
                   newChat.push(text);
                   sendData({
                     type: "chat",
-                    data: text,
+                    data: player + "·" + text,
                   })();
                   setText("");
                   setBChat(newChat);
