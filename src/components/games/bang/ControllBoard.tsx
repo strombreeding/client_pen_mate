@@ -119,6 +119,10 @@ function ControllBoard({
           const botRight = [x + 1, y + 1];
           const botLeft = [x + 1, y - 1];
           const hold = [x, y];
+          if (step >= 1) {
+            hold.pop();
+            hold.pop();
+          }
           canAtkLegnth.push(topRight, topLeft, botRight, botLeft, hold);
         }
       });

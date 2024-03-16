@@ -27,6 +27,7 @@ import {
 } from "../../../../store/slices/bangState";
 import { SOCKET_URI, iceServers } from "../../../../configs/server";
 import { useNavigate } from "react-router-dom";
+import { setEncryptedCookie } from "../../../../utils/cookies";
 
 const ModalContainer = styled(View)<{ visible: boolean }>`
   display: ${(props) => (props.visible ? "flex" : "none")};
@@ -114,7 +115,12 @@ function MatchingModal({}) {
 
     socket.on("closeRoom", closeRoom);
 
-    socket.on("goBang", () => navigation("/games/bang"));
+    socket.on("goBang", () => {
+      navigation("/games/bang");
+      dispatch(setMatchStart(false));
+      setEncryptedCookie("bang", { type: "cool" });
+      closeRoom();
+    });
 
     return () => {
       socket.emit("cancelMatch", matchId);

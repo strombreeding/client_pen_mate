@@ -224,8 +224,6 @@ function Junkyard() {
     }, 3000);
     // console.log(gameState);
     gameInit();
-    console.log(board.length);
-    console.log("십쉐야");
     dispatch(setBgm(allBgm.junkyard));
     dispatch(setBgImg(gameImg.junkward_bg));
 

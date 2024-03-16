@@ -9,6 +9,7 @@ import {
   setActionModal,
   setActionWait,
   setBAction,
+  setMatchId,
   setNowAction,
   setReady,
   setRound,
@@ -52,6 +53,7 @@ import { getDecryptedCookie, setEncryptedCookie } from "../utils/cookies";
 
 export interface IMessageProps {
   type:
+    | "giveup"
     | "shot"
     | "atk"
     | "avoid"
@@ -123,17 +125,12 @@ const Out = styled.img`
   height: 25px;
   text-align: start;
 `;
-
-const peerConnection = new RTCPeerConnection({
-  iceServers: iceServers,
-});
-
+// const peerConnection = new RTCPeerConnection({
+//   iceServers: iceServers,
+// });
 function Bang() {
-  // const [peerConnection] = useState<RTCPeerConnection>(
-  //   new RTCPeerConnection({
-  //     iceServers: iceServers,
-  //   })
-  // );
+  const [peerConnection, setPeerConnection] =
+    useState<RTCPeerConnection | null>(null);
   const [prevFirstAction, setPrevFirstAction] = useState<"공격" | "회피" | "">(
     ""
   );
@@ -268,7 +265,7 @@ function Bang() {
       setTerminel((prev) => ({ ...prev, me: "firstActionDone" }));
     } else if (actionStep === 1) {
       setTerminel((prev) => ({ ...prev, me: "secondActionDone" }));
-      wasJump.current = "stand";
+      wasJump.current = "avoid";
     }
 
     // 액션 수행
@@ -291,7 +288,10 @@ function Bang() {
           startTime: secondActionTimer.current,
         },
       })();
-
+      if (actionStep === 1 && willStay) {
+        hitPoint(ability.atk, status.you.subHealth, status.you.health);
+        return;
+      }
       // 카운트 이전에 쏜 경우
       if (cnt !== 0) {
         if (playerRef.current === "A") {
@@ -324,12 +324,6 @@ function Bang() {
       }
     }
     if (action === "회피") {
-      if (playerRef.current === "A") {
-        dispatch(setAAction("jump"));
-      } else {
-        dispatch(setBAction("jump"));
-      }
-
       if (cnt !== 0) {
         sendData({
           type: "avoid",
@@ -350,6 +344,11 @@ function Bang() {
             startTime: secondActionTimer.current,
           },
         })();
+      }
+      if (playerRef.current === "A") {
+        dispatch(setAAction("jump"));
+      } else {
+        dispatch(setBAction("jump"));
       }
     }
   };
@@ -377,18 +376,37 @@ function Bang() {
       ])
     );
   };
+  // const reload = (e: BeforeUnloadEvent) => {
+  //   e.preventDefault();
+  //   e.returnValue = "";
+  //   navigation("/games", { replace: true });
+  // };
+
+  useEffect(() => {
+    setPeerConnection(
+      new RTCPeerConnection({
+        iceServers: iceServers,
+      })
+    );
+
+    return () => {
+      Cookies.remove("bang");
+    };
+  }, []);
   // rtc 연결
   useEffect(() => {
-    console.log("기모륑");
+    // dataChannel.current = undefined;
     const socket = io(`${SOCKET_URI}`, {
       transports: ["websocket"],
     });
     if (!socket) {
       alert("매칭이 실패했습니다");
+
       navigation("/games", { replace: true });
     }
 
     if (!peerConnection) return;
+
     /* ice이벤트 발생시 핸들러 */
     const handleIce = (data: RTCPeerConnectionIceEvent) => {
       socket.emit("ice", data.candidate, matchId);
@@ -397,6 +415,16 @@ function Bang() {
     const handleData = (event: MessageEvent<string>) => {
       // 선준비 여부 , 상대방의 액션 목록, 상대방의 보드
       const recieve: IMessageProps = JSON.parse(event.data);
+
+      if (recieve.type === "giveup") {
+        setStatus((prev) => ({
+          ...prev,
+          you: {
+            ...prev.you,
+            health: 0,
+          },
+        }));
+      }
 
       if (recieve.type === "상대능력") {
         setTargetAbility(recieve.data);
@@ -570,19 +598,27 @@ function Bang() {
     socket.on("ice", ice);
 
     peerConnection.addEventListener("icecandidate", handleIce);
+    const cookies = getDecryptedCookie("bang");
 
+    if (!cookies) {
+      navigation("/games", { replace: true });
+    }
     window.addEventListener("beforeunload", (e) => {
-      e.returnValue = "";
+      Cookies.remove("bang");
+      sendData({ type: "giveup", data: "" })();
+      // e.preventDefault();
+      // e.returnValue = "";
     });
-
     return () => {
       socket.emit("cancelMatch", matchId);
-      socket.disconnect();
+      sendData({ type: "giveup", data: "" })();
       socket.removeAllListeners();
+      socket.disconnect();
       peerConnection.removeEventListener("icecandidate", handleIce);
       peerConnection.close();
+      dispatch(setMatchId(""));
     };
-  }, []);
+  }, [peerConnection]);
 
   // 총 효과음
   useEffect(() => {
