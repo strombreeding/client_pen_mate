@@ -12,6 +12,7 @@ import {
   setMatchId,
   setNowAction,
   setReady,
+  setReset,
   setRound,
   setStep,
   setTargetAtkPath,
@@ -759,16 +760,18 @@ function Bang() {
       round,
       useTime: 0,
     };
-    if (status.me.health === 0) {
+    if (status.me.health <= 0) {
       result.useTime = (new Date().getTime() - startTime) / 1000;
       setEncryptedCookie("gameResult", result);
+      dispatch(setReset(1));
       setResultModal(true);
-    } else if (status.you.health === 0) {
+    } else if (status.you.health <= 0) {
       result.reward = 300;
       result.win = true;
       result.useTime = (new Date().getTime() - startTime) / 1000;
 
       setEncryptedCookie("gameResult", result);
+      dispatch(setReset(1));
       setResultModal(true);
     }
   }, [status]);

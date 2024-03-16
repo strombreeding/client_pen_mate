@@ -114,10 +114,14 @@ const bangSlice = createSlice({
     setRound: (state, action: PayloadAction<number>) => {
       state.round = action.payload;
     },
+    setReset: (state, action: PayloadAction<number>) => {
+      state = { ...initialState };
+    },
   },
 });
 
 export const {
+  setReset,
   setDataChannel,
   setMatchStart,
   setMatchFound,
