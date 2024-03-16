@@ -842,13 +842,31 @@ function Bang() {
             />
             <PrevBtn
               onClick={() => {
-                setObj((prev) => ({
-                  ...prev,
-                  cols: 8,
-                  rows: 1,
-                  // imgSrc: gameImg.cow_jump_right_1x8,
-                }));
-                dispatch(setAAction("jump"));
+                if (playerRef.current === "A") {
+                  const newChat = [...aChat];
+                  if (newChat.length >= 2) {
+                    newChat.shift();
+                  }
+                  newChat.push(text);
+                  sendData({
+                    type: "chat",
+                    data: playerRef.current + "·" + text,
+                  })();
+                  setText("");
+                  setAChat(newChat);
+                } else if (playerRef.current === "B") {
+                  const newChat = [...bChat];
+                  if (newChat.length >= 2) {
+                    newChat.shift();
+                  }
+                  newChat.push(text);
+                  sendData({
+                    type: "chat",
+                    data: playerRef.current + "·" + text,
+                  })();
+                  setText("");
+                  setBChat(newChat);
+                }
               }}
               style={{ padding: 5, minHeight: 30 }}
             >
