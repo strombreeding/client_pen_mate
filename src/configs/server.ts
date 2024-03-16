@@ -17,11 +17,11 @@ export const iceServers: RTCIceServer[] = [
   {
     urls: "stun:stun.l.google.com:19302",
   },
-  // {
-  //   urls: process.env.REACT_APP_TURN_SERVER!,
-  //   username: process.env.REACT_APP_TURN_ID!,
-  //   credential: process.env.REACT_APP_TURN_PW!,
-  // },
+  {
+    urls: process.env.REACT_APP_TURN_SERVER!,
+    username: process.env.REACT_APP_TURN_ID!,
+    credential: process.env.REACT_APP_TURN_PW!,
+  },
 ];
 
 console.log(iceServers);
