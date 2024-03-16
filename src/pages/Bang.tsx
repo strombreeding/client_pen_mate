@@ -638,7 +638,7 @@ function Bang() {
   useEffect(() => {
     const me = terminel.me;
     const you = terminel.you;
-
+    console.log(me, you);
     // 장비 다 골랐을때
     if (me === "initDone" && you === "initDone") {
       dispatch(setActionModal(true));

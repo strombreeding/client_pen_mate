@@ -26,4 +26,4 @@ export const iceServers: RTCIceServer[] = [
 ];
 
 console.log(process.env.REACT_APP_SERVER_URI);
-console.log(process.env.REACT_APP_SOCEKT_URI);
+console.log(process.env.iceServers);
