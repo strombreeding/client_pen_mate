@@ -8,6 +8,7 @@ interface IWillAction {
   path: number[];
 }
 type StepProps = "action" | "first" | "second" | "final" | "ready" | "init";
+export type ActionType = "jump" | "stand" | "atk" | "walk";
 
 interface SocketState {
   dataChannel: RTCDataChannel | undefined;
@@ -20,12 +21,15 @@ interface SocketState {
   ready: boolean; // 내가 준비했는지
   targetReady: BangTargetReadt; // 적이 준비했는지
   nowAction: IWillAction[];
+  targetAvoidPath: number[];
   // step: StepProps;
   step: number;
   gameStatus: StepProps;
   actionModal: boolean;
+  aAction: ActionType;
+  bAction: ActionType;
+  round: number;
 }
-
 const initialState: SocketState = {
   dataChannel: undefined,
   matchStart: false,
@@ -40,9 +44,13 @@ const initialState: SocketState = {
     { action: "", path: [] },
     { action: "", path: [] },
   ],
+  targetAvoidPath: [-11, -11],
   step: 0,
   gameStatus: "init",
   actionModal: false,
+  aAction: "stand",
+  bAction: "stand",
+  round: 1,
 };
 
 const bangSlice = createSlice({
@@ -83,11 +91,23 @@ const bangSlice = createSlice({
     setNowAction: (state, action: PayloadAction<IWillAction[]>) => {
       state.nowAction = [...action.payload];
     },
+    setTargetAvoidPath: (state, action: PayloadAction<number[]>) => {
+      state.targetAvoidPath = [...action.payload];
+    },
     setStep: (state, action: PayloadAction<number>) => {
       state.step = action.payload;
     },
     setActionModal: (state, action: PayloadAction<boolean>) => {
       state.actionModal = action.payload;
+    },
+    setAAction: (state, action: PayloadAction<ActionType>) => {
+      state.aAction = action.payload;
+    },
+    setBAction: (state, action: PayloadAction<ActionType>) => {
+      state.bAction = action.payload;
+    },
+    setRound: (state, action: PayloadAction<number>) => {
+      state.round = action.payload;
     },
   },
 });
@@ -102,8 +122,12 @@ export const {
   setReady,
   setTargetReady,
   setNowAction,
+  setTargetAvoidPath,
   setStep,
   setActionModal,
+  setAAction,
+  setBAction,
+  setRound,
 } = bangSlice.actions;
 
 export default bangSlice.reducer;

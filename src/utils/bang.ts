@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { IStatusProps } from "../pages/Bang";
 
+export const emptyVal = (width: number) => -((width - width * 0.625) / 2);
+
 export const getChangeBoard = (
   board: number[][],
   player: "A" | "B",
@@ -78,4 +80,41 @@ export const calculateDamage = (
   const remainingHealth = health - remainingAttack;
 
   return [remainingHealth, remainingDefense];
+};
+
+export const getPostionValue = (
+  target: number[],
+  width: number,
+  currentPostion: { top: number; left: number },
+  round: number
+) => {
+  // let defaultY = emptyVal(width) + -emptyVal(width) / 3 + width * 0.75 * 0;
+  // if (defaultY < 0) {
+  //   defaultY = defaultY * -1;
+  // }
+  const x = target[0];
+  const y = target[1];
+  // x축 은 0, height , height x 2 이기떄문에
+  // 현재 x가 0이라면 맨위, 1이라면 height만큼, 2라면 2배만큼 내려가면 됨
+
+  const top = x * width * 0.625; // 80의 width를 가졌다면 60의 height를 가짐
+  const left =
+    // defaultY +
+    emptyVal(width) + -emptyVal(width) / 3 + width * 0.75 * y;
+  return [top, left];
+};
+
+export const getTargetPath = (targetBoard: number[][], player: "A" | "B") => {
+  const symbol = player === "A" ? 3 : 2;
+  const result = [];
+  for (let x = 0; x < targetBoard.length; x++) {
+    for (let y = 0; y < targetBoard[x].length; y++) {
+      if (targetBoard[x][y] === symbol) {
+        result.push(x);
+        result.push(y);
+        break;
+      }
+    }
+  }
+  return result;
 };

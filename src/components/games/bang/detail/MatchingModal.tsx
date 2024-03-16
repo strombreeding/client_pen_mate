@@ -80,12 +80,10 @@ function MatchingModal({}) {
       dispatch(setMatchFound(true));
       dispatch(setMatchId(id));
       const timeoutId = setTimeout(() => {
-        socket.emit("cancelMatch", matchId);
+        socket.emit("cancelMatch", id);
         dispatch(setMatchFound(false));
         dispatch(setMatchStart(false));
-        setTimeout(() => {
-          socket.disconnect();
-        }, 1000);
+        socket.disconnect();
       }, 5000);
       dispatch(setMatchTimer(timeoutId));
     };
@@ -93,7 +91,7 @@ function MatchingModal({}) {
     /* 상대방에 의해 매칭이 취소된 경우에 새롭게 큐를 잡아줌 */
     const cancelMatch = () => {
       console.log("안들어와");
-      setTimeout(() => socket.emit("joinQueue"), 1000);
+      setTimeout(() => socket.emit("joinQueue"), 2000);
       clearTimeout(matchTimer!);
       setClicked(false);
       dispatch(setMatchFound(false));
@@ -162,10 +160,13 @@ function MatchingModal({}) {
         }}
       >
         <PrevBtn
+          style={clicked ? { opacity: 0.5 } : {}}
           onClick={() => {
+            if (clicked) return;
             socket?.emit("cancelMatch", matchId);
             socket?.disconnect();
             clearTimeout(matchTimer!);
+            setClicked(false);
             dispatch(setMatchStart(false));
             dispatch(setMatchFound(false));
             dispatch(setMatchTimer(null));
@@ -178,12 +179,11 @@ function MatchingModal({}) {
           style={clicked ? { opacity: 0.5 } : {}}
           onClick={() => {
             // navigation("wieogjweoigj", { state: socket });
-            if (clicked === false) {
-              clearTimeout(matchTimer!);
-              dispatch(setMatchTimer(null));
-              setClicked(true);
-              socket?.emit("acceptMatch", matchId);
-            }
+            if (clicked) return;
+            clearTimeout(matchTimer!);
+            dispatch(setMatchTimer(null));
+            setClicked(true);
+            socket?.emit("acceptMatch", matchId);
           }}
         >
           <Text.Light_20>수락</Text.Light_20>

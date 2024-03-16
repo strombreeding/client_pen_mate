@@ -63,7 +63,7 @@ function ActionModal({ prevFirstAction }: { prevFirstAction: string }) {
       <ActionBtn
         style={{
           display:
-            prevFirstAction === "공격"
+            prevFirstAction === "공격" && step === 0
               ? "none"
               : nowAction[0].action === "공격" || nowAction[1].action === "공격"
               ? "none"
@@ -82,7 +82,7 @@ function ActionModal({ prevFirstAction }: { prevFirstAction: string }) {
       <ActionBtn
         style={{
           display:
-            prevFirstAction === "회피"
+            prevFirstAction === "회피" && step === 0
               ? "none"
               : nowAction[0].action === "회피" || nowAction[1].action === "회피"
               ? "none"

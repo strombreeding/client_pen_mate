@@ -1,22 +1,14 @@
 import styled, { keyframes } from "styled-components";
-import { IWillAction, emptyVal } from "../../../pages/Test";
-import { Pressable, View } from "../../../nativeView";
+import { View } from "../../../nativeView";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Text } from "../../../assets/fontStyles";
-import { EmptyBox } from "../../../styles";
-import { colors } from "../../../assets/colors";
 import { gameImg } from "../../../assets/gameImg";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../configs/device";
-import BottomPrevNext from "../../navigations/BottomPrevNext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import {
   setActionModal,
   setNowAction,
-  setReady,
   setStep,
 } from "../../../store/slices/bangState";
-import { getChangeBoard } from "../../../utils/bang";
 interface ICharProps {
   imgSrc: string;
   width: number;
