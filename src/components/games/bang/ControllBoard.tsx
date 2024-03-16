@@ -42,9 +42,9 @@ const StayI = styled.div<{ data: ICharProps; type: string }>`
       : props.type === "willAtk"
       ? "#e04545ce"
       : props.type === "me"
-      ? "#1610bcc4"
+      ? "#0800ff3b"
       : props.type === "atk"
-      ? "#bc1010c4"
+      ? "#ff000032"
       : "#00000035"};
   background-size: ${(props) => props.data.width * props.data.cols}px
     ${(props) => props.data.width * 0.625 * props.data.rows}px;
@@ -100,16 +100,17 @@ function ControllBoard({
         if (board[x][y] === me) {
           canMoveLength.push(topRight, topLeft, botRight, botLeft);
         } else if (board[x][y] === you) {
-          const topRight = [x - 1, y + 1];
-          const topLeft = [x - 1, y - 1];
-          const botRight = [x + 1, y + 1];
-          const botLeft = [x + 1, y - 1];
-          const hold = [x, y];
-          if (step >= 1) {
-            hold.pop();
-            hold.pop();
+          if (step <= 0) {
+            const hold = [x, y];
+
+            canAtkLegnth.push(hold);
+          } else {
+            const topRight = [x - 1, y + 1];
+            const topLeft = [x - 1, y - 1];
+            const botRight = [x + 1, y + 1];
+            const botLeft = [x + 1, y - 1];
+            canAtkLegnth.push(topRight, topLeft, botRight, botLeft);
           }
-          canAtkLegnth.push(topRight, topLeft, botRight, botLeft, hold);
         }
       });
     });
