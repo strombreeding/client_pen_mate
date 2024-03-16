@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { gameImg } from "../../../../assets/gameImg";
 import { setAAction } from "../../../../store/slices/bangState";
+import { attack } from "./attack";
 
 // 스프라이트 이미지 구성품, 및 크기
 interface ICharProps {
@@ -34,11 +35,11 @@ interface ICharProps {
 
 const Char = styled.div<{ data: ICharProps; player: "A" | "B" }>`
   position: absolute;
-  top: ${(props) => props.data.width * 0.625}px;
+  /* top: ${(props) => props.data.width * 0.625}px;
   left: ${(props) =>
     emptyVal(props.data.width) +
     -emptyVal(props.data.width) / 3 +
-    props.data.width * 0.75 * (props.player === "A" ? 0 : 5)}px;
+    props.data.width * 0.75 * 0}px; */
   width: ${(props) => props.data.width}px;
   height: ${(props) => props.data.width * 0.625}px;
   background-image: url(${(props) => props.data.imgSrc});
@@ -54,7 +55,7 @@ interface CharacterProps {
   type: "A" | "B";
   player: "A" | "B";
 }
-function Character({ charObj, setCharObj, type, player }: CharacterProps) {
+function CharacterB({ charObj, setCharObj, type, player }: CharacterProps) {
   const charRef = useRef<HTMLDivElement | null>(null);
 
   //  emptyVal(width) + -emptyVal(width) / 3 + width * 0.75 * y;
@@ -66,75 +67,45 @@ function Character({ charObj, setCharObj, type, player }: CharacterProps) {
       charObj.width * 0.75 * (type === "A" ? 0 : 5), // 이동하려는 값 0 === y 축
     top: charObj.width * 0.625 * 1,
   });
+  const round = useSelector((state: RootState) => state.bangState.round);
   // charRef.current.style.top = charObj.width * 0.625 * 1;
-  const step = useSelector((state: RootState) => state.bangState.step);
   const nowAction = useSelector(
     (state: RootState) => state.bangState.nowAction
   );
-  const targetAction = useSelector(
+  const targetAvoidPath = useSelector(
     (state: RootState) => state.bangState.targetAvoidPath
   );
+  const targetAtkPath = useSelector(
+    (state: RootState) => state.bangState.targetAtkPath
+  );
   const aAction = useSelector((state: RootState) => state.bangState.aAction);
-  const bAction = useSelector((state: RootState) => state.bangState.bAction);
-  const round = useSelector((state: RootState) => state.bangState.round);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    // if ((type === "A" && player === "A") === false) return;
     if (aAction === "jump") {
-      console.log(
-        "A의 개쩌는 움직임 보시겠습니다.",
-        player,
-        type,
-        nowAction[step].path,
-        targetAction,
-        step
-      );
-      setCharObj((prev) => ({
-        ...prev,
-        imgSrc: gameImg.cow_jump_right_1x8,
-        rows: 1,
-        cols: 8,
-      }));
+      const jumpIdx = nowAction.findIndex((obj) => obj.action === "회피");
+
       jump(
         charRef,
         charObj,
         setCharObj,
         position,
         setPosition,
-        player === type ? nowAction[step].path : targetAction,
-        round
+        player === type ? nowAction[jumpIdx].path : targetAvoidPath
+      );
+      return;
+    } else if (aAction === "atk") {
+      const atkIdx = nowAction.findIndex((obj) => obj.action === "공격");
+      attack(
+        charRef,
+        charObj,
+        setCharObj,
+        position,
+        player === type ? nowAction[atkIdx].path : targetAtkPath
       );
       return;
     }
   }, [aAction]);
 
-  // useEffect(() => {
-  //   if (bAction === "jump") {
-  //     console.log(
-  //       "B의 개쩌는 움직임 보시겠습니다.",
-  //       player,
-  //       type,
-  //       nowAction[step].path,
-  //       targetAction
-  //     );
-  //     setCharObj((prev) => ({
-  //       ...prev,
-  //       imgSrc: gameImg.cow_jump_right_1x8,
-  //       rows: 1,
-  //       cols: 8,
-  //     }));
-  //     jump(
-  //       charRef,
-  //       charObj,
-  //       setCharObj,
-  //       position,
-  //       setPosition,
-
-  //       player === "B" && type === "B" ? nowAction[step].path : targetAction
-  //     );
-  //     return;
-  //   }
-  // }, [bAction]);
   // useEffect(() => {
   //   dispatch(setAAction("stand"));
   // }, [position]);
@@ -142,7 +113,8 @@ function Character({ charObj, setCharObj, type, player }: CharacterProps) {
     <Char
       ref={charRef}
       style={{
-        backgroundImage: gameImg.cow_jump_right_1x8,
+        top: position.top,
+        left: position.left,
       }}
       data={charObj}
       player={type}
@@ -150,4 +122,4 @@ function Character({ charObj, setCharObj, type, player }: CharacterProps) {
   );
 }
 
-export default memo(Character);
+export default memo(CharacterB);

@@ -22,6 +22,7 @@ interface SocketState {
   targetReady: BangTargetReadt; // 적이 준비했는지
   nowAction: IWillAction[];
   targetAvoidPath: number[];
+  targetAtkPath: number[];
   // step: StepProps;
   step: number;
   gameStatus: StepProps;
@@ -45,6 +46,7 @@ const initialState: SocketState = {
     { action: "", path: [] },
   ],
   targetAvoidPath: [-11, -11],
+  targetAtkPath: [-11, -11],
   step: 0,
   gameStatus: "init",
   actionModal: false,
@@ -94,6 +96,9 @@ const bangSlice = createSlice({
     setTargetAvoidPath: (state, action: PayloadAction<number[]>) => {
       state.targetAvoidPath = [...action.payload];
     },
+    setTargetAtkPath: (state, action: PayloadAction<number[]>) => {
+      state.targetAtkPath = [...action.payload];
+    },
     setStep: (state, action: PayloadAction<number>) => {
       state.step = action.payload;
     },
@@ -123,6 +128,7 @@ export const {
   setTargetReady,
   setNowAction,
   setTargetAvoidPath,
+  setTargetAtkPath,
   setStep,
   setActionModal,
   setAAction,

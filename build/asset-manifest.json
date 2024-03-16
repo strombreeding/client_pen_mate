@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.425d37d2.css",
-    "main.js": "/static/js/main.f6aa921e.js",
+    "main.js": "/static/js/main.81af9235.js",
     "static/js/787.a5c12ccf.chunk.js": "/static/js/787.a5c12ccf.chunk.js",
     "static/media/SpoqaHanSansNeoLight.ttf": "/static/media/SpoqaHanSansNeoLight.71d8174224ae0bcbefb2.ttf",
     "static/media/SpoqaHanSansNeoRegular.ttf": "/static/media/SpoqaHanSansNeoRegular.95ececb5af85b0f66467.ttf",
@@ -26,8 +26,8 @@
     "static/media/bounti_jump_right_1x8.png": "/static/media/bounti_jump_right_1x8.9096ccbdc318c41f454a.png",
     "static/media/sachunsung.png": "/static/media/sachunsung.eb3d91c6b1bec1526fec.png",
     "static/media/bounti_atk_left_3x2.png": "/static/media/bounti_atk_left_3x2.a98d5e53f5e8036bc568.png",
-    "static/media/cow_jump_right_1x8.png": "/static/media/cow_jump_right_1x8.6cfe5b02938885cbd227.png",
-    "static/media/cow_jump_left_1x8.png": "/static/media/cow_jump_left_1x8.527eccf57c3fd7ac3dc3.png",
+    "static/media/cow_jump_left_1x8.png": "/static/media/cow_jump_left_1x8.edb2ae61f2a3b9f0c07c.png",
+    "static/media/cow_jump_right_1x8.png": "/static/media/cow_jump_right_1x8.a87b0d820634dc8b0059.png",
     "static/media/bounti_atk_right_3x2.png": "/static/media/bounti_atk_right_3x2.22f44fa00401803b37b0.png",
     "static/media/tetris_img.png": "/static/media/tetris_img.4515575574ae9acdbe43.png",
     "static/media/bounti_walk_left_1x4.png": "/static/media/bounti_walk_left_1x4.a95c547ccefc43e5e6d4.png",
@@ -75,11 +75,11 @@
     "static/media/slide.mp3": "/static/media/slide.b4c6710b66d2f3bc44bb.mp3",
     "index.html": "/index.html",
     "main.425d37d2.css.map": "/static/css/main.425d37d2.css.map",
-    "main.f6aa921e.js.map": "/static/js/main.f6aa921e.js.map",
+    "main.81af9235.js.map": "/static/js/main.81af9235.js.map",
     "787.a5c12ccf.chunk.js.map": "/static/js/787.a5c12ccf.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.425d37d2.css",
-    "static/js/main.f6aa921e.js"
+    "static/js/main.81af9235.js"
   ]
 }

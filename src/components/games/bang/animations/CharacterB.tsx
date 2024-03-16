@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { gameImg } from "../../../../assets/gameImg";
 import { setAAction } from "../../../../store/slices/bangState";
+import { attack } from "./attack";
 
 // 스프라이트 이미지 구성품, 및 크기
 interface ICharProps {
@@ -34,11 +35,11 @@ interface ICharProps {
 
 const Char = styled.div<{ data: ICharProps; player: "A" | "B" }>`
   position: absolute;
-  top: ${(props) => props.data.width * 0.625}px;
+  /* top: ${(props) => props.data.width * 0.625}px;
   left: ${(props) =>
     emptyVal(props.data.width) +
     -emptyVal(props.data.width) / 3 +
-    props.data.width * 0.75 * (props.player === "A" ? 0 : 5)}px;
+    props.data.width * 0.75 * (props.player === "A" ? 0 : 5)}px; */
   width: ${(props) => props.data.width}px;
   height: ${(props) => props.data.width * 0.625}px;
   background-image: url(${(props) => props.data.imgSrc});
@@ -63,45 +64,44 @@ function CharacterB({ charObj, setCharObj, type, player }: CharacterProps) {
     left:
       emptyVal(charObj.width) + // 최소한의 캐릭터 히트박스
       -emptyVal(charObj.width) / 3 + // 처음 여유값
-      charObj.width * 0.75 * (type === "A" ? 0 : 5), // 이동하려는 값 0 === y 축
+      charObj.width * 0.75 * 5, // 이동하려는 값 0 === y 축
     top: charObj.width * 0.625 * 1,
   });
   const round = useSelector((state: RootState) => state.bangState.round);
   // charRef.current.style.top = charObj.width * 0.625 * 1;
-  const step = useSelector((state: RootState) => state.bangState.step);
   const nowAction = useSelector(
     (state: RootState) => state.bangState.nowAction
   );
-  const targetAction = useSelector(
+  const targetAvoidPath = useSelector(
     (state: RootState) => state.bangState.targetAvoidPath
+  );
+  const targetAtkPath = useSelector(
+    (state: RootState) => state.bangState.targetAtkPath
   );
   const bAction = useSelector((state: RootState) => state.bangState.bAction);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     if (bAction === "jump") {
-      console.log(
-        "B의 개쩌는 움직임 보시겠습니다.",
-        player,
-        type,
-        nowAction[step].path,
-        targetAction,
-        step
-      );
-      setCharObj((prev) => ({
-        ...prev,
-        imgSrc: gameImg.cow_jump_right_1x8,
-        rows: 1,
-        cols: 8,
-      }));
+      const jumpIdx = nowAction.findIndex((obj) => obj.action === "회피");
+
       jump(
         charRef,
         charObj,
         setCharObj,
         position,
         setPosition,
+        player === type ? nowAction[jumpIdx].path : targetAvoidPath
+      );
+      return;
+    } else if (bAction === "atk") {
+      const atkIdx = nowAction.findIndex((obj) => obj.action === "공격");
 
-        player === type ? nowAction[step].path : targetAction,
-        round
+      attack(
+        charRef,
+        charObj,
+        setCharObj,
+        position,
+        player === type ? nowAction[atkIdx].path : targetAtkPath
       );
       return;
     }
@@ -114,7 +114,8 @@ function CharacterB({ charObj, setCharObj, type, player }: CharacterProps) {
     <Char
       ref={charRef}
       style={{
-        backgroundImage: gameImg.cow_jump_right_1x8,
+        top: position.top,
+        left: position.left,
       }}
       data={charObj}
       player={type}

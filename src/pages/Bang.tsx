@@ -13,6 +13,7 @@ import {
   setReady,
   setRound,
   setStep,
+  setTargetAtkPath,
   setTargetAvoidPath,
   setTargetReady,
 } from "../store/slices/bangState";
@@ -263,16 +264,32 @@ function Bang() {
     const x = actionPath[0];
     const y = actionPath[1];
     setActionClicked(true);
-    console.log("액션 스탭", actionStep);
+    if (actionStep === 0) {
+      setTerminel((prev) => ({ ...prev, me: "firstActionDone" }));
+    } else if (actionStep === 1) {
+      setTerminel((prev) => ({ ...prev, me: "secondActionDone" }));
+      wasJump.current = "stand";
+    }
+
     // 액션 수행
     if (action === "공격") {
       const symbol = playerRef.current === "A" ? 3 : 2;
       const prevStay = targetBoard[x][y] === 1;
       const willStay = targetBoard[x][y] === symbol;
       gunFireAudio.play();
+      if (playerRef.current === "A") {
+        dispatch(setAAction("atk"));
+      } else {
+        dispatch(setBAction("atk"));
+      }
+
       sendData({
         type: "shot",
-        data: { actionStep, player: playerRef.current },
+        data: {
+          actionStep,
+          player: playerRef.current,
+          startTime: secondActionTimer.current,
+        },
       })();
 
       // 카운트 이전에 쏜 경우
@@ -282,6 +299,7 @@ function Bang() {
         } else {
           setBChat(["Already Shot!"]);
         }
+        return;
       }
 
       // 상대가 점프를 너무 일찍한 경우
@@ -304,19 +322,8 @@ function Bang() {
       } else {
         setBChat(["Miss"]);
       }
-
-      if (playerRef.current === "A") {
-        dispatch(setAAction("atk"));
-      } else {
-        dispatch(setBAction("atk"));
-      }
     }
     if (action === "회피") {
-      setObj((prev) => ({
-        ...prev,
-        cols: 8,
-        rows: 1,
-      }));
       if (playerRef.current === "A") {
         dispatch(setAAction("jump"));
       } else {
@@ -326,20 +333,24 @@ function Bang() {
       if (cnt !== 0) {
         sendData({
           type: "avoid",
-          data: { player: playerRef.current, actionStep, state: "mistake" },
+          data: {
+            player: playerRef.current,
+            actionStep,
+            state: "mistake",
+            startTime: secondActionTimer.current,
+          },
         })();
       } else {
         sendData({
           type: "avoid",
-          data: { player: playerRef.current, actionStep, state: "avoid" },
+          data: {
+            player: playerRef.current,
+            actionStep,
+            state: "avoid",
+            startTime: secondActionTimer.current,
+          },
         })();
       }
-    }
-    if (actionStep === 0) {
-      setTerminel((prev) => ({ ...prev, me: "firstActionDone" }));
-    } else if (actionStep === 1) {
-      setTerminel((prev) => ({ ...prev, me: "secondActionDone" }));
-      wasJump.current = "stand";
     }
   };
 
@@ -423,10 +434,19 @@ function Bang() {
           you: "readyForCnt",
         }));
         actionWait.current = recieve.data.time;
-        const targetPath = getTargetPath(recieve.data.board, playerRef.current);
+        const targetAvoidPath = getTargetPath(
+          recieve.data.board,
+          playerRef.current
+        );
+        const targetAtkPath = recieve.data.atkPath;
+        console.log(
+          recieve.data.board,
+          targetAvoidPath,
+          "상대방의 보드와 행동 경로"
+        );
+        dispatch(setTargetAtkPath(targetAtkPath));
+        dispatch(setTargetAvoidPath(targetAvoidPath));
         setTargetBoard(JSON.parse(JSON.stringify(recieve.data.board)));
-        console.log(recieve.data.board, targetPath);
-        dispatch(setTargetAvoidPath(targetPath));
       }
 
       if (recieve.type === "getTargetAction") {
@@ -435,6 +455,7 @@ function Bang() {
 
       if (recieve.type === "shot") {
         console.log(recieve.data.actionStep);
+        secondActionTimer.current = recieve.data.startTime;
         setPlayShot(true);
         setTerminel((prev) => ({
           ...prev,
@@ -454,6 +475,8 @@ function Bang() {
 
       if (recieve.type === "avoid") {
         wasJump.current = recieve.data.state;
+        secondActionTimer.current = recieve.data.startTime;
+
         setTerminel((prev) => ({
           ...prev,
           you:
@@ -490,6 +513,7 @@ function Bang() {
       */
     const welcomeAndDataChannel = async () => {
       playerRef.current = "A";
+      setPrevFirstAction("공격");
       dataChannel.current = peerConnection.createDataChannel("chat");
       // 상대방의 데이터를 수신하여 다른 기능을 하는 함수
       dataChannel.current.addEventListener("message", handleData);
@@ -503,6 +527,8 @@ function Bang() {
     /* 후클릭 브라우저가 받는 오퍼와 데이터채널 교환 */
     const offerAndDataChannel = async (offer: any) => {
       playerRef.current = "B";
+      setPrevFirstAction("회피");
+
       peerConnection.addEventListener("datachannel", (event) => {
         dataChannel.current = event.channel;
         dataChannel.current.addEventListener("message", handleData);
@@ -574,7 +600,9 @@ function Bang() {
   }, []);
   // --
 
+  const secondActionTimer = useRef(0);
   // 카운트 관리 -= 추후 특정 시간대에 시작으로 바꿔야할듯?
+  secondActionTimer.current = new Date().getTime() + 1000;
   useEffect(() => {
     if (
       terminel.me === "countDown" &&
@@ -586,7 +614,6 @@ function Bang() {
           if (prevCount === 1) {
             setTimeout(() => {
               setCnt((prev) => prev - 1);
-              actionWait.current = new Date().getTime() + 3000; // 서로 3초 후 시작할거라는 약속
             }, actionWait.current);
             clearInterval(timer);
             return prevCount;
@@ -621,29 +648,25 @@ function Bang() {
     }
     if (me === "firstActionDone" && you === "firstActionDone") {
       // if (me === "firstActionDone") {
-      console.log(actionWait.current - Date.now(), "초 후 시작");
+      const dateNow = Date.now();
+      console.log((secondActionTimer.current - dateNow) / 1000, "초 후 시작");
       wasJump.current = "stand";
       setTimeout(() => {
         console.log("2번째액션 시작!", new Date());
         action(1);
-      }, actionWait.current - Date.now());
+      }, secondActionTimer.current - dateNow);
     }
-    if (me === "secondAction" && you === "secondAction") {
-      // const timer = setTimeout(() => {
-      action(1);
-      console.log("액션수행!");
-      // }, 3000);
-      // return () => clearTimeout(timer);
-    }
-    console.log(me, you);
+    // console.log(me, you);
     if (me === "secondActionDone" && you === "secondActionDone") {
-      // const timer = setTimeout(() => {
-      wasJump.current = "stand";
-      reset();
-      setTerminel((prev) => ({ ...prev, me: "initDone", you: "initDone" }));
       const newBoard = copyBoard(board, targetBoard, playerRef.current);
-      setBoard(newBoard);
-      dispatch(setRound(round + 1));
+      wasJump.current = "stand";
+      // const timer = setTimeout(() => {
+      setTimeout(() => {
+        reset();
+        setTerminel((prev) => ({ ...prev, me: "initDone", you: "initDone" }));
+        setBoard(newBoard);
+        dispatch(setRound(round + 1));
+      }, 2000);
       // }, 2000);
       // return () => clearTimeout(timer);
     }
@@ -932,8 +955,13 @@ function Bang() {
         prevAction={reset}
         prevText={"초기화"}
         nextAction={() => {
+          if (
+            (terminel.me === "initDone" && !actionModal && step === 2) === false
+          )
+            return;
           const random = getRandomTime();
           const jumpIdx = nowAction.findIndex((obj) => obj.action === "회피");
+          const atkIdx = nowAction.findIndex((obj) => obj.action === "공격");
           const [newBoard, exchangeBoard] = getChangeBoard(
             board,
             playerRef.current,
@@ -941,7 +969,11 @@ function Bang() {
           );
           sendData({
             type: "readyForCnt",
-            data: { time: random, board: exchangeBoard },
+            data: {
+              time: random,
+              board: exchangeBoard,
+              atkPath: nowAction[atkIdx].path,
+            },
           })();
           actionWait.current = random;
           setTerminel((prev) => ({
