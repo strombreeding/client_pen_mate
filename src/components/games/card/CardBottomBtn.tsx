@@ -102,6 +102,7 @@ function CardBottomBtn({
           onClick={() => {
             if (gameState.gameTitle === "결투!" && !matchStart) {
               bangMatch();
+            } else if (gameState.gameTitle === "결투!" && matchStart) {
             } else {
               gameCreateReq();
             }

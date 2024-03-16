@@ -75,7 +75,6 @@ function MatchingModal({}) {
 
     //  peerConnection
     if (socket == null) return;
-
     /* 소켓에서 매칭 되었을때 타이머와 모달을 생성 */
     const matchFound = (id: string) => {
       dispatch(setMatchFound(true));
@@ -108,7 +107,7 @@ function MatchingModal({}) {
     };
 
     socket.emit("joinQueue");
-
+    console.log("하 분명 보내는데");
     socket.on("matchFound", matchFound);
 
     socket.on("cancelMatch", cancelMatch);
@@ -133,6 +132,7 @@ function MatchingModal({}) {
   useEffect(() => {
     if (!matchStart) return;
 
+    console.log(SOCKET_URI, "로 접속 시도");
     setSocket(
       io(`${SOCKET_URI}`, {
         transports: ["websocket"],

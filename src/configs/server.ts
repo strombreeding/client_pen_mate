@@ -9,7 +9,6 @@ export const SOCKET_URI =
     ? "http://localhost:8000/"
     : process.env.REACT_APP_SOCKET_URI;
 
-console.log(SOCKET_URI);
 export const CLIENT_URI =
   process.env.REACT_APP_CLIENT_URI || "http://192.168.25.15:3000/";
 // process.env.REACT_APP_CLIENT_URI || "http://localhost:3000/";
@@ -24,6 +23,3 @@ export const iceServers: RTCIceServer[] = [
     credential: process.env.REACT_APP_TURN_PW!,
   },
 ];
-
-console.log(process.env.REACT_APP_SERVER_URI);
-console.log(iceServers);

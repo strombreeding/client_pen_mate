@@ -53,20 +53,6 @@ const StayI = styled.div<{ data: ICharProps; type: string }>`
     1s linear;
   animation-iteration-count: infinite;
 `;
-// const StayI  = styled.div<{ data: ICharProps; stand: number }>`
-//   position: absolute;
-//   /* top: 300px; */
-//   right: ${(prop) =>
-//     emptyVal(prop.data.width) + -emptyVal(prop.data.width) / 3}px;
-//   width: ${(props) => props.data.width}px;
-//   height: ${(props) => props.data.width * 0.625}px;
-//   /* background-image: url(${(props) => props.data.imgSrc}); */
-//   border: 1px solid black;
-//   background-color: ${(props) =>
-//     props.stand === 1 ? "red" : props.stand === 2 ? "blue" : "pink"};
-//   background-size: ${(props) => props.data.width * props.data.cols}px
-//     ${(props) => props.data.width * 0.625 * props.data.rows}px;
-// `;
 const RowView = styled.div<{ data: ICharProps }>`
   position: relative;
   flex-direction: row;
