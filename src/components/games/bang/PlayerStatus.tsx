@@ -27,19 +27,19 @@ function PlayerInterface({
       </Text.Light_16>
       <View style={{ flexDirection: "row" }}>
         {player === type
-          ? Array(status.me.health)
+          ? Array(status.me.health < 0 ? 0 : status.me.health)
               .fill(0)
               .map(() => <img src={imgSrc.heart_fill} style={{ width: 15 }} />)
-          : Array(status.you.health)
+          : Array(status.you.health < 0 ? 0 : status.you.health)
               .fill(0)
               .map(() => <img src={imgSrc.heart_fill} style={{ width: 15 }} />)}
       </View>
       <View style={{ flexDirection: "row" }}>
         {player === type
-          ? Array(status.me.subHealth)
+          ? Array(status.me.subHealth < 0 ? 0 : status.me.subHealth)
               .fill(0)
               .map(() => <img src={imgSrc.sub_health} style={{ width: 15 }} />)
-          : Array(status.you.subHealth)
+          : Array(status.you.subHealth < 0 ? 0 : status.you.subHealth)
               .fill(0)
               .map(() => <img src={imgSrc.sub_health} style={{ width: 15 }} />)}
       </View>

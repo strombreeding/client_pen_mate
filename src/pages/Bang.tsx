@@ -482,6 +482,9 @@ function Bang() {
         setTargetAction((prev) => ({ ...prev, ...recieve.data.action }));
       }
 
+      // isOK? 라는 타입 만들고
+      // 데이터에 type, data 를 그대로 담아놓고
+
       if (recieve.type === "shot") {
         console.log(recieve.data.actionStep);
         secondActionTimer.current = recieve.data.startTime;
@@ -603,12 +606,14 @@ function Bang() {
     if (!cookies) {
       navigation("/games", { replace: true });
     }
-    window.addEventListener("beforeunload", (e) => {
+
+    const giveUp = () => {
       Cookies.remove("bang");
       sendData({ type: "giveup", data: "" })();
-      // e.preventDefault();
-      // e.returnValue = "";
-    });
+    };
+    window.addEventListener("beforeunload", giveUp);
+    window.addEventListener("pagehide", giveUp);
+
     return () => {
       socket.emit("cancelMatch", matchId);
       sendData({ type: "giveup", data: "" })();
@@ -616,6 +621,8 @@ function Bang() {
       socket.disconnect();
       peerConnection.removeEventListener("icecandidate", handleIce);
       peerConnection.close();
+      window.removeEventListener("beforeunload", giveUp);
+      window.removeEventListener("pagehide", giveUp);
       dispatch(setMatchId(""));
     };
   }, [peerConnection]);
