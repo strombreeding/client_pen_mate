@@ -15,9 +15,9 @@ export const CLIENT_URI =
 // process.env.REACT_APP_CLIENT_URI || "http://localhost:3000/";
 
 export const iceServers: RTCIceServer[] = [
-  {
-    urls: "stun:stun.l.google.com:19302",
-  },
+  // {
+  //   urls: "stun:stun.l.google.com:19302",
+  // },
   {
     urls: process.env.REACT_APP_TURN_SERVER!,
     username: process.env.REACT_APP_TURN_ID!,
@@ -26,4 +26,4 @@ export const iceServers: RTCIceServer[] = [
 ];
 
 console.log(process.env.REACT_APP_SERVER_URI);
-console.log(process.env.iceServers);
+console.log(iceServers);

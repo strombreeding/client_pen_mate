@@ -379,6 +379,7 @@ function Bang() {
   };
   // rtc 연결
   useEffect(() => {
+    console.log("기모륑");
     const socket = io(`${SOCKET_URI}`, {
       transports: ["websocket"],
     });
@@ -513,6 +514,7 @@ function Bang() {
       */
     const welcomeAndDataChannel = async () => {
       playerRef.current = "A";
+      console.log("playerA");
       setPrevFirstAction("공격");
       dataChannel.current = peerConnection.createDataChannel("chat");
       // 상대방의 데이터를 수신하여 다른 기능을 하는 함수
@@ -526,6 +528,7 @@ function Bang() {
 
     /* 후클릭 브라우저가 받는 오퍼와 데이터채널 교환 */
     const offerAndDataChannel = async (offer: any) => {
+      console.log("playerB");
       playerRef.current = "B";
       setPrevFirstAction("회피");
 
@@ -554,9 +557,8 @@ function Bang() {
           아이스 상태 : ${peerConnection.iceConnectionState}
           플레이어 선정 : ${playerRef.current}
         `);
-      socket.disconnect();
+      // setTimeout(() => socket.disconnect(), 2000);
     };
-
     socket.emit("moveToBangDone", matchId);
 
     socket.on("welcome", welcomeAndDataChannel);
