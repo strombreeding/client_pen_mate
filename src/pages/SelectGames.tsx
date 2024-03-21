@@ -35,6 +35,7 @@ import { useAudio } from "../hooks/useAudio";
 import MatchingModal from "../components/games/bang/detail/MatchingModal";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { Socket } from "socket.io-client";
+import HeaderPoint from "../components/HeaderPoint";
 
 const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
@@ -52,6 +53,7 @@ export interface GameProps {
   matchType: string[];
   player: string[];
   img: string;
+  rewards: string[];
 }
 
 type Tx = {
@@ -248,16 +250,11 @@ const SelectGames = () => {
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-between",
+            alignItems: "flex-start",
           }}
         >
           <Text.Regular_20>{langueage.gameSelect[0]}</Text.Regular_20>
-          <View style={{ flexDirection: "row" }}>
-            <img
-              src={imgSrc.atata_un}
-              style={{ width: 20, height: 20, marginTop: -3 }}
-            />
-            <Text.Spo_Medium_16>{100}</Text.Spo_Medium_16>
-          </View>
+          <HeaderPoint />
         </View>
         <EmptyBox height={35} />
       </View>

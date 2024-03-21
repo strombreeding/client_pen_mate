@@ -84,7 +84,7 @@ function Join() {
     <Container style={{ flex: 1, justifyContent: "space-between" }}>
       <BgImg src={imgSrc.bg_login} />
       {/* <BgView> */}
-      <Logo visited={isVisited} src={imgSrc.atata_join} />
+      {/* <Logo visited={isVisited} src={imgSrc.atata_join} /> */}
       {/* </BgView> */}
       <EmptyBox height={10} />
       <EmptyBox height={10} />

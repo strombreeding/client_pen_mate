@@ -12,6 +12,10 @@ import GameTitle from "./GameTitle";
 import GameOption from "./GameOption";
 import Shake from "../../animations/Shake";
 import LoadingLottie from "../../LoadingLottie";
+import { imgSrc } from "../../../assets/img";
+import { colors } from "../../../assets/colors";
+import RewardItems from "./RewardItems";
+import GameDescription from "./GameDescription";
 
 interface ICardLayerProps {
   animation: Animations;
@@ -108,10 +112,14 @@ const GameCard: React.FC<{
               justifyContent: "space-between",
             }}
           >
-            <Text.Light_12 style={{ fontSize: 10 }}>
-              {gameProps.description}
-            </Text.Light_12>
-            <GameOption gameProps={gameProps} />
+            <GameDescription description={gameProps.description} />
+
+            <EmptyBox height={10} />
+
+            <RewardItems rewards={gameProps.rewards} />
+            {/* 게임 옵션. 현재는 개발 리소스 부족으로 보류 */}
+            {/* <GameOption gameProps={gameProps} /> */}
+            <EmptyBox height={10} />
 
             <CardBottomBtn gameProps={gameProps} setSpecial={setSpecial} />
           </View>
