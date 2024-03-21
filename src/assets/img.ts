@@ -73,4 +73,6 @@ export const imgSrc = {
   close: require("../assets/pngs/close.png"),
   sound_un_mute: require("../assets/pngs/sound_un_mute.png"),
   sound_mute: require("../assets/pngs/sound_mute.png"),
+
+  energy: require("../assets/pngs/energy.png"),
 };

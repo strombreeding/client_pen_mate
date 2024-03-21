@@ -52,4 +52,6 @@ export const gameImg = {
   tile4: require("../assets/gameAssets/tile4.png"),
   sun1: require("../assets/gameAssets/sun1.png"),
   sun2: require("../assets/gameAssets/sun2.png"),
+
+  hit_1x3: require("../assets/gameAssets/hit_1x3.png"),
 };

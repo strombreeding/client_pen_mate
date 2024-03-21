@@ -4,7 +4,7 @@ import { Pressable, View } from "../../../nativeView";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { setActionModal, setNowAction } from "../../../store/slices/bangState";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, memo } from "react";
 import { gameImg } from "../../../assets/gameImg";
 
 const ActionContainer = styled(View)`
@@ -56,7 +56,7 @@ function ActionModal({ prevFirstAction }: { prevFirstAction: string }) {
   );
   const step = useSelector((state: RootState) => state.bangState.step);
   const dispatch = useDispatch<AppDispatch>();
-
+  console.log(nowAction);
   if (!actionModal) return <></>;
   return (
     <ActionContainer>
@@ -99,8 +99,18 @@ function ActionModal({ prevFirstAction }: { prevFirstAction: string }) {
       >
         <ActionImg src={gameImg.action_jump} />
       </ActionBtn>
+      {(nowAction[0].action === "회피" || nowAction[1].action === "회피") &&
+        (nowAction[0].action === "공격" || nowAction[1].action === "공격") && (
+          <ActionBtn
+            style={{
+              display: "flex",
+            }}
+          >
+            <ActionImg />
+          </ActionBtn>
+        )}
     </ActionContainer>
   );
 }
 
-export default ActionModal;
+export default memo(ActionModal);

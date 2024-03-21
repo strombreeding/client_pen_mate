@@ -84,41 +84,14 @@ function CharBoard({
 }) {
   const boardXSize = [1, 2, 3];
   const boardYSize = [1, 2, 3, 4, 5, 6];
-  const aChatRef = useRef<HTMLDivElement | null>(null);
-  const bChatRef = useRef<HTMLDivElement | null>(null);
-  const aCurrentPath = getTargetPath(
-    player === "A" ? board : targetBoard,
-    player
-  );
-  const animationRef = useRef(0);
-  const width = obj.height;
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        const { height } = entry.contentRect;
-        console.log("말풍선의 높이가 변경되었습니다:", height);
-        // 여기서 말풍선의 크기에 따른 추가적인 작업을 수행할 수 있습니다.
-      }
-    });
-
-    if (bChatRef.current) {
-      resizeObserver.observe(bChatRef.current);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  const divRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <View
       style={{
         width: "100%",
         backgroundColor: "#9B5127",
-        // height: obj.width * 0.625 * boardXSize.length + 50,
         position: "relative",
+        overflow: "hidden",
       }}
     >
       {boardXSize.map((empty, x) => (
@@ -136,6 +109,7 @@ function CharBoard({
         setCharObj={setObj}
         type={"A"}
         player={player}
+        aChat={aChat}
       />
 
       {/* B */}
@@ -144,6 +118,7 @@ function CharBoard({
         setCharObj={setBObj}
         type={"B"}
         player={player}
+        bChat={bChat}
       />
     </View>
   );

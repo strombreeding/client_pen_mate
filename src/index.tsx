@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import "./index.css";
 import Cookies from "js-cookie";
+import { encrypt } from "./utils/crypto";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

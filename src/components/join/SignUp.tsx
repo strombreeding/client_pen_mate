@@ -12,7 +12,7 @@ import { colors } from "../../assets/colors";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { setEncryptedCookie } from "../../utils/cookies";
-import { setLoginState } from "../../store/slices/userState";
+import { setInfomation, setLoginState } from "../../store/slices/userState";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 
@@ -60,69 +60,114 @@ const Form = styled.form<{ shake: boolean }>`
 
 let cnt = 0;
 function SignUp({ step }: { step: string }) {
-  const oauthData = useLocation().state;
-
+  const [timer, setTimer] = useState<NodeJS.Timeout>(setTimeout(() => {}, 0));
   const [text, setText] = useState("");
   const [canNext, setCanNext] = useState(false);
   const [shake, setShake] = useState(false);
   const [errReason, setErrReason] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
-  const reqRef = useRef(false);
+
+  const oauthData = useLocation().state;
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigate();
-  useEffect(() => {
-    // console.log(text);
-    const req = async () => {
-      console.log("어디까지왔냐");
 
-      const wasted = validateString(text);
-      if (wasted) {
-        setErrReason(wasted);
-        setShake(true);
-        return;
-      }
-      try {
-        const res = await axios.get(SERVER_URI + "user/" + text);
-        console.log(res);
-        if (res.data === false) {
-          setShake(true);
-          setErrReason("이미 존재하는 닉네임 입니다.");
-        } else {
-          setCanNext(true);
-        }
-      } catch (err: any) {
-        setShake(true);
-        setErrReason("서비스가 혼잡합니다. 잠시후에 시도해주세요.");
-      }
-    };
-    setCanNext(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const passRef = useRef(false);
+
+  const joinReq = async () => {
+    try {
+      const res = await axios.post(SERVER_URI + "user/create", {
+        ...oauthData,
+        nickname: text,
+      });
+      console.log("시발", res);
+      dispatch(setLoginState(true));
+      dispatch(
+        setInfomation({
+          id: res.data.id,
+          nickname: res.data.nickname,
+          atataPoint: res.data.atataPoint,
+          atataStone: res.data.atataStone,
+          energy: res.data.energy,
+        })
+      );
+      window.localStorage.setItem("at", res.data.at);
+      window.localStorage.setItem("rt", res.data.rt);
+      navigation("/");
+    } catch (err: any) {
+      console.log(err);
+      alert(err.message);
+    }
+  };
+
+  const req = async () => {
     if (text.length <= 0) return;
+
+    const wasted = validateString(text);
+    if (wasted) {
+      setErrReason(wasted);
+      setShake(true);
+      return;
+    }
+
+    const res = await axios.get(SERVER_URI + "user/" + text);
+    if (!res.data) {
+      setShake(true);
+      setErrReason("이미 존재하는 닉네임 입니다.");
+    } else {
+      if (!inputRef.current) return;
+      passRef.current = true;
+      setCanNext(true);
+    }
+
+    try {
+    } catch (err: any) {
+      setShake(true);
+      setErrReason("서비스가 혼잡합니다. 잠시후에 시도해주세요.");
+    }
+  };
+
+  useEffect(() => {
+    setCanNext(false);
+    passRef.current = false;
     const checkNick = setTimeout(() => {
+      if (passRef.current === true) return;
       req();
     }, 800);
+    setTimer(checkNick);
 
     return () => {
+      clearTimeout(timer);
       clearTimeout(checkNick);
     };
   }, [text]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     // if (text.length === 10) return;
+    console.log(text === e.currentTarget.value);
+    if (text === e.currentTarget.value) return;
     setText(e.currentTarget.value);
     setShake(false);
   };
+
   return (
     <Container style={{ flex: 1 }}>
       <EmptyBox height={20} />
       <Form ref={formRef} onSubmit={(e) => e.preventDefault()} shake={shake}>
         <Text.Spo_Medium_16>닉네임</Text.Spo_Medium_16>
         <Input
+          ref={inputRef}
           type="text"
           maxLength={12}
           value={text}
-          onBlur={(e) => e.preventDefault()}
-          onChange={onChange}
           placeholder="닉네임을 입력해주세요."
+          onChange={onChange}
+          onBlur={(e) => {
+            e.stopPropagation();
+            console.log("실행", passRef.current);
+            setCanNext(passRef.current);
+            console.log("정료");
+          }}
         />
         {text.length > 0 && (
           <View
@@ -153,20 +198,6 @@ function SignUp({ step }: { step: string }) {
       {canNext && (
         <PrevBtn
           onClick={() => {
-            const joinReq = async () => {
-              try {
-                const res = await axios.post(SERVER_URI + "user/create", {
-                  ...oauthData,
-                  nickname: text,
-                });
-                console.log(res);
-                setEncryptedCookie("chkin", { ...oauthData, nickname: text });
-                dispatch(setLoginState(true));
-                navigation("/");
-              } catch (err: any) {
-                alert(err.message);
-              }
-            };
             joinReq();
           }}
           style={{

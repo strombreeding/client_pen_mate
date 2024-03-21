@@ -5,7 +5,7 @@ import { SERVER_URI } from "../configs/server";
 import { Container } from "../styles";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
-import { setLoginState } from "../store/slices/userState";
+import { setInfomation, setLoginState } from "../store/slices/userState";
 
 const SocialTerminel: React.FC = () => {
   const location = useLocation();
@@ -15,11 +15,28 @@ const SocialTerminel: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const req = async () => {
     const res = await axios.post(SERVER_URI + "social/oauth", { code });
-    console.log(res);
     const resData = res.data.data;
-    navigate(resData.result, {
-      state: { id: resData.id, email: resData.email },
-    });
+
+    if (resData.result === "/join") {
+      navigate(resData.result, {
+        state: { id: resData.id, email: resData.email },
+      });
+    } else {
+      console.log(resData);
+      dispatch(setLoginState(true));
+      dispatch(
+        setInfomation({
+          id: resData.result.id,
+          nickname: resData.result.nickname,
+          atataPoint: resData.result.atataPoint,
+          atataStone: resData.result.atataStone,
+          energy: resData.result.energy,
+        })
+      );
+      window.localStorage.setItem("at", resData.result.at);
+      window.localStorage.setItem("rt", resData.result.rt);
+      navigate("/", { replace: true });
+    }
     // if (res.data.data === "sign-up") {
     //   dispatch(setLoginState(true));
     //   navigate("/sign-up?step=0", { replace: true });

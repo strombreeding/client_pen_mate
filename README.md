@@ -12,6 +12,12 @@
 회복아이템
 <a href="https://kr.freepik.com/free-vector/cartoon-set-of-farm-game-assets-and-harvest-isolated-on-background-vector-illustration-of-sack-garden-rake-wooden-crate-grain-beans-pomegranate-eggplant-gardening-tools-fruit-and-vegetables_68184287.htm#fromView=search&page=4&position=47&uuid=ddd3e801-e0a4-4c69-875b-717f88f881da">작가 upklyak 출처 Freepik</a>
 
+에너지
+<a href="https://www.freepik.com/free-vector/game-icons-heart-lightning-potion-bottle_21184494.htm#fromView=search&page=1&position=0&uuid=bdfe6552-ab75-47a4-8653-5f2f8e1a24be">Image by upklyak on Freepik</a>
+
+피격
+<a href="https://www.freepik.com/free-vector/action-bubbles-set_2799398.htm#fromView=search&page=1&position=0&uuid=6fac436d-6e58-4d84-bea7-a9f1c00bc663">Image by rawpixel.com on Freepik</a>
+
 반물질 홀
 <a href="https://kr.freepik.com/free-vector/neon-optical-halo-flares-with-light-glow-vector-effect-circle-energy-flare-glow-abstract-frame-with-3d-shine-digital-fantasy-portal-swirl-shape-illustration-beautiful-pink-sphere-twist-element_65854391.htm#fromView=search&page=1&position=4&uuid=ae7109cd-a210-47f7-b044-3c2589237312">작가 upklyak 출처 Freepik</a>
 

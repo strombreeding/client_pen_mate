@@ -5,10 +5,13 @@ import { SOCKET_URI, iceServers } from "../configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import {
+  resetState,
   setAAction,
+  setAHit,
   setActionModal,
   setActionWait,
   setBAction,
+  setBHit,
   setMatchId,
   setNowAction,
   setReady,
@@ -51,6 +54,7 @@ import {
 } from "../utils/bang";
 import Cookies from "js-cookie";
 import { getDecryptedCookie, setEncryptedCookie } from "../utils/cookies";
+import { startAfterMsTime } from "../utils/date";
 
 export interface IMessageProps {
   type:
@@ -245,6 +249,11 @@ function Bang() {
       subHealth,
       health
     );
+    if (playerRef.current === "A") {
+      dispatch(setBHit(true));
+    } else {
+      dispatch(setAHit(true));
+    }
     setStatus((prev) => ({
       ...prev,
       you: {
@@ -377,11 +386,6 @@ function Bang() {
       ])
     );
   };
-  // const reload = (e: BeforeUnloadEvent) => {
-  //   e.preventDefault();
-  //   e.returnValue = "";
-  //   navigation("/games", { replace: true });
-  // };
 
   useEffect(() => {
     setPeerConnection(
@@ -389,6 +393,8 @@ function Bang() {
         iceServers: iceServers,
       })
     );
+    dispatch(setReset(resetState));
+    console.log(nowAction);
 
     return () => {
       Cookies.remove("bang");
@@ -459,24 +465,26 @@ function Bang() {
       }
 
       if (recieve.type === "readyForCnt") {
-        setTerminel((prev) => ({
-          ...prev,
-          you: "readyForCnt",
-        }));
-        actionWait.current = recieve.data.time;
-        const targetAvoidPath = getTargetPath(
-          recieve.data.board,
-          playerRef.current
-        );
-        const targetAtkPath = recieve.data.atkPath;
-        console.log(
-          recieve.data.board,
-          targetAvoidPath,
-          "상대방의 보드와 행동 경로"
-        );
-        dispatch(setTargetAtkPath(targetAtkPath));
-        dispatch(setTargetAvoidPath(targetAvoidPath));
-        setTargetBoard(JSON.parse(JSON.stringify(recieve.data.board)));
+        setTimeout(() => {
+          setTerminel((prev) => ({
+            ...prev,
+            you: "readyForCnt",
+          }));
+          actionWait.current = recieve.data.time;
+          const targetAvoidPath = getTargetPath(
+            recieve.data.board,
+            playerRef.current
+          );
+          const targetAtkPath = recieve.data.atkPath;
+          console.log(
+            recieve.data.board,
+            targetAvoidPath,
+            "상대방의 보드와 행동 경로"
+          );
+          dispatch(setTargetAtkPath(targetAtkPath));
+          dispatch(setTargetAvoidPath(targetAvoidPath));
+          setTargetBoard(JSON.parse(JSON.stringify(recieve.data.board)));
+        }, 0);
       }
 
       if (recieve.type === "getTargetAction") {
@@ -489,51 +497,61 @@ function Bang() {
       if (recieve.type === "shot") {
         console.log(recieve.data.actionStep);
         secondActionTimer.current = recieve.data.startTime;
-        setPlayShot(true);
-        setTerminel((prev) => ({
-          ...prev,
-          you:
-            recieve.data.actionStep === 0
-              ? "firstActionDone"
-              : "secondActionDone",
-        }));
-        if (recieve.data.player === "A") {
-          // A가 쐈다는 뜻
-          dispatch(setAAction("atk"));
-        } else {
-          dispatch(setBAction("atk"));
-        }
+        setTimeout(() => {
+          setTerminel((prev) => ({
+            ...prev,
+            you:
+              recieve.data.actionStep === 0
+                ? "firstActionDone"
+                : "secondActionDone",
+          }));
+          setPlayShot(true);
+          if (recieve.data.player === "A") {
+            // A가 쐈다는 뜻
+            dispatch(setAAction("atk"));
+          } else {
+            dispatch(setBAction("atk"));
+          }
+        }, 0);
         // 타겟 애니메이션
       }
 
       if (recieve.type === "avoid") {
         wasJump.current = recieve.data.state;
         secondActionTimer.current = recieve.data.startTime;
-
-        setTerminel((prev) => ({
-          ...prev,
-          you:
-            recieve.data.actionStep === 0
-              ? "firstActionDone"
-              : "secondActionDone",
-        }));
-        if (recieve.data.player === "A") {
-          dispatch(setAAction("jump"));
-        } else {
-          dispatch(setBAction("jump"));
-        }
+        setTimeout(() => {
+          setTerminel((prev) => ({
+            ...prev,
+            you:
+              recieve.data.actionStep === 0
+                ? "firstActionDone"
+                : "secondActionDone",
+          }));
+          if (recieve.data.player === "A") {
+            dispatch(setAAction("jump"));
+          } else {
+            dispatch(setBAction("jump"));
+          }
+        }, 0);
       }
 
       if (recieve.type === "atk") {
         //이미 받은 판정이니까 그대로 status변경하면 됨
-        setStatus((prev) => ({
-          ...prev,
-          me: {
-            ...prev.me,
-            health: recieve.data.resultHealth,
-            subHealth: recieve.data.resultSubHealth,
-          },
-        }));
+        setTimeout(() => {
+          if (playerRef.current === "A") {
+            dispatch(setAHit(true));
+          } else {
+            dispatch(setBHit(true));
+          }
+          setStatus((prev) => ({
+            ...prev,
+            me: {
+              ...prev.me,
+              health: recieve.data.resultHealth,
+              subHealth: recieve.data.resultSubHealth,
+            },
+          }));
+        }, 0);
       }
 
       if (recieve.type === "secondAction") {
@@ -624,7 +642,6 @@ function Bang() {
       peerConnection.close();
       window.removeEventListener("beforeunload", giveUp);
       window.removeEventListener("pagehide", giveUp);
-      dispatch(setMatchId(""));
     };
   }, [peerConnection]);
 
@@ -632,6 +649,7 @@ function Bang() {
   useEffect(() => {
     if (playShot) {
       gunFireAudio.play();
+      setPlayShot(false);
     }
   }, [playShot]);
   // --
@@ -642,6 +660,7 @@ function Bang() {
     dispatch(setBgm(allBgm.bang));
     return () => {
       dispatch(setBgm(allBgm.home));
+      dispatch(setReset(resetState));
     };
   }, []);
   // --
@@ -655,12 +674,13 @@ function Bang() {
       // terminel.you === "countDown" &&
       cnt !== 0
     ) {
+      console.log(startAfterMsTime(actionWait.current - Date.now()));
       const timer = setInterval(() => {
         setCnt((prevCount) => {
           if (prevCount === 1) {
             setTimeout(() => {
               setCnt((prev) => prev - 1);
-            }, actionWait.current);
+            }, actionWait.current - Date.now());
             clearInterval(timer);
             return prevCount;
           }
@@ -763,7 +783,7 @@ function Bang() {
     if (status.me.health <= 0) {
       result.useTime = (new Date().getTime() - startTime) / 1000;
       setEncryptedCookie("gameResult", result);
-      dispatch(setReset(1));
+      dispatch(setReset(resetState));
       setResultModal(true);
     } else if (status.you.health <= 0) {
       result.reward = 300;
@@ -771,7 +791,7 @@ function Bang() {
       result.useTime = (new Date().getTime() - startTime) / 1000;
 
       setEncryptedCookie("gameResult", result);
-      dispatch(setReset(1));
+      dispatch(setReset(resetState));
       setResultModal(true);
     }
   }, [status]);
@@ -1025,7 +1045,7 @@ function Bang() {
             (terminel.me === "initDone" && !actionModal && step === 2) === false
           )
             return;
-          const random = getRandomTime();
+          const random = getRandomTime(); // ms로
           const jumpIdx = nowAction.findIndex((obj) => obj.action === "회피");
           const atkIdx = nowAction.findIndex((obj) => obj.action === "공격");
           const [newBoard, exchangeBoard] = getChangeBoard(
@@ -1036,12 +1056,13 @@ function Bang() {
           sendData({
             type: "readyForCnt",
             data: {
-              time: random,
+              time: random + Date.now(),
               board: exchangeBoard,
               atkPath: nowAction[atkIdx].path,
             },
           })();
-          actionWait.current = random;
+          actionWait.current = random + Date.now();
+          console.log(actionWait.current);
           setTerminel((prev) => ({
             ...prev,
             me: "readyForCnt",

@@ -23,6 +23,8 @@ import { AppDispatch, RootState } from "../../../../store/store";
 import { gameImg } from "../../../../assets/gameImg";
 import { setAAction } from "../../../../store/slices/bangState";
 import { attack } from "./attack";
+import HitBox from "../detail/HitBox";
+import ChatBox from "../detail/Chat";
 
 // 스프라이트 이미지 구성품, 및 크기
 interface ICharProps {
@@ -35,11 +37,6 @@ interface ICharProps {
 
 const Char = styled.div<{ data: ICharProps; player: "A" | "B" }>`
   position: absolute;
-  /* top: ${(props) => props.data.width * 0.625}px;
-  left: ${(props) =>
-    emptyVal(props.data.width) +
-    -emptyVal(props.data.width) / 3 +
-    props.data.width * 0.75 * 0}px; */
   width: ${(props) => props.data.width}px;
   height: ${(props) => props.data.width * 0.625}px;
   background-image: url(${(props) => props.data.imgSrc});
@@ -47,6 +44,7 @@ const Char = styled.div<{ data: ICharProps; player: "A" | "B" }>`
     ${(props) => props.data.width * 0.625 * props.data.rows}px;
   display: flex;
   align-items: center;
+  justify-content: center;
 `;
 
 interface CharacterProps {
@@ -54,8 +52,15 @@ interface CharacterProps {
   setCharObj: Dispatch<SetStateAction<ICharProps>>;
   type: "A" | "B";
   player: "A" | "B";
+  aChat: string[];
 }
-function CharacterB({ charObj, setCharObj, type, player }: CharacterProps) {
+function CharacterA({
+  charObj,
+  setCharObj,
+  type,
+  player,
+  aChat,
+}: CharacterProps) {
   const charRef = useRef<HTMLDivElement | null>(null);
 
   //  emptyVal(width) + -emptyVal(width) / 3 + width * 0.75 * y;
@@ -118,8 +123,11 @@ function CharacterB({ charObj, setCharObj, type, player }: CharacterProps) {
       }}
       data={charObj}
       player={type}
-    ></Char>
+    >
+      <ChatBox chat={aChat} />
+      <HitBox who="A" />
+    </Char>
   );
 }
 
-export default memo(CharacterB);
+export default memo(CharacterA);

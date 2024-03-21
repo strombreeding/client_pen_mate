@@ -3,8 +3,7 @@ import { RootState } from "../store/store";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivatePage = () => {
-  const isLogged = true;
-  // const isLogged = useSelector((state: RootState) => state.userState.logedIn);
+  const isLogged = useSelector((state: RootState) => state.userState.logedIn);
   return isLogged ? <Outlet /> : <Navigate to="/login" />;
 };
 

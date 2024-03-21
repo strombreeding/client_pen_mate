@@ -18,6 +18,10 @@ import BottomModal from "./components/games/BottomModal";
 import useDefaultBrowser from "./hooks/useDefaultBrowser";
 import KakaoInAppBrowserDetect from "./KakaoInAppBrowserDetect";
 import AudioComponent from "./components/Audio";
+import axios from "axios";
+import { setInfomation, setLoginState } from "./store/slices/userState";
+import { jwtApiRequest } from "./apis/jwtApiService";
+import { decrypt } from "./utils/crypto";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -91,6 +95,27 @@ function App() {
       }
       // event.returnValue = ""; // Chrome에서는 이 값을 설정해야 경고 메시지가 표시됩니다.
     });
+  }, []);
+
+  const req = async (at: string) => {
+    try {
+      const res = await jwtApiRequest("user/verify", "POST", { at });
+      // const res = await axios.post(SERVER_URI + "user/verify", { at });
+      console.log(res);
+      dispatch(setLoginState(true));
+      dispatch(setInfomation({ ...res }));
+    } catch (err: any) {
+      localStorage.removeItem("logged");
+
+      console.log(err);
+      // alert(err.message);
+    }
+  };
+  useEffect(() => {
+    const storage = window.localStorage.getItem("at");
+    if (storage != null) {
+      req(storage);
+    }
   }, []);
 
   const mute = useSelector((state: RootState) => state.appState.mute);

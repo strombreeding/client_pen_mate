@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { EmptyBox } from "../../styles";
 import { imgSrc } from "../../assets/img";
-import { Fragment } from "react";
+import { Fragment, memo } from "react";
 import { Text } from "../../assets/fontStyles";
 import { View } from "../../nativeView";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const Header = styled.div`
   display: flex;
@@ -20,16 +22,32 @@ export const RowView = styled.div`
 `;
 
 const HeaderHome = () => {
+  const infomation = useSelector(
+    (state: RootState) => state.userState.infomation
+  );
+  console.log(infomation);
   const point = 1004;
   return (
     <Header>
-      <View>
-        <Text.Regular_16>esaynee_</Text.Regular_16>
+      <View style={{ paddingTop: 5 }}>
+        <Text.Regular_16>{infomation.nickname}</Text.Regular_16>
         <EmptyBox height={4} />
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <img src={imgSrc.atata_point} style={{ width: 20, height: 20 }} />
-          {/* <EmptyBox width={5} /> */}
-          <Text.Spo_Medium_16>{point}p</Text.Spo_Medium_16>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <img
+              src={imgSrc.atata_point}
+              style={{ width: 20, height: 20, marginTop: -3 }}
+            />
+            <Text.Spo_Medium_16>{infomation.atataPoint}</Text.Spo_Medium_16>
+          </View>
+          <EmptyBox width={5} />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <img
+              src={imgSrc.energy}
+              style={{ width: 20, height: 20, marginTop: 0 }}
+            />
+            <Text.Spo_Medium_16>{infomation.energy}</Text.Spo_Medium_16>
+          </View>
         </View>
       </View>
       <RowView>
@@ -39,4 +57,4 @@ const HeaderHome = () => {
   );
 };
 
-export default HeaderHome;
+export default memo(HeaderHome);

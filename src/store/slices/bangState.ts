@@ -10,7 +10,7 @@ interface IWillAction {
 type StepProps = "action" | "first" | "second" | "final" | "ready" | "init";
 export type ActionType = "jump" | "stand" | "atk" | "walk";
 
-interface SocketState {
+interface BangState {
   dataChannel: RTCDataChannel | undefined;
   matchStart: boolean;
   matchFound: boolean;
@@ -30,8 +30,11 @@ interface SocketState {
   aAction: ActionType;
   bAction: ActionType;
   round: number;
+  aHit: boolean;
+  bHit: boolean;
 }
-const initialState: SocketState = {
+
+const initialState: BangState = {
   dataChannel: undefined,
   matchStart: false,
   matchFound: false,
@@ -53,6 +56,8 @@ const initialState: SocketState = {
   aAction: "stand",
   bAction: "stand",
   round: 1,
+  aHit: false,
+  bHit: false,
 };
 
 const bangSlice = createSlice({
@@ -114,8 +119,14 @@ const bangSlice = createSlice({
     setRound: (state, action: PayloadAction<number>) => {
       state.round = action.payload;
     },
-    setReset: (state, action: PayloadAction<number>) => {
-      state = { ...initialState };
+    setAHit: (state, action: PayloadAction<boolean>) => {
+      state.aHit = action.payload;
+    },
+    setBHit: (state, action: PayloadAction<boolean>) => {
+      state.bHit = action.payload;
+    },
+    setReset: (state, action: PayloadAction<BangState>) => {
+      return (state = { ...action.payload });
     },
   },
 });
@@ -138,6 +149,34 @@ export const {
   setAAction,
   setBAction,
   setRound,
+  setAHit,
+  setBHit,
 } = bangSlice.actions;
 
 export default bangSlice.reducer;
+
+export const resetState: BangState = {
+  dataChannel: undefined,
+  matchStart: false,
+  matchFound: false,
+  matchId: "",
+  matchTimer: null,
+  actionWait: 0,
+  ready: false,
+  targetReady: "notYet",
+  nowAction: [
+    { action: "", path: [] },
+    { action: "", path: [] },
+    { action: "", path: [] },
+  ],
+  targetAvoidPath: [-11, -11],
+  targetAtkPath: [-11, -11],
+  step: 0,
+  gameStatus: "init",
+  actionModal: false,
+  aAction: "stand",
+  bAction: "stand",
+  round: 1,
+  aHit: false,
+  bHit: false,
+};
