@@ -12,7 +12,6 @@ export type GameTitle =
 export type GamePlayer = string | undefined;
 export interface GameStatus {
   gameTitle?: GameTitle;
-  cost?: number;
   player?: GamePlayer;
   matchType?: string;
   aiOption?: string;
@@ -26,7 +25,6 @@ const initialState: GameState = {
   status: {
     gameTitle: undefined,
     player: undefined,
-    cost: 0,
     matchType: "regular",
   },
   selectState: "move",

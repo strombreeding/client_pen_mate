@@ -1,8 +1,17 @@
 import axiosInstance from "./axiosInstance";
 import { refreshToken } from "./authService";
-import { encrypt } from "../utils/crypto";
+import { decrypt, encrypt } from "../utils/crypto";
+import { setStorageCrypto } from "../utils/localStorage";
 
 type AxiosMethod = "GET" | "POST" | "DELETE" | "PUT";
+
+const refreshSession = (err: any) => {
+  localStorage.clear();
+  alert("세션이 만료되었습니다.\n다시 로그인해주세요.");
+  window.location.reload();
+  console.error("Error refreshing token:", err);
+  throw err;
+};
 
 export const jwtApiRequest = async (
   url: string,
@@ -17,21 +26,31 @@ export const jwtApiRequest = async (
     });
     return response.data;
   } catch (error: any) {
+    const errMsg = error.response.data.message;
+    console.log(error.message);
     if (
       error.response &&
       error.response.status === 401 &&
-      error.response.data.message === "jwt expired"
+      errMsg.includes("jwt expired")
     ) {
       try {
         const currentRt = localStorage.getItem("rt");
         // 리프레시 토큰을 가져와서 새로운 액세스 토큰을 발급
-        const { at, rt } = await refreshToken(currentRt);
-        window.localStorage.setItem("at", at);
-        window.localStorage.setItem("rt", rt);
-        data = { at: at };
+        const res = await refreshToken(currentRt);
+        setStorageCrypto("atataPoint", res.atataPoint);
+        setStorageCrypto("atataStone", res.atataStone);
+        setStorageCrypto("energy", res.energy);
+        console.log(res.rt === window.localStorage.getItem("rt"));
+        window.localStorage.setItem("at", res.at);
+        window.localStorage.setItem("rt", res.rt);
+        console.log(res.rt === window.localStorage.getItem("rt"));
+        data = { ...data, at: res.at };
         // 새로운 액세스 토큰을 헤더에 설정
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${at}`;
+        axiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${res.at}`;
         // 원래의 API 요청을 다시 시도
+        console.log("다시 시도", url);
         const retryResponse = await axiosInstance({
           url,
           method,
@@ -39,15 +58,18 @@ export const jwtApiRequest = async (
         });
         console.log(retryResponse.data, "zz");
         return retryResponse.data;
-      } catch (refreshError: any) {
-        localStorage.clear();
-        alert("세션이 만료되었습니다.\n다시 로그인해주세요.");
-        window.location.reload();
-        console.error("Error refreshing token:", refreshError);
-        throw refreshError;
+      } catch (err: any) {
+        console.log(err);
+        if (err.message.includes("jwt")) {
+          refreshSession(err);
+        }
+        throw err;
       }
     }
     console.error("Error making API request:", error);
+    if (errMsg.includes("위조된RT") || errMsg.includes("invalid signature")) {
+      refreshSession(error);
+    }
     throw error;
   }
 };

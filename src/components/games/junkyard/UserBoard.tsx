@@ -6,6 +6,8 @@ import { gameImg } from "../../../assets/gameImg";
 import { url } from "inspector";
 import { SCREEN_WIDTH } from "../../../configs/device";
 import { View } from "../../../nativeView";
+import { useAudio } from "../../../hooks/useAudio";
+import { allSfx } from "../../../assets/sound";
 
 const UserBoard: FC<{
   board: number[][];
@@ -19,6 +21,8 @@ const UserBoard: FC<{
   const [secondItem, setSecondItem] = useState([-1, -1]);
   const [step, setStep] = useState<"first" | "second">("first");
   const [keyPath, setKeyPath] = useState([] as number[][]);
+  const pairAudio = useAudio(allSfx.slide);
+  const clickAudio = useAudio(allSfx.click);
   const userClickCnt = useRef(0);
   const clickCard = async (clicked: boolean, i: number, a: number) => {
     if (clicked) {
@@ -71,6 +75,9 @@ const UserBoard: FC<{
             copy,
             "hint"
           );
+
+          pairAudio.play();
+
           if (
             (complate === JSON.stringify(board) && settingStep === 4) ||
             remainingPath == null
@@ -111,6 +118,7 @@ const UserBoard: FC<{
                   processed={isProcessed}
                   success={board[i][a] === 0 ? true : false}
                   onClick={() => {
+                    clickAudio.play();
                     clickCard(clicked, i, a);
                   }}
                 >

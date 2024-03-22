@@ -36,31 +36,17 @@ import Popup from "./components/Popup";
 // `;
 
 function App() {
-  const pageState = usePageState();
-  useDefaultBrowser();
-  const loading = useSelector((state: RootState) => state.appState.loading);
-  // useEffect(() => {}, [loading]);
-  const bgImg = useSelector((state: RootState) => state.appState.bgImg);
-  const canPopstate = useSelector(
-    (state: RootState) => state.appState.canPopstateEvent
-  );
-  // const popupState = useSelector((state: RootState) => state.appState.popup);
-  // const modalState = useSelector((state: RootState) => state.appState.modal);
-  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
-  // const receiveRef = useRef(false);
-  // const containerRef = useRef<HTMLDivElement>(null);
-  // console.log(SERVER_URI);
-  // console.log(window.innerHeight);
-  // console.log(window.innerWidth);
-  useSafeAreaSize();
-  // const dispatch = useDispatch<AppDispatch>();
   const [modal, setModal] = useState(false);
-
   const dispatch = useDispatch<AppDispatch>();
-  const choiceTitle = useSelector(
-    (state: RootState) => state.gameState.status.gameTitle
-  );
+  const loading = useSelector((state: RootState) => state.appState.loading);
+  const bgImg = useSelector((state: RootState) => state.appState.bgImg);
+  const safeArea = useSelector((state: RootState) => state.appState.safeArea);
+  usePageState();
+  useDefaultBrowser();
 
+  useSafeAreaSize();
+
+  // react native 이벤트
   useEffect(() => {
     const readDataFromReactNative = (event: MessageEvent<string>) => {
       if (typeof event.data === "string") {
@@ -87,35 +73,43 @@ function App() {
     };
     // return () =>
   }, []);
+
+  // 새로고침시 쿠키제거
   useEffect(() => {
-    window.addEventListener("beforeunload", function (event) {
-      // 이벤트 핸들러에서 사용자에게 경고 메시지를 표시할 수 있습니다.
+    const removeCookies = (e: any) => {
+      e.returnValue = "";
       const cookies = Cookies.get(); // 모든 쿠키를 가져옵니다.
       for (const cookie in cookies) {
-        Cookies.remove(cookie); // 각 쿠키를 삭제합니다.
+        if (cookie === "mute") {
+          Cookies.remove(cookie); // 각 쿠키를 삭제합니다.
+        }
       }
-      // event.returnValue = ""; // Chrome에서는 이 값을 설정해야 경고 메시지가 표시됩니다.
-    });
+    };
+
+    window.addEventListener("beforeunload", removeCookies);
+    window.addEventListener("pagehide", removeCookies);
+    return () => {
+      window.removeEventListener("beforeunload", removeCookies);
+      window.removeEventListener("pagehide", removeCookies);
+    };
   }, []);
 
-  const req = async (at: string) => {
-    try {
-      const res = await jwtApiRequest("user/verify", "POST", { at });
-      // const res = await axios.post(SERVER_URI + "user/verify", { at });
-      console.log(res);
-      dispatch(setLoginState(true));
-      dispatch(setInfomation({ ...res }));
-    } catch (err: any) {
-      localStorage.removeItem("logged");
-
-      console.log(err);
-      // alert(err.message);
-    }
-  };
+  const infomation = useSelector(
+    (state: RootState) => state.userState.infomation
+  );
   useEffect(() => {
-    const storage = window.localStorage.getItem("at");
-    if (storage != null) {
-      req(storage);
+    const req = async (at: string) => {
+      try {
+        const res = await jwtApiRequest("user/verify", "POST", { at });
+        dispatch(setLoginState(true));
+        dispatch(setInfomation({ ...infomation, ...res }));
+      } catch (err: any) {
+        localStorage.clear();
+      }
+    };
+    const at = window.localStorage.getItem("at");
+    if (at != null) {
+      req(at);
     }
   }, []);
 

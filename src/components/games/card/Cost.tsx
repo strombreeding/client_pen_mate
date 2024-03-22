@@ -14,18 +14,18 @@ const Wraper = styled(View)`
   align-items: center;
 `;
 
-function Cost({ costObj }: { costObj: { img: string; cost: number }[] }) {
+function Cost({ costObj }: { costObj: { type: string; cost: number }[] }) {
   const costSrc: { imgUrl: string; cost: number }[] = [];
   const findInObj = costObj.filter((obj) => {
     const keys = Object.keys(imgSrc);
     const values = Object.values(imgSrc);
-    const index = keys.findIndex((key) => key === obj.img);
+    const index = keys.findIndex((key) => key === obj.type);
     costSrc.push({ imgUrl: values[index], cost: obj.cost });
   });
   return (
     <Wraper>
       <Text.Light_12
-        color={colors.Accent}
+        color={colors.Accent_Red}
         style={{ marginTop: -3, fontSize: 12 }}
       >
         필요 재화

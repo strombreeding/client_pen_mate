@@ -6,6 +6,8 @@ import { Container } from "../styles";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { setInfomation, setLoginState } from "../store/slices/userState";
+import { decrypt, encrypt } from "../utils/crypto";
+import { setStorageCrypto } from "../utils/localStorage";
 
 const SocialTerminel: React.FC = () => {
   const location = useLocation();
@@ -33,6 +35,9 @@ const SocialTerminel: React.FC = () => {
           energy: resData.result.energy,
         })
       );
+      setStorageCrypto("atataPoint", resData.result.atataPoint);
+      setStorageCrypto("atataStone", resData.result.atataStone);
+      setStorageCrypto("energy", resData.result.energy);
       window.localStorage.setItem("at", resData.result.at);
       window.localStorage.setItem("rt", resData.result.rt);
       navigate("/", { replace: true });

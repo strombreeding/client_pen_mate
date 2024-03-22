@@ -18,9 +18,13 @@ import axios from "axios";
 import { SERVER_URI } from "../../../configs/server";
 import Shake from "../../animations/Shake";
 import LoadingLottie from "../../LoadingLottie";
-import { setEncryptedCookie } from "../../../utils/cookies";
+import { getDecryptedCookie, setEncryptedCookie } from "../../../utils/cookies";
 import { setMatchStart } from "../../../store/slices/bangState";
 import { IPopupProps, setPopup } from "../../../store/slices/appState";
+import { IRecordGameProps, recordGame } from "../../../apis/recordGame";
+import { checkCost } from "../../../apis/game";
+import { setInfomation } from "../../../store/slices/userState";
+import { setStorageCrypto } from "../../../utils/localStorage";
 
 function CardBottomBtn({
   setSpecial,
@@ -29,6 +33,7 @@ function CardBottomBtn({
   setSpecial: Dispatch<SetStateAction<boolean>>;
   gameProps: GameProps;
 }) {
+  const [clicked, setClicked] = useState(false);
   const [enough, setEnough] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
@@ -37,31 +42,41 @@ function CardBottomBtn({
   );
   const dispatch = useDispatch<AppDispatch>();
   const gameState = useSelector((state: RootState) => state.gameState.status);
+  const checkOutCost = async () => {
+    try {
+      const canCreateRecord = await checkCost(gameProps.costObj);
+      return canCreateRecord;
+    } catch (err: any) {
+      setEnough(err.message);
+    }
+  };
+  const infomation = useSelector(
+    (state: RootState) => state.userState.infomation
+  );
   const gameCreateReq = async () => {
-    // dispatch(
-    //   setPopup({
-    //     show: true,
-    //     title: "고철장",
-    //     description: `게임에 필요한 재화가 소모됩니다.`,
-    //     rightAction: () => dispatch(setPopup({ show: false })),
-    //     rightText: "시작",
-    //   })
-    // );
-    console.log(gameState);
-    return;
     try {
       // setLoading(true);
-      const res = await axios.post(SERVER_URI + "game/new", gameState);
-      console.log(res.data.result);
-      navigation(`/games/${gameProps.id}`);
-      const cookieData = { ...gameState, id: res.data.result.id };
+      const props = {
+        gameTitle: gameState.gameTitle!,
+        costObj: gameProps.costObj,
+      };
+      const { record, updateSource } = await recordGame(props);
+
+      const updateStateList = Object.entries(updateSource);
+      updateStateList.map((item) => {
+        const key = item[0];
+        const value = item[1];
+        setStorageCrypto(key, value);
+      });
+
+      const cookieData = { ...record };
+
+      dispatch(setInfomation({ ...infomation, ...updateSource }));
       setEncryptedCookie("ingame", cookieData);
+      console.log(getDecryptedCookie("ingame"));
+      navigation(`/games/${gameProps.game_url}`);
     } catch (err: any) {
-      if (err.message === "NOT ENOUGH") {
-        setEnough("포인트가 부족합니다!");
-      } else {
-        setEnough("문제가 발생했습니다.");
-      }
+      setEnough(err.message);
     } finally {
       // setLoading(false);
     }
@@ -70,6 +85,9 @@ function CardBottomBtn({
     (state: RootState) => state.bangState.matchFound
   );
   const bangMatch = () => {
+    const canCreateRecord = checkOutCost();
+    if (!canCreateRecord) return;
+
     dispatch(setMatchStart(true));
   };
   const bangCancelMatch = () => {
@@ -109,13 +127,16 @@ function CardBottomBtn({
           style={{
             backgroundColor: colors.Main_Button1,
             height: 50,
-            opacity: matchStart ? 0.5 : 1,
+            opacity: matchStart || clicked ? 0.5 : 1,
           }}
           onClick={() => {
+            if (clicked) return;
+
             if (gameState.gameTitle === "결투!" && !matchStart) {
               bangMatch();
-            } else if (gameState.gameTitle === "결투!" && matchStart) {
+            } else if (matchStart) {
             } else {
+              setClicked(true);
               gameCreateReq();
             }
           }}
@@ -123,20 +144,6 @@ function CardBottomBtn({
           <Text.Light_12>
             {gameState.gameTitle === "결투!" ? "매칭" : "시작"}
           </Text.Light_12>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text.Light_12 style={{ fontSize: 10 }}>
-              -{gameProps.cost}
-            </Text.Light_12>
-            <img
-              src={imgSrc.atata_un}
-              style={{ width: 12, aspectRatio: 1, marginTop: -2 }}
-            />
-          </View>
         </PrevBtn>
       </View>
     </>

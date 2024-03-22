@@ -16,6 +16,10 @@ export const allSfx = {
   click: cdnDefaultURL + "sfx/click.mp3",
   back: cdnDefaultURL + "sfx/back.mp3",
   match: cdnDefaultURL + "sfx/match.mp3",
+  three: cdnDefaultURL + "sfx/three.mp3",
+  two: cdnDefaultURL + "sfx/two.mp3",
+  one: cdnDefaultURL + "sfx/one.mp3",
+  bang: cdnDefaultURL + "sfx/bang!.mp3",
 };
 
 export const allBgm = {

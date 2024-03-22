@@ -47,7 +47,7 @@ const initialState: AppState = {
     leftText: "취소",
     rightSubText: null,
     rightText: "",
-    rightAction: () => {},
+    rightAction: undefined,
   },
   modal: false,
   keyboardHeight: 0,

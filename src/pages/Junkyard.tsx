@@ -22,7 +22,8 @@ import { GameStatus } from "../store/slices/gameState";
 import { imgSrc } from "../assets/img";
 import { decrypt, encrypt } from "../utils/crypto";
 import { getDecryptedCookie, setEncryptedCookie } from "../utils/cookies";
-import { allBgm } from "../assets/sound";
+import { allBgm, allSfx } from "../assets/sound";
+import { useAudio } from "../hooks/useAudio";
 // import { createBoard, findPathDFS } from "../utils";
 
 type IGameLevel = [];
@@ -172,6 +173,7 @@ function Junkyard() {
   const [isStarting, setIsStarting] = useState(false);
   const [startBtnText, setStartBtnText] = useState("시작");
   const dispatch = useDispatch<AppDispatch>();
+  const clickAudio = useAudio(allSfx.click);
 
   const create = () => {
     console.log(gameSetting.level);
@@ -230,7 +232,6 @@ function Junkyard() {
     return () => {
       dispatch(setBgImg(undefined));
       dispatch(setBgm(allBgm.home));
-      Cookies.remove("ingame");
     };
   }, []);
 
@@ -238,6 +239,7 @@ function Junkyard() {
   // + 뒤로가기, 새로고침 등의 페이지전환 처리
   useEffect(() => {
     const getCookie = getDecryptedCookie("ingame");
+    console.log(getCookie, "쿠키 첨내요ㅕㅇ");
     const saveObj: InGameState = {
       ...getCookie,
       ...gameSetting,
@@ -338,14 +340,17 @@ function Junkyard() {
     if (tictoc <= 0) {
       alert("리저트 페이지로 이동");
       console.log(getDecryptedCookie("ingame"));
+      const gameData = getDecryptedCookie("ingame");
+      Cookies.remove("ingame");
+
       navigation("/games/reward", {
         replace: true,
-        state: { data: getDecryptedCookie("ingame") },
+        state: { data: gameData },
       });
     }
     const timer = setTimeout(() => {
       setTictoc(tictoc - 1);
-    }, 50);
+    }, 1000);
     return () => {
       clearTimeout(timer);
     };
@@ -395,6 +400,7 @@ function Junkyard() {
       ) : (
         <StartBtn
           onClick={() => {
+            clickAudio.play();
             setStartBtnText("3");
             setNavVisble(false);
           }}

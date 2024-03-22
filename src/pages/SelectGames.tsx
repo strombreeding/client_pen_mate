@@ -45,19 +45,19 @@ let touchEndX = 0;
 // == 컴포넌트
 
 export interface GameProps {
-  id: string;
+  game_url: string;
   title: GameTitle;
   description: string;
   minReward: number;
-  cost: number;
   matchType: string[];
   player: string[];
   img: string;
   rewards: string[];
-  costObj: {
-    img: string;
-    cost: number;
-  }[];
+  costObj: CostObjProps[];
+}
+export interface CostObjProps {
+  type: string;
+  cost: number;
 }
 
 type Tx = {
@@ -86,9 +86,9 @@ const SelectGames = () => {
     dispatch(setLoading(true));
     const res = await axios.get(SERVER_URI + "game");
     const data = res.data.result;
-    data[0].img = gameImg.junkyard;
-    data[1].img = gameImg.tetris_img;
-    data[2].img = gameImg.bang_img;
+    // data[0].img = gameImg.junkyard;
+    // data[1].img = gameImg.tetris_img;
+    // data[2].img = gameImg.bang_img;
     const startData = data[0];
     const endData = data[data.length - 1];
     const newList = [startData, endData, ...data, startData, endData];
@@ -237,7 +237,6 @@ const SelectGames = () => {
       setGameState({
         gameTitle: games[idx].title,
         matchType: games[idx].matchType[0],
-        cost: games[idx].cost,
         player: games[idx].player[0],
       })
     );

@@ -24,7 +24,7 @@ export const colors = {
   Background2: "#0E0328",
   Main_Button1: "#3150FE",
   Accent: "#8FFF00",
-
+  Accent_Red: "#F828B1",
   Pale_Puple: "#452A7C",
   Gray_1: "#C1C1C1",
 };

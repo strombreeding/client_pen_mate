@@ -8,26 +8,36 @@ import { SignInFormData } from "../../types";
 import { Dispatch, SetStateAction } from "react";
 import Cookies from "js-cookie";
 import { getDecryptedCookie } from "../../utils/cookies";
+import { decrypt, encrypt } from "../../utils/crypto";
+import { getStorageCrypto } from "../../utils/localStorage";
 
 interface IInfomation {
   nickname: string;
-  energy: number;
-  atataPoint: number;
-  atataStone: number;
+  energy: number | null;
+  atataPoint: number | null;
+  atataStone: number | null;
   id: string;
 }
 interface UserState {
   logedIn: boolean;
   infomation: IInfomation;
 }
+const atataPoint = Number(getStorageCrypto("atataPoint"));
+const atataStone = Number(getStorageCrypto("atataStone"));
+const energy = Number(getStorageCrypto("energy"));
 
+console.log("으아아아");
+console.log(atataPoint);
+console.log(atataStone);
+console.log(energy);
+console.log("####");
 const initialState: UserState = {
   logedIn: false,
   infomation: {
     nickname: "",
-    energy: 0,
-    atataPoint: 0,
-    atataStone: 0,
+    atataPoint,
+    atataStone,
+    energy,
     id: "",
   },
 };

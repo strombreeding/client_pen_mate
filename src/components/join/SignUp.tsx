@@ -15,6 +15,8 @@ import { setEncryptedCookie } from "../../utils/cookies";
 import { setInfomation, setLoginState } from "../../store/slices/userState";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
+import { encrypt } from "../../utils/crypto";
+import { setStorageCrypto } from "../../utils/localStorage";
 
 const shake = keyframes`
   0% {
@@ -80,19 +82,23 @@ function SignUp({ step }: { step: string }) {
         ...oauthData,
         nickname: text,
       });
-      console.log("시발", res);
+      const resData = res.data;
       dispatch(setLoginState(true));
       dispatch(
         setInfomation({
-          id: res.data.id,
-          nickname: res.data.nickname,
-          atataPoint: res.data.atataPoint,
-          atataStone: res.data.atataStone,
-          energy: res.data.energy,
+          id: resData.id,
+          nickname: resData.nickname,
+          atataPoint: resData.atataPoint,
+          atataStone: resData.atataStone,
+          energy: resData.energy,
         })
       );
-      window.localStorage.setItem("at", res.data.at);
-      window.localStorage.setItem("rt", res.data.rt);
+      setStorageCrypto("atataPoint", resData.atataPoint);
+      setStorageCrypto("atataStone", resData.atataStone);
+      setStorageCrypto("energy", resData.energy);
+
+      window.localStorage.setItem("at", resData.at);
+      window.localStorage.setItem("rt", resData.rt);
       navigation("/");
     } catch (err: any) {
       console.log(err);
