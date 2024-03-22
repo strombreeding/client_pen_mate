@@ -26,10 +26,8 @@ const RightChar = styled.div<{ data: ICharProps; stand: number }>`
 
   width: ${(props) => props.data.width}px;
   height: ${(props) => props.data.width * 0.625}px;
-  /* background-image: url(${(props) => props.data.imgSrc}); */
   background-image: url(${gameImg.tile4});
-  /* background-image: url(${gameImg.tile2}); */
-  /* background-image: url(${gameImg.mars_tile}); */
+
   background-color: ${(props) =>
     props.stand === 1 ? "red" : props.stand === 2 ? "blue" : "pink"};
   background-size: ${(props) => props.data.width * props.data.cols}px

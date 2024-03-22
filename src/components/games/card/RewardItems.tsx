@@ -3,6 +3,7 @@ import { View } from "../../../nativeView";
 import { Text } from "../../../assets/fontStyles";
 import { colors } from "../../../assets/colors";
 import { imgSrc } from "../../../assets/img";
+import { EmptyBox } from "../../../styles";
 
 const Wraper = styled(View)`
   background-color: rgba(0, 0, 0, 0.5);
@@ -21,7 +22,7 @@ function RewardItems({ rewards }: { rewards: string[] }) {
     const index = keys.findIndex((key) => key === img);
     imgSrcList.push(values[index]);
   });
-  console.log(imgSrcList);
+
   return (
     <Wraper>
       <Text.Light_12
@@ -30,9 +31,11 @@ function RewardItems({ rewards }: { rewards: string[] }) {
       >
         보상
       </Text.Light_12>
-      <View style={{ flexDirection: "row" }}>
+      <EmptyBox height={5} />
+
+      <View style={{ flexDirection: "row", flex: 1 }}>
         {imgSrcList.map((img, i) => {
-          return <img key={i} src={img} style={{ width: 18 }} />;
+          return <img key={i} src={img} style={{ width: 18, height: 18 }} />;
         })}
       </View>
     </Wraper>

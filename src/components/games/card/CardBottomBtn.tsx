@@ -20,6 +20,7 @@ import Shake from "../../animations/Shake";
 import LoadingLottie from "../../LoadingLottie";
 import { setEncryptedCookie } from "../../../utils/cookies";
 import { setMatchStart } from "../../../store/slices/bangState";
+import { IPopupProps, setPopup } from "../../../store/slices/appState";
 
 function CardBottomBtn({
   setSpecial,
@@ -37,8 +38,19 @@ function CardBottomBtn({
   const dispatch = useDispatch<AppDispatch>();
   const gameState = useSelector((state: RootState) => state.gameState.status);
   const gameCreateReq = async () => {
-    setLoading(true);
+    // dispatch(
+    //   setPopup({
+    //     show: true,
+    //     title: "고철장",
+    //     description: `게임에 필요한 재화가 소모됩니다.`,
+    //     rightAction: () => dispatch(setPopup({ show: false })),
+    //     rightText: "시작",
+    //   })
+    // );
+    console.log(gameState);
+    return;
     try {
+      // setLoading(true);
       const res = await axios.post(SERVER_URI + "game/new", gameState);
       console.log(res.data.result);
       navigation(`/games/${gameProps.id}`);
@@ -51,7 +63,7 @@ function CardBottomBtn({
         setEnough("문제가 발생했습니다.");
       }
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
   const matchFound = useSelector(

@@ -5,10 +5,10 @@ import SecondaryBtn from "./SecondaryBtn";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { showPopup } from "../../store/slices/appState";
 import { SCREEN_HEIGHT } from "../../configs/device";
 import { Text } from "../../assets/fontStyles";
 import { colors } from "../../assets/colors";
+import { setPopup } from "../../store/slices/appState";
 
 const Popup: React.FC<{
   title: string;
@@ -22,9 +22,9 @@ const Popup: React.FC<{
   const dispatch = useDispatch<AppDispatch>();
   const [state, setState] = useState(popupState);
   const cancelBtn = () => {
-    setState(false);
+    // setState(false);
     setTimeout(() => {
-      dispatch(showPopup(false));
+      // dispatch(setPopup(false));
     }, 50);
   };
   const action = () => {
@@ -33,7 +33,7 @@ const Popup: React.FC<{
     }
   };
   return (
-    <View show={state}>
+    <View show={false}>
       <div>
         <EmptyBox height={10} />
         <Text.Spo_Medium_18>{title}</Text.Spo_Medium_18>

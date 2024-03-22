@@ -5,7 +5,7 @@ import SecondaryBtn from "./SecondaryBtn";
 import { TouchEventHandler, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { showModal } from "../../store/slices/appState";
+import { setModal } from "../../store/slices/appState";
 import { SCREEN_HEIGHT } from "../../configs/device";
 import { colors } from "../../assets/colors";
 import { Text } from "../../assets/fontStyles";
@@ -42,7 +42,7 @@ const Modal: React.FC<{
   const close = () => {
     setState(false);
     setTimeout(() => {
-      dispatch(showModal(false));
+      dispatch(setModal(false));
     }, 500);
   };
   const [y, setY] = useState(0);

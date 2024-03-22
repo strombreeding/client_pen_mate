@@ -68,7 +68,7 @@ function MatchingModal({}) {
     (state: RootState) => state.bangState.matchTimer
   );
   const dispatch = useDispatch<AppDispatch>();
-
+  const matchAudio = useAudio(allSfx.match);
   // 소켓연결후 조인큐 보내는 훅
   useEffect(() => {
     console.log("소켓변경감지");
@@ -77,6 +77,7 @@ function MatchingModal({}) {
     if (socket == null) return;
     /* 소켓에서 매칭 되었을때 타이머와 모달을 생성 */
     const matchFound = (id: string) => {
+      matchAudio.play();
       dispatch(setMatchFound(true));
       dispatch(setMatchId(id));
       const timeoutId = setTimeout(() => {
@@ -90,7 +91,6 @@ function MatchingModal({}) {
 
     /* 상대방에 의해 매칭이 취소된 경우에 새롭게 큐를 잡아줌 */
     const cancelMatch = () => {
-      console.log("안들어와");
       setTimeout(() => socket.emit("joinQueue"), 2000);
       clearTimeout(matchTimer!);
       setClicked(false);
@@ -107,7 +107,7 @@ function MatchingModal({}) {
     };
 
     socket.emit("joinQueue");
-    console.log("하 분명 보내는데");
+
     socket.on("matchFound", matchFound);
 
     socket.on("cancelMatch", cancelMatch);

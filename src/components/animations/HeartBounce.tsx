@@ -32,10 +32,7 @@ const BounceHeart = styled.img<{ vis: boolean }>`
 
 const HeartBounce: React.FC<{ vis: boolean }> = ({ vis }) => {
   return (
-    <BounceHeart
-      src={vis ? imgSrc.heart_fill : imgSrc.heart_un_fill}
-      vis={vis}
-    />
+    <BounceHeart src={vis ? imgSrc.heart_fill : imgSrc.heart_un} vis={vis} />
   );
 };
 

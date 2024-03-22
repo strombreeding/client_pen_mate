@@ -9,8 +9,24 @@ import { Dispatch, SetStateAction } from "react";
 import Cookies from "js-cookie";
 import { allBgm } from "../../assets/sound";
 
+export interface IPopupProps {
+  show: boolean;
+  title?: string;
+  description?: string;
+  leftText?: null | string;
+  rightSubText?: null | string;
+  rightText?: string;
+  rightAction?: (data?: any) => void;
+}
+export interface IModalProps {
+  show: boolean;
+  title: string;
+  description: string;
+  text: null | string;
+}
+
 interface AppState {
-  popup: boolean;
+  popup: IPopupProps;
   modal: boolean;
   keyboardHeight: number;
   safeArea: number[];
@@ -24,7 +40,15 @@ interface AppState {
 }
 
 const initialState: AppState = {
-  popup: false,
+  popup: {
+    show: false,
+    title: "",
+    description: "",
+    leftText: "취소",
+    rightSubText: null,
+    rightText: "",
+    rightAction: () => {},
+  },
   modal: false,
   keyboardHeight: 0,
   safeArea: [0, 0],
@@ -41,10 +65,10 @@ const appState = createSlice({
   name: "appState",
   initialState,
   reducers: {
-    showPopup: (state, action: PayloadAction<boolean>) => {
+    setPopup: (state, action: PayloadAction<IPopupProps>) => {
       state.popup = action.payload;
     },
-    showModal: (state, action: PayloadAction<boolean>) => {
+    setModal: (state, action: PayloadAction<boolean>) => {
       state.modal = action.payload;
     },
     editKeyboardHeight: (state, action: PayloadAction<number>) => {
@@ -83,8 +107,8 @@ const appState = createSlice({
 });
 
 export const {
-  showPopup,
-  showModal,
+  setPopup,
+  setModal,
   editKeyboardHeight,
   setSafeArea,
   setNavTab,

@@ -1,78 +1,103 @@
+import { cdnDefaultURL } from "../configs/server";
+
 export const imgSrc = {
-  bg_login: require("../assets/pngs/backgroundStars.png"),
-  bg_viewport: require("../assets/pngs/backgroundImage.png"),
-  bg_game: require("../assets/pngs/bg_game.png"),
-  bg_reward: require("../assets/pngs/bg_reward.png"),
+  bg_login: cdnDefaultURL + "pngs/backgroundStars.png",
+  bg_viewport: cdnDefaultURL + "pngs/backgroundImage.png",
+  bg_game: cdnDefaultURL + "pngs/bg_game.png",
+  bg_reward: cdnDefaultURL + "pngs/bg_reward.png",
 
-  btn_hexagon_green: require("../assets/pngs/btn_hexagon_green.png"),
-  btn_hexagon_yellow: require("../assets/pngs/btn_hexagon_yellow.png"),
-  btn_hexagon_blue: require("../assets/pngs/btn_hexagon_blue.png"),
+  btn_hexagon_blue: cdnDefaultURL + "pngs/btn_hexagon_blue.png",
 
-  atata_join: require("../assets/pngs/atata_join.png"),
+  atata_join: cdnDefaultURL + "pngs/atata_join.png",
 
-  atata_point: require("../assets/pngs/atata_point.png"),
-  atata_un: require("../assets/pngs/atata_un.png"),
-  atata_atcive: require("../assets/pngs/atata_active.png"),
-  heart_un: require("../assets/pngs/heart_un.png"),
-  heart_active: require("../assets/pngs/heart_active.png"),
-  sub_health: require("../assets/pngs/sub_health.png"),
-  out: require("../assets/pngs/out.png"),
+  heart_un: cdnDefaultURL + "pngs/heart_un.png",
+  heart_fill: cdnDefaultURL + "pngs/heart_fill.png",
+  sub_health: cdnDefaultURL + "pngs/sub_health.png",
+  out: cdnDefaultURL + "pngs/out.png",
 
-  home_un: require("../assets/pngs/home_un.png"),
-  home_active: require("../assets/pngs/home_active.png"),
-  store_un: require("../assets/pngs/store_un.png"),
-  store_active: require("../assets/pngs/store_active.png"),
-  ranking_un: require("../assets/pngs/ranking_un.png"),
-  ranking_active: require("../assets/pngs/ranking_active.png"),
-  profile_un: require("../assets/pngs/profile_un.png"),
-  profile_active: require("../assets/pngs/profile_active.png"),
+  // bottom nav icon
+  home_un: cdnDefaultURL + "pngs/home_un.png",
+  home_active: cdnDefaultURL + "pngs/home_active.png",
+  store_un: cdnDefaultURL + "pngs/store_un.png",
+  store_active: cdnDefaultURL + "pngs/store_active.png",
+  ranking_un: cdnDefaultURL + "pngs/ranking_un.png",
+  ranking_active: cdnDefaultURL + "pngs/ranking_active.png",
+  profile_un: cdnDefaultURL + "pngs/profile_un.png",
+  profile_active: cdnDefaultURL + "pngs/profile_active.png",
 
-  polygon_big_ko: require("../assets/pngs/polygon_ko.png"),
-  polygon_big_en: require("../assets/pngs/polygon_en.png"),
+  polygon_big_ko: cdnDefaultURL + "pngs/polygon_ko.png",
+  polygon_big_en: cdnDefaultURL + "pngs/polygon_en.png",
 
-  apple: require("../assets/pngs/apple.png"),
-  kakao: require("../assets/pngs/kakao.png"),
-  google: require("../assets/pngs/google.png"),
+  //social login
+  apple: cdnDefaultURL + "pngs/apple.png",
+  kakao: cdnDefaultURL + "pngs/kakao.png",
+  google: cdnDefaultURL + "pngs/google.png",
 
-  women: require("../assets/pngs/women.png"),
-  men: require("../assets/pngs/men.png"),
+  right_arrow: cdnDefaultURL + "pngs/right_arrow.png",
 
-  /* 30px */
-  /* 바텀 네비 아이콘 */
-  bot_navi_home: require("../assets/pngs/home_30px.png"),
-  bot_navi_mypage: require("../assets/pngs/note_30px.png"),
-  bot_navi_store: require("../assets/pngs/store_30px.png"),
-  bot_navi_write: require("../assets/pngs/write_30px.png"),
+  slide_up: cdnDefaultURL + "pngs/slide_up.png",
+  timer: cdnDefaultURL + "pngs/timer.png",
 
-  /* 14px */
-  x_circle_14px: require("../assets/pngs/x_circle_14px.png"),
+  star: cdnDefaultURL + "pngs/star.png",
+  close: cdnDefaultURL + "pngs/close.png",
+  sound_un_mute: cdnDefaultURL + "pngs/sound_un_mute.png",
+  sound_mute: cdnDefaultURL + "pngs/sound_mute.png",
 
-  /* 20px */
-  heart_fill: require("../assets/pngs/heart_fill.png"),
-  heart_un_fill: require("../assets/pngs/heart_un_fill.png"),
-  dots: require("../assets/pngs/dots_20px.png"),
-  chevron_right_20px: require("../assets/pngs/chevron_right_20px.png"),
-  message_20px: require("../assets/pngs/message_20px.png"),
-  retweet_20px: require("../assets/pngs/retweet_20px.png"),
-  dm_20px: require("../assets/pngs/dm_20px.png"),
-
-  /* 24px */
-  check_24px: require("../assets/pngs/check_24px.png"),
-  un_check_24px: require("../assets/pngs/un_check_24px.png"),
-
-  /* 26px */
-  arrow_left_26px: require("../assets/pngs/arrow_left_26px.png"),
-  arrow_right_26px: require("../assets/pngs/arrow_right_26px.png"),
-  right_arrow: require("../assets/pngs/right_arrow.png"),
-  bell_26px: require("../assets/pngs/bell_26px.png"),
-  dm_26px: require("../assets/pngs/dm_26px.png"),
-
-  slide_up: require("../assets/pngs/slide_up.png"),
-  timer: require("../assets/pngs/timer.png"),
-  star: require("../assets/pngs/star.png"),
-  close: require("../assets/pngs/close.png"),
-  sound_un_mute: require("../assets/pngs/sound_un_mute.png"),
-  sound_mute: require("../assets/pngs/sound_mute.png"),
-
-  energy: require("../assets/pngs/energy.png"),
+  // game resource
+  energy: cdnDefaultURL + "pngs/energy.png",
+  antimatter: cdnDefaultURL + "pngs/antimatter.png",
+  atata_point: cdnDefaultURL + "pngs/atata_point.png",
+  atata_un: cdnDefaultURL + "pngs/atata_un.png",
+  atata_atcive: cdnDefaultURL + "pngs/atata_active.png",
 };
+
+// export const imgSrc = {
+//   bg_login: require("../assets/pngs/backgroundStars.png"),
+//   bg_viewport: require("../assets/pngs/backgroundImage.png"),
+//   bg_game: require("../assets/pngs/bg_game.png"),
+//   bg_reward: require("../assets/pngs/bg_reward.png"),
+
+//   btn_hexagon_blue: require("../assets/pngs/btn_hexagon_blue.png"),
+
+//   atata_join: require("../assets/pngs/atata_join.png"),
+
+//   heart_un: require("../assets/pngs/heart_un.png"),
+//   heart_fill: require("../assets/pngs/heart_fill.png"),
+//   sub_health: require("../assets/pngs/sub_health.png"),
+//   out: require("../assets/pngs/out.png"),
+
+//   // bottom nav icon
+//   home_un: require("../assets/pngs/home_un.png"),
+//   home_active: require("../assets/pngs/home_active.png"),
+//   store_un: require("../assets/pngs/store_un.png"),
+//   store_active: require("../assets/pngs/store_active.png"),
+//   ranking_un: require("../assets/pngs/ranking_un.png"),
+//   ranking_active: require("../assets/pngs/ranking_active.png"),
+//   profile_un: require("../assets/pngs/profile_un.png"),
+//   profile_active: require("../assets/pngs/profile_active.png"),
+
+//   polygon_big_ko: require("../assets/pngs/polygon_ko.png"),
+//   polygon_big_en: require("../assets/pngs/polygon_en.png"),
+
+//   //social login
+//   apple: require("../assets/pngs/apple.png"),
+//   kakao: require("../assets/pngs/kakao.png"),
+//   google: require("../assets/pngs/google.png"),
+
+//   right_arrow: require("../assets/pngs/right_arrow.png"),
+
+//   slide_up: require("../assets/pngs/slide_up.png"),
+//   timer: require("../assets/pngs/timer.png"),
+
+//   star: require("../assets/pngs/star.png"),
+//   close: require("../assets/pngs/close.png"),
+//   sound_un_mute: require("../assets/pngs/sound_un_mute.png"),
+//   sound_mute: require("../assets/pngs/sound_mute.png"),
+
+//   // game resource
+//   energy: require("../assets/pngs/energy.png"),
+//   antimatter: require("../assets/pngs/antimatter.png"),
+//   atata_point: require("../assets/pngs/atata_point.png"),
+//   atata_un: require("../assets/pngs/atata_un.png"),
+//   atata_atcive: require("../assets/pngs/atata_active.png"),
+// };

@@ -54,6 +54,10 @@ export interface GameProps {
   player: string[];
   img: string;
   rewards: string[];
+  costObj: {
+    img: string;
+    cost: number;
+  }[];
 }
 
 type Tx = {

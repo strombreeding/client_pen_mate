@@ -16,6 +16,7 @@ import { imgSrc } from "../../../assets/img";
 import { colors } from "../../../assets/colors";
 import RewardItems from "./RewardItems";
 import GameDescription from "./GameDescription";
+import Cost from "./Cost";
 
 interface ICardLayerProps {
   animation: Animations;
@@ -112,15 +113,18 @@ const GameCard: React.FC<{
               justifyContent: "space-between",
             }}
           >
-            <GameDescription description={gameProps.description} />
-
-            <EmptyBox height={10} />
-
-            <RewardItems rewards={gameProps.rewards} />
             {/* 게임 옵션. 현재는 개발 리소스 부족으로 보류 */}
             {/* <GameOption gameProps={gameProps} /> */}
-            <EmptyBox height={10} />
-
+            <View>
+              <GameDescription description={gameProps.description} />
+              <EmptyBox height={10} />
+            </View>
+            <View>
+              <Cost costObj={gameProps.costObj} />
+              <EmptyBox height={4} />
+              <RewardItems rewards={gameProps.rewards} />
+              <EmptyBox height={10} />
+            </View>
             <CardBottomBtn gameProps={gameProps} setSpecial={setSpecial} />
           </View>
         )}

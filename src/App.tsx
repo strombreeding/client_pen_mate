@@ -22,6 +22,7 @@ import axios from "axios";
 import { setInfomation, setLoginState } from "./store/slices/userState";
 import { jwtApiRequest } from "./apis/jwtApiService";
 import { decrypt } from "./utils/crypto";
+import Popup from "./components/Popup";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -128,6 +129,7 @@ function App() {
         <Viewport src={imgSrc.bg_viewport} />
 
         <Background>
+          <Popup />
           <AudioComponent />
           <Loading />
 
