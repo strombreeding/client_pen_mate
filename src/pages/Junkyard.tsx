@@ -16,14 +16,20 @@ import styled, { keyframes } from "styled-components";
 import { Pressable, View } from "../nativeView";
 import { SCREEN_WIDTH } from "../configs/device";
 import { getAiInt } from "../components/games/junkyard/useful";
-import { createRandomLevel } from "../utils/saChunSungUtil";
+import { createRandomLevel, shuffleBoard } from "../utils/saChunSungUtil";
 import Cookies from "js-cookie";
-import { GameStatus } from "../store/slices/gameState";
+import gameState, { GameStatus } from "../store/slices/gameState";
 import { imgSrc } from "../assets/img";
 import { decrypt, encrypt } from "../utils/crypto";
 import { getDecryptedCookie, setEncryptedCookie } from "../utils/cookies";
 import { allBgm, allSfx } from "../assets/sound";
 import { useAudio } from "../hooks/useAudio";
+import { colors } from "../assets/colors";
+import axios from "axios";
+import axiosInstance from "../apis/axiosInstance";
+import { SERVER_URI } from "../configs/server";
+import { updateCostState } from "../utils/localStorage";
+import { setInfomation } from "../store/slices/userState";
 // import { createBoard, findPathDFS } from "../utils";
 
 type IGameLevel = [];
@@ -106,6 +112,7 @@ function BgView({
   isContinue: boolean;
 }) {
   const [step, setStep] = useState(-1);
+
   // 0 = 글자나타남  1= 글자위로 2 = 배경 투명
   useEffect(() => {
     if (isContinue) {
@@ -134,36 +141,29 @@ function BgView({
 }
 
 interface InGameState extends GameStatus {
-  id: string;
-  isStarting: boolean;
+  _id?: string;
+  isStarting?: boolean;
   startTime: number;
-  clearList: string[];
-  board: number[][];
-  aiBoard: number[][];
-  level: string;
-  isContinue: boolean;
+  clearList?: string[];
+  board?: number[][];
+  aiBoard?: number[][];
+  level?: string;
+  isContinue?: boolean;
 }
 // type InGameState extend= GameStatus;
 let startY = 0;
 let endY = 0;
 function Junkyard() {
-  const pageState = usePageState(false);
-  const navigation = useNavigate();
-  const loading = useSelector((state: RootState) => state.appState.loading);
-  const validateAuth = useAuthVisitPage();
-  const continueRef = useRef(false);
   const [aiBoard, setAiBoard] = useState([] as number[][]);
-  const [reward, setReward] = useState(0);
+  const [rewards, setRewards] = useState<any[]>([]);
   const [board, setBoard] = useState([] as number[][]);
   const [complate, setComplate] = useState("");
   const [aiComplate, setAiComplate] = useState("");
-  const [settingStep, setSettingStep] = useState(0);
   const [aiStatus, setAiStatus] = useState(false);
   const [startTime, setStartTime] = useState(0);
   const [tictoc, setTictoc] = useState(0);
   const [navVisble, setNavVisble] = useState(false);
   const [gameSetting, setGameSetting] = useState<JunkwardGameSetting>({
-    id: "",
     matchAI: false,
     level: "0,0",
     // level: "3,4",
@@ -172,13 +172,36 @@ function Junkyard() {
   const [clearList, setClearList] = useState([] as string[]);
   const [isStarting, setIsStarting] = useState(false);
   const [startBtnText, setStartBtnText] = useState("시작");
+
   const dispatch = useDispatch<AppDispatch>();
   const clickAudio = useAudio(allSfx.click);
+  const loading = useSelector((state: RootState) => state.appState.loading);
+  const pageState = usePageState(false);
+  const navigation = useNavigate();
+  const validateAuth = useAuthVisitPage();
 
-  const create = () => {
-    console.log(gameSetting.level);
-    const [row, col] = gameSetting.level.split(",");
-    const createdBoard = utils.saChunSung.createBoard(Number(row), Number(col));
+  const continueRef = useRef(false);
+  const startTimeRef = useRef(0);
+
+  const create = async (level: string) => {
+    console.log(level);
+    const [row, col] = level.split(",");
+    let createdBoard = utils.saChunSung.createBoard(Number(row), Number(col));
+    let pathFind = false;
+    while (!pathFind) {
+      const copy = JSON.parse(JSON.stringify(createdBoard));
+      const remainingPath = await utils.saChunSung.remainingPathFinder(
+        copy,
+        "hint"
+      );
+      if (remainingPath == null) {
+        createdBoard = shuffleBoard(createdBoard);
+        console.log(createdBoard, "여우");
+      } else {
+        pathFind = true;
+      }
+    }
+
     const boardToString = JSON.stringify(
       Array.from({ length: Number(row) + 2 }, () =>
         Array(Number(col) + 2).fill(0)
@@ -197,12 +220,12 @@ function Junkyard() {
     const cookie = getDecryptedCookie("ingame");
     if (cookie == null) {
       history.push("/games");
+      history.forward();
     } else {
       const gameInfo: InGameState = cookie;
       const nowTime = Math.floor(new Date().getTime() / 1000);
       setGameSetting((prev) => ({
         ...prev,
-        id: gameInfo.id,
         intAI: getAiInt(gameInfo.aiOption),
         level: gameInfo.level == undefined ? "3,4" : gameInfo.level,
         matchAI: gameInfo.player !== "AI" ? false : true,
@@ -213,6 +236,7 @@ function Junkyard() {
       setClearList(gameInfo.clearList || []);
       setBoard(gameInfo.board || []);
       setAiBoard(gameInfo.aiBoard || []);
+      setRewards(gameInfo.rewards!);
       if (gameInfo.isContinue) {
         continueRef.current = true;
       }
@@ -238,20 +262,19 @@ function Junkyard() {
   // 문제 풀때마다 쿠키에 게임상태를 저장하는 이펙트
   // + 뒤로가기, 새로고침 등의 페이지전환 처리
   useEffect(() => {
-    const getCookie = getDecryptedCookie("ingame");
-    console.log(getCookie, "쿠키 첨내요ㅕㅇ");
-    const saveObj: InGameState = {
-      ...getCookie,
-      ...gameSetting,
-      board,
-      aiBoard,
-      clearList,
-      isStarting,
-      startTime,
-      isContinue: true,
-    };
-    setEncryptedCookie("ingame", saveObj);
-    console.log("쿠키업뎃!", saveObj);
+    // const getCookie = getDecryptedCookie("ingame");
+    // const saveObj: InGameState = {
+    //   ...getCookie,
+    //   ...gameSetting,
+    //   board,
+    //   aiBoard,
+    //   clearList,
+    //   isStarting,
+    //   startTime,
+    //   isContinue: true,
+    // };
+    // setEncryptedCookie("ingame", saveObj);
+    // console.log("쿠키업뎃!", saveObj);
     const unlistenHistoryEvent = history.listen(({ action }) => {
       if (action === "POP") {
         const confirm = window.confirm(
@@ -259,7 +282,7 @@ function Junkyard() {
         );
         if (confirm) {
           Cookies.remove("ingame");
-          Cookies.remove("mute");
+          // Cookies.remove("mute");
           history.push("/games");
           navigation("/games", { replace: true });
           // navigation("/games", { replace: true });
@@ -271,7 +294,7 @@ function Junkyard() {
     const refreshAction = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = "";
-      Cookies.remove("mute");
+      // Cookies.remove("mute");
     };
     window.addEventListener("pagehide", refreshAction);
     window.addEventListener("beforeunload", refreshAction);
@@ -279,7 +302,7 @@ function Junkyard() {
       unlistenHistoryEvent();
       window.addEventListener("pagehide", refreshAction);
       window.removeEventListener("beforeunload", refreshAction);
-      Cookies.remove("mute");
+      // Cookies.remove("mute");
     };
   }, [board]);
 
@@ -303,8 +326,9 @@ function Junkyard() {
       continueRef.current = false;
     } else {
       const newLevel = createRandomLevel(clearList);
+      console.log("새로운 레벨", newLevel);
+      create(newLevel);
       setGameSetting((prev) => ({ ...prev, level: newLevel }));
-      create();
     }
 
     //
@@ -323,7 +347,8 @@ function Junkyard() {
         } else if (startBtnText === "1") {
           const nowTime = Math.floor(new Date().getTime() / 1000);
           const clearTime = Math.floor((new Date().getTime() + 60000) / 1000);
-          create();
+          startTimeRef.current = Date.now();
+          create("3,4");
           setTictoc(clearTime - nowTime);
           setStartTime(clearTime);
           setIsStarting(true);
@@ -335,22 +360,38 @@ function Junkyard() {
 
   // 타이머 제어 및 타임아웃 이후 이펙트
   useEffect(() => {
+    const req = async (gameData: any) => {
+      // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
+      const res = await axios.put(SERVER_URI + "game/record", gameData);
+      console.log(res.data);
+      updateCostState(res.data);
+      dispatch(setInfomation(res.data));
+    };
     if (!isStarting) return;
     // if (tictoc > 0) {
     if (tictoc <= 0) {
-      alert("리저트 페이지로 이동");
       console.log(getDecryptedCookie("ingame"));
       const gameData = getDecryptedCookie("ingame");
-      Cookies.remove("ingame");
+      gameData.play_time = Math.floor(
+        (Date.now() - startTimeRef.current) / 1000
+      );
+      gameData.game_result = "작업끝";
 
+      Cookies.remove("ingame");
+      req(gameData);
       navigation("/games/reward", {
         replace: true,
         state: { data: gameData },
       });
     }
     const timer = setTimeout(() => {
-      setTictoc(tictoc - 1);
-    }, 1000);
+      setTictoc((prev) => {
+        if (prev <= 0) {
+          clearTimeout(timer);
+        }
+        return prev - 1;
+      });
+    }, 50);
     return () => {
       clearTimeout(timer);
     };
@@ -362,40 +403,20 @@ function Junkyard() {
       <Title>
         <Text.SemiBold_24>우주 고철장</Text.SemiBold_24>
       </Title>
-      <View
-        style={{
-          position: "absolute",
-          top: 10,
-          right: 10,
-          alignItems: "end",
-        }}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <img src={imgSrc.timer} style={{ width: 20, aspectRatio: 1 }} />
-          <EmptyBox width={3} />
-          <Text.SemiBold_20>
-            {isNaN(tictoc) || tictoc < 0 ? "" : tictoc}
-          </Text.SemiBold_20>
-        </View>
-        <EmptyBox height={15} />
-        <View style={{ flexDirection: "row" }}>
-          <img
-            src={imgSrc.atata_un}
-            style={{ width: 20, height: 20, marginTop: -3.5 }}
-          />
-          <Text.Light_16>{50}+</Text.Light_16>
-        </View>
-      </View>
+
       <BgView loading={loading} isContinue={isStarting} />
       <EmptyBox height={60} />
       {board.length > 0 ? (
         <UserBoard
           board={board}
           setBoard={setBoard}
-          settingStep={settingStep}
           complate={complate}
           nowLevel={gameSetting.level}
           setClearList={setClearList}
+          tictoc={tictoc}
+          rewards={rewards}
+          setRewards={setRewards}
+          setTictoc={setTictoc}
         />
       ) : (
         <StartBtn
@@ -419,6 +440,19 @@ function Junkyard() {
       <EmptyBox height={60} />
       <BottomPrevNext style={{ zIndex: 1 }} visible={navVisble} />
       <View
+        onMouseDown={(e) => {
+          startY = e.clientY;
+        }}
+        onMouseUp={(e) => {
+          endY = e.clientY;
+          if (endY > startY) {
+            console.log("내려감");
+            setNavVisble(false);
+          } else {
+            console.log("올라옴");
+            setNavVisble(true);
+          }
+        }}
         onTouchStart={(e) => {
           startY = e.nativeEvent.changedTouches[0].clientY;
         }}
@@ -460,7 +494,8 @@ const StartBtn = styled(Pressable)`
   top: 45%;
   width: 130px;
   padding: 15px;
-  background-color: rgba(49, 80, 254, 0.3);
+  background-color: #91ff00dc;
+  /* background-color: rgba(49, 80, 254, 0.3); */
   backdrop-filter: blur(4px) contrast(90%);
   -webkit-backdrop-filter: blur(4px) contrast(90%);
   display: flex;

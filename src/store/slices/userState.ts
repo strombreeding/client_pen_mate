@@ -50,7 +50,7 @@ const UserState = createSlice({
       state.logedIn = action.payload;
     },
     setInfomation: (state, action: PayloadAction<IInfomation>) => {
-      state.infomation = action.payload;
+      state.infomation = { ...state.infomation, ...action.payload };
     },
   },
 });

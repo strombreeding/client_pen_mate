@@ -1,4 +1,5 @@
-export const SERVER_URI = "http://192.168.55.72:8080/";
+export const SERVER_URI = "http://localhost:8080/";
+// export const SERVER_URI = "http://192.168.55.72:8080/";
 // export const SERVER_URI =
 //   process.env.REACT_APP_SERVER_URI == undefined
 //     ? "http://localhost:8080/"

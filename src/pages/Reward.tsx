@@ -43,8 +43,9 @@ function Reward() {
     currentAP: 0,
     result: ["운석", "반물질", "AP"],
   });
+  const gameData = location.state.data;
+  console.log(gameData);
   const req = async () => {
-    const gameData = location.state.data;
     // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
   };
   console.log(location);
@@ -89,6 +90,7 @@ function Reward() {
                   console.log(item);
                   return (
                     <View
+                      key={i}
                       style={{
                         width: 50,
                         aspectRatio: 1,

@@ -10,3 +10,12 @@ export const getStorageCrypto = (name: string) => {
   const decryptValue = decrypt(encryptValue);
   return decryptValue;
 };
+
+export const updateCostState = (updateSource: any) => {
+  const updateStateList = Object.entries(updateSource);
+  updateStateList.map((item) => {
+    const key = item[0];
+    const value = item[1];
+    setStorageCrypto(key, value);
+  });
+};

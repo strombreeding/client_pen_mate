@@ -39,6 +39,7 @@ function AudioComponent() {
       if (audio) {
         audio.currentTime = 0; // 재생 시간을 초기화하여 무한 재생을 구현합니다.
         setTimeout(() => {
+          audio.load();
           audio.play();
         }, 2000);
       }
@@ -58,6 +59,7 @@ function AudioComponent() {
     dispatch(setMute(false));
     Cookies.set("mute", "false");
     // console.log("언뮽", audio.muted);
+    audio.load();
     audio.play();
     setModal(false);
   };

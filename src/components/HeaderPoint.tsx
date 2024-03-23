@@ -25,7 +25,7 @@ function HeaderPoint() {
 
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <img
-          src={imgSrc.atata_un}
+          src={imgSrc.atata_stone}
           style={{ width: 20, height: 20, marginTop: -3 }}
         />
         <Text.Spo_Medium_16>{infomation.atataStone}</Text.Spo_Medium_16>

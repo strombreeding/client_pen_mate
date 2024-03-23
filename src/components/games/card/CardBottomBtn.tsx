@@ -24,7 +24,7 @@ import { IPopupProps, setPopup } from "../../../store/slices/appState";
 import { IRecordGameProps, recordGame } from "../../../apis/recordGame";
 import { checkCost } from "../../../apis/game";
 import { setInfomation } from "../../../store/slices/userState";
-import { setStorageCrypto } from "../../../utils/localStorage";
+import { setStorageCrypto, updateCostState } from "../../../utils/localStorage";
 
 function CardBottomBtn({
   setSpecial,
@@ -62,12 +62,7 @@ function CardBottomBtn({
       };
       const { record, updateSource } = await recordGame(props);
 
-      const updateStateList = Object.entries(updateSource);
-      updateStateList.map((item) => {
-        const key = item[0];
-        const value = item[1];
-        setStorageCrypto(key, value);
-      });
+      updateCostState(updateSource);
 
       const cookieData = { ...record };
 

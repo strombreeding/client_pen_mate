@@ -179,7 +179,7 @@ function BottomModal({ visible, setVisible }: IBottomModalProps) {
             <EmptyBox width={5} />
             <Text.Light_12>-{1000}</Text.Light_12>
             <img
-              src={imgSrc.atata_un}
+              src={imgSrc.atata_stone}
               style={{
                 marginTop: -1,
                 width: 20,

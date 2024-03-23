@@ -18,7 +18,7 @@ const SocialTerminel: React.FC = () => {
   const req = async () => {
     const res = await axios.post(SERVER_URI + "social/oauth", { code });
     const resData = res.data.data;
-
+    console.log(res);
     if (resData.result === "/join") {
       navigate(resData.result, {
         state: { id: resData.id, email: resData.email },

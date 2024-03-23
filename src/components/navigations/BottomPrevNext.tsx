@@ -67,6 +67,7 @@ function BottomPrevNext({
   if (nextText == null) nextText = "스토어";
 
   const goHome = () => {
+    prevAudio.load();
     prevAudio.play();
     setTimeout(() => {
       navigate("/", { replace: true });
@@ -82,6 +83,7 @@ function BottomPrevNext({
   };
   const pressUp = (type: "prev" | "next") => () => {
     if (type === "next") {
+      nextAudio.load();
       nextAudio.play();
       setNextBtnClick(false);
     } else {

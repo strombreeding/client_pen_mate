@@ -15,6 +15,7 @@ export interface GameStatus {
   player?: GamePlayer;
   matchType?: string;
   aiOption?: string;
+  rewards?: any[];
 }
 interface GameState {
   status: GameStatus;

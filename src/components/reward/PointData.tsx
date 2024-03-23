@@ -31,7 +31,7 @@ function PointData({ reward }: { reward: any }) {
 
       <View style={{ flexDirection: "row" }}>
         <img
-          src={imgSrc.atata_un}
+          src={imgSrc.atata_stone}
           style={{ width: 20, height: 20, marginTop: -3.5 }}
           alt=""
         />

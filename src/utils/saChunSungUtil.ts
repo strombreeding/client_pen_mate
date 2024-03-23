@@ -104,66 +104,189 @@ const getImportance = (start: number[], end: number[]) => {
   return directions;
 };
 
-/** 게임판 생성 로직 */
-export const createBoard = (rows: number, cols: number) => {
-  rows = rows + 2;
-  cols = cols + 2;
-  // 0으로 초기화된 rows x cols 크기의 2차원 배열 생성
-  const board = Array.from({ length: rows }, () => Array(cols).fill(0));
+export const shuffleBoard = (board: number[][]) => {
+  const row = board.length;
+  const col = board[0].length;
+  const innerBoard: any[] = [];
 
-  const maxItem = (rows - 2) * (cols - 2);
-  if (maxItem % 2 !== 0) return [[]]; // 짝수여야 짝이 맞음
-  let cnt = 1;
-  const itemLength: number[] = [1, 2, 3];
-  if (cols > 14) itemLength.push(4, 5, 6, 7, 8, 9);
-  // const itemLength: number[] = [1];
-  while (cnt < 10) {
-    // cnt++;
-    cnt++;
-
-    // 12 / 6 가 정수일 경우 멈춤
-    if (
-      Number.isInteger(maxItem / itemLength.length) &&
-      (maxItem / itemLength.length) % 2 === 0
-    ) {
-      break;
-    }
-    itemLength.pop();
-
-    // itemLength.push(cnt);
-  }
-
-  const maxStack = maxItem / itemLength.length; // 12면 아이템랭스는 3이고 12/ = 4, 각아이템이 4번씩
-
-  const itemStack = Array.from({ length: itemLength.length }, (i) =>
-    Array(maxStack).fill(1)
-  ); // [[],[],[]]
-  console.log(Math.floor(Math.random() * itemLength.length));
-  for (let i = 0; i < board.length; i++) {
-    if (i === 0 || i === board.length - 1) continue;
-    for (let r = 1; r < cols - 1; r++) {
-      const randomNumber = Math.floor(Math.random() * itemLength.length); // 랜덤으로하나뽑음
-
-      if (itemStack[randomNumber].length > 0) {
-        itemStack[randomNumber].pop();
-        board[i][r] = randomNumber + 1;
+  // 가장자리 0 값 복사
+  for (let i = 0; i < row; i++) {
+    innerBoard.push([]);
+    for (let j = 0; j < col; j++) {
+      if (i === 0 || i === row - 1 || j === 0 || j === col - 1) {
+        innerBoard[i].push(0);
       } else {
-        r--;
+        innerBoard[i].push(board[i][j]);
       }
     }
   }
 
-  return board;
-  const zz = [
-    [0, 0, 0, 0, 0],
-    [0, 1, 2, 3, 0],
-    [0, 3, 1, 2, 0],
-    [0, 1, 1, 2, 0],
-    [0, 3, 3, 2, 0],
-    [0, 0, 0, 0, 0],
-  ];
-  return zz;
+  // 내부 숫자들을 무작위로 섞기
+  const innerNumbers = innerBoard
+    .slice(1, -1)
+    .flatMap((row) => row.slice(1, -1));
+  shuffle(innerNumbers);
+
+  // 섞인 숫자들을 다시 보드에 배치
+  let k = 0;
+  for (let i = 1; i < row - 1; i++) {
+    for (let j = 1; j < col - 1; j++) {
+      innerBoard[i][j] = innerNumbers[k++];
+    }
+  }
+
+  return innerBoard;
 };
+
+// 배열 무작위 섞는 함수
+const shuffle = (array: number[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
+// export const createBoard = (originalRow: number, originalCol: number) => {
+//   // row와 col을 각각 2씩 증가
+//   const row = originalRow + 2;
+//   const col = originalCol + 2;
+//   const totalInnerCells = (row - 2) * (col - 2);
+//   const board = new Array(row).fill(null).map(() => new Array(col).fill(0));
+//   let numbers = [];
+
+//   // 내부 셀에 사용할 수 있는 숫자들을 준비 (1부터 8까지 숫자가 정확히 2개씩)
+//   for (let i = 1; i <= 8 && numbers.length < totalInnerCells; i++) {
+//     numbers.push(i, i);
+//   }
+
+//   // 숫자들이 전체 셀을 채우지 못할 경우, 남은 셀 수에 맞춰서 숫자 추가
+//   while (numbers.length < totalInnerCells) {
+//     // 이미 8개 숫자를 모두 사용한 경우, 남은 공간을 채우기 위해 필요한 추가 숫자들 선택
+//     for (let i = 1; i <= 8 && numbers.length < totalInnerCells; i++) {
+//       numbers.push(i, i);
+//     }
+//   }
+
+//   // 숫자들을 섞음
+//   numbers.sort(() => Math.random() - 0.5);
+
+//   // 보드 내부에 숫자 배치, 가장자리는 0으로 유지
+//   for (let i = 1; i < row - 1; i++) {
+//     for (let j = 1; j < col - 1; j++) {
+//       const index = (i - 1) * (col - 2) + (j - 1); // 내부 셀에 대한 인덱스 계산
+//       board[i][j] = numbers[index];
+//     }
+//   }
+
+//   // const zz = [
+//   //   [0, 0, 0, 0, 0, 0],
+//   //   [0, 1, 2, 3, 4, 0],
+//   //   [0, 2, 1, 5, 6, 0],
+//   //   [0, 3, 4, 5, 6, 0],
+//   //   [0, 0, 0, 0, 0, 0],
+//   // ];
+//   // return zz;
+//   return board;
+// };
+export const createBoard = (originalRow: number, originalCol: number) => {
+  // row와 col을 각각 2씩 증가
+  const row = originalRow + 2;
+  const col = originalCol + 2;
+  const totalInnerCells = (row - 2) * (col - 2);
+  const board = new Array(row).fill(null).map(() => new Array(col).fill(0));
+  let numbers = [];
+
+  // 내부 셀에 사용할 수 있는 숫자들을 준비 (1부터 14까지 숫자가 정확히 2개씩)
+  for (let i = 1; i <= 14 && numbers.length < totalInnerCells; i++) {
+    numbers.push(i, i);
+  }
+
+  // 숫자들이 전체 셀을 채우지 못할 경우, 남은 셀 수에 맞춰서 숫자 추가
+  while (numbers.length < totalInnerCells) {
+    // 이미 14개 숫자를 모두 사용한 경우, 남은 공간을 채우기 위해 필요한 추가 숫자들 선택
+    for (let i = 1; i <= 14 && numbers.length < totalInnerCells; i++) {
+      numbers.push(i, i);
+    }
+  }
+
+  // 숫자들을 섞음
+  numbers.sort(() => Math.random() - 0.5);
+
+  // 보드 내부에 숫자 배치, 가장자리는 0으로 유지
+  for (let i = 1; i < row - 1; i++) {
+    for (let j = 1; j < col - 1; j++) {
+      const index = (i - 1) * (col - 2) + (j - 1); // 내부 셀에 대한 인덱스 계산
+      board[i][j] = numbers[index];
+    }
+  }
+  console.log(board);
+  return board;
+};
+
+// 예제 실행
+
+/** 게임판 생성 로직 */
+// export const createBoard = (rows: number, cols: number) => {
+//   rows = rows + 2;
+//   cols = cols + 2;
+//   // 0으로 초기화된 rows x cols 크기의 2차원 배열 생성
+//   const board = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+//   // "3,4", "3,6", "3,8", "4,4", "4,5", "4,6", "4,7","4,8","5,4","5,6","5,8","6,6","6,7","6,8","7,6","7,8","8,7","8,8","8,9",
+//   const maxItem = ((rows - 2) * (cols - 2)) / 2; // 게임판의 최대 개수는 게임판 크기 /2
+//   if (maxItem % 2 !== 0) return [[]]; // 짝수여야 짝이 맞음 이부분은
+
+//   let cnt = 1;
+//   const itemLength: number[] = [1, 2, 3];
+//   if (cols > 14) itemLength.push(4, 5, 6, 7, 8, 9);
+//   // const itemLength: number[] = [1];
+//   while (cnt < 10) {
+//     // cnt++;
+//     cnt++;
+
+//     // 12 / 6 가 정수일 경우 멈춤
+//     if (
+//       Number.isInteger(maxItem / itemLength.length) &&
+//       (maxItem / itemLength.length) % 2 === 0
+//     ) {
+//       break;
+//     }
+//     itemLength.pop();
+
+//     // itemLength.push(cnt);
+//   }
+
+//   const maxStack = maxItem / itemLength.length; // 12면 아이템랭스는 3이고 12/ = 4, 각아이템이 4번씩
+
+//   const itemStack = Array.from({ length: itemLength.length }, (i) =>
+//     Array(maxStack).fill(1)
+//   ); // [[],[],[]]
+//   console.log(Math.floor(Math.random() * itemLength.length));
+//   for (let i = 0; i < board.length; i++) {
+//     if (i === 0 || i === board.length - 1) continue;
+//     for (let r = 1; r < cols - 1; r++) {
+//       const randomNumber = Math.floor(Math.random() * itemLength.length); // 랜덤으로하나뽑음
+
+//       if (itemStack[randomNumber].length > 0) {
+//         itemStack[randomNumber].pop();
+//         board[i][r] = randomNumber + 1;
+//       } else {
+//         r--;
+//       }
+//     }
+//   }
+
+//   return board;
+//   const zz = [
+//     [0, 0, 0, 0, 0],
+//     [0, 1, 2, 3, 0],
+//     [0, 3, 1, 2, 0],
+//     [0, 1, 1, 2, 0],
+//     [0, 3, 3, 2, 0],
+//     [0, 0, 0, 0, 0],
+//   ];
+//   return zz;
+// };
 
 // 경로를 넣으면 꺾임의 횟수를 판단하여
 const calculTransXY = (pathArr: number[][], underBand: number) => {
@@ -389,7 +512,6 @@ export const remainingPathFinder = async (
             startValue
           ); //
           if (canFound) {
-            console.log(canFound);
             graph[x][y] = 0;
             graph[currnetX][currnetY] = 0;
             return type === "bot" ? graph : canFound;

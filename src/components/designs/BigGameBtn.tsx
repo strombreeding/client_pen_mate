@@ -38,6 +38,7 @@ const BigGameBtn = () => {
   const clickAudio = useAudio(allSfx.click);
   const navigation = useNavigate();
   const onPress = () => {
+    clickAudio.load();
     clickAudio.play();
     setTimeout(() => {
       navigation("/games");

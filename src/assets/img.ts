@@ -47,7 +47,7 @@ export const imgSrc = {
   energy: cdnDefaultURL + "pngs/energy.png",
   antimatter: cdnDefaultURL + "pngs/antimatter.png",
   atata_point: cdnDefaultURL + "pngs/atata_point.png",
-  atata_un: cdnDefaultURL + "pngs/atata_un.png",
+  atata_stone: cdnDefaultURL + "pngs/atata_stone.png",
   atata_atcive: cdnDefaultURL + "pngs/atata_active.png",
 };
 
@@ -98,6 +98,6 @@ export const imgSrc = {
 //   energy: require("../assets/pngs/energy.png"),
 //   antimatter: require("../assets/pngs/antimatter.png"),
 //   atata_point: require("../assets/pngs/atata_point.png"),
-//   atata_un: require("../assets/pngs/atata_un.png"),
+//   atata_stone: require("../assets/pngs/atata_stone.png"),
 //   atata_atcive: require("../assets/pngs/atata_active.png"),
 // };
