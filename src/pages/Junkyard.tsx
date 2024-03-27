@@ -364,8 +364,8 @@ function Junkyard() {
       // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
       const res = await axios.put(SERVER_URI + "game/record", gameData);
       console.log(res.data);
-      updateCostState(res.data);
-      dispatch(setInfomation(res.data));
+      const updateCost = updateCostState(res.data);
+      dispatch(setInfomation({ ...updateCost }));
     };
     if (!isStarting) return;
     // if (tictoc > 0) {
@@ -391,7 +391,7 @@ function Junkyard() {
         }
         return prev - 1;
       });
-    }, 50);
+    }, 1000);
     return () => {
       clearTimeout(timer);
     };

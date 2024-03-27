@@ -14,7 +14,7 @@ export const getDecryptedCookie = (name: string) => {
   try {
     const cookieData = Cookies.get(name);
     if (!cookieData) throw new Error(name + " 이름의 쿠키가 없습니다.");
-
+    console.log("쿠키이름 : ", name);
     const decryptData = decrypt(cookieData);
     return decryptData;
   } catch (err: any) {

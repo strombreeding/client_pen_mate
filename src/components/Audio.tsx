@@ -60,7 +60,9 @@ function AudioComponent() {
     Cookies.set("mute", "false");
     // console.log("언뮽", audio.muted);
     audio.load();
-    audio.play();
+    setTimeout(() => {
+      audio.play();
+    }, 500);
     setModal(false);
   };
 

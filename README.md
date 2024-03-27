@@ -24,6 +24,15 @@
 반물질
 <a href="https://www.freepik.com/free-vector/cartoon-sprite-sheet-star-explosion_43396678.htm#fromView=search&page=1&position=6&uuid=0e4517f9-5023-43e7-b47b-de61d260a07e">Image by upklyak on Freepik</a>
 
+탄 속성
+<a href="https://www.freepik.com/free-vector/magical-game-orbs-with-glowing-neon-effect-cartoon-vector-illustration-set-fantasy-spheres-with-inner-energy-power-magician-fortune-teller-balls-with-power-predict-future-cast-spell_117227443.htm#fromView=search&page=2&position=50&uuid=85f85dbc-3e4c-407e-82de-fdb0a5787b0f">Image by upklyak</a> on Freepik
+
+그외속성
+<a href="https://www.freepik.com/free-vector/fantasy-alien-planets-ui-space-game-vector_28641103.htm#fromView=search&page=2&position=1&uuid=85f85dbc-3e4c-407e-82de-fdb0a5787b0f">Image by upklyak</a> on Freepik
+
+반물질재련
+<a href="https://www.freepik.com/free-vector/magic-light-orb-game-energy-sphere-with-fire-lightnings-realistic-vector-illustration-set-glowing-red-blue-electric-power-balls-with-neon-effect-fantasy-globe-with-luminous-plasma_83317194.htm#page=11&position=29&from_view=author&uuid=f284fe45-e5b0-4900-a20d-f98dd8fe53bb">Image by upklyak</a> on Freepik
+
 어택이미지
 <a href="https://www.freepik.com/free-vector/tool-weapon-bank-theft-set-isolated-white-knuckle-duster-riffle-revolver-handcuffs-picklock-kit-wooden-bat-leather-bag-filled-with-stolen-money-time-bomb_25272927.htm#fromView=search&page=2&position=7&uuid=83681cf0-dd18-4a5f-9ee5-f7c7f1d2ea23">Image by studio4rt on Freepik</a>
 

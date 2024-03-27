@@ -6,7 +6,6 @@ import { Container } from "../styles";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { setInfomation, setLoginState } from "../store/slices/userState";
-import { decrypt, encrypt } from "../utils/crypto";
 import { setStorageCrypto } from "../utils/localStorage";
 
 const SocialTerminel: React.FC = () => {

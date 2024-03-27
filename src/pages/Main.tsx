@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "../store/store";
 import { usePageState } from "../hooks/getVisitedPage";
 import { useEffect } from "react";
 import { setNavTab } from "../store/slices/appState";
+import Store from "./Store";
 
 function Main() {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +32,7 @@ function Main() {
       <HeaderHome />
       {navType === "/" && <BigGameBtn />}
       {navType === "/ranking" && <Profile />}
-      {navType === "/store" && <Profile />}
+      {navType === "/store" && <Store />}
       {navType === "/profile" && <Profile />}
 
       <EmptyBox height={60} />

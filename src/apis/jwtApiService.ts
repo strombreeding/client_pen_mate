@@ -1,6 +1,5 @@
 import axiosInstance from "./axiosInstance";
 import { refreshToken } from "./authService";
-import { decrypt, encrypt } from "../utils/crypto";
 import { setStorageCrypto } from "../utils/localStorage";
 
 type AxiosMethod = "GET" | "POST" | "DELETE" | "PUT";
@@ -24,10 +23,12 @@ export const jwtApiRequest = async (
       method,
       data,
     });
+    console.log(url, "이게 처음 시도한 url");
+    console.log(response);
     return response.data;
   } catch (error: any) {
     const errMsg = error.response.data.message;
-    console.log(error.message);
+    console.log(error.response.data.message, "###");
     if (
       error.response &&
       error.response.status === 401 &&
@@ -37,13 +38,12 @@ export const jwtApiRequest = async (
         const currentRt = localStorage.getItem("rt");
         // 리프레시 토큰을 가져와서 새로운 액세스 토큰을 발급
         const res = await refreshToken(currentRt);
+
         setStorageCrypto("atataPoint", res.atataPoint);
         setStorageCrypto("atataStone", res.atataStone);
         setStorageCrypto("energy", res.energy);
-        console.log(res.rt === window.localStorage.getItem("rt"));
         window.localStorage.setItem("at", res.at);
         window.localStorage.setItem("rt", res.rt);
-        console.log(res.rt === window.localStorage.getItem("rt"));
         data = { ...data, at: res.at };
         // 새로운 액세스 토큰을 헤더에 설정
         axiosInstance.defaults.headers.common[

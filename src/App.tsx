@@ -18,10 +18,10 @@ import BottomModal from "./components/games/BottomModal";
 import useDefaultBrowser from "./hooks/useDefaultBrowser";
 import KakaoInAppBrowserDetect from "./KakaoInAppBrowserDetect";
 import AudioComponent from "./components/Audio";
-import axios from "axios";
+
 import { setInfomation, setLoginState } from "./store/slices/userState";
 import { jwtApiRequest } from "./apis/jwtApiService";
-import { decrypt } from "./utils/crypto";
+
 import Popup from "./components/Popup";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
@@ -104,6 +104,7 @@ function App() {
         dispatch(setLoginState(true));
         dispatch(setInfomation({ ...infomation, ...res }));
       } catch (err: any) {
+        console.log(err.message);
         localStorage.clear();
       }
     };

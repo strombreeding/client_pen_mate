@@ -17,8 +17,7 @@ export const recordGame = async (recordProps: IRecordGameProps) => {
     return res;
   } catch (err: any) {
     const errMsg = err.response.data.message;
-    console.log(errMsg);
-    if (errMsg === "not enough energy" || errMsg === "not enough atataStone") {
+    if (errMsg.includes("not enough")) {
       throw new Error("재화가 부족합니다.");
     } else {
       throw new Error("문제가 발생했습니다.");

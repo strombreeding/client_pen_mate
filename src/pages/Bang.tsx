@@ -609,6 +609,7 @@ function Bang() {
         `);
       // setTimeout(() => socket.disconnect(), 2000);
     };
+
     socket.emit("moveToBangDone", matchId);
 
     socket.on("welcome", welcomeAndDataChannel);
@@ -753,6 +754,7 @@ function Bang() {
       };
     }
   }, [aChat]);
+
   useEffect(() => {
     if (bChat.length >= 1) {
       const timer = setTimeout(() => {

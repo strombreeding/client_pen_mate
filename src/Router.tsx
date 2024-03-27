@@ -23,6 +23,7 @@ import Reward from "./pages/Reward";
 import PrivatePage from "./routes/PrivatePage";
 import Test from "./pages/Test";
 import Bang from "./pages/Bang";
+import Store from "./pages/Store";
 
 const Routers: React.FC = () => {
   useDisablePinchZoom();
@@ -33,7 +34,7 @@ const Routers: React.FC = () => {
         <Route element={<PrivatePage />}>
           <Route path="/" element={<Main />} />
           <Route path="/ranking" element={<Main />} />
-          <Route path="/store" element={<Main />} />
+          <Route path="/store" element={<Store />} />
           <Route path="/profile" element={<Main />} />
 
           {/* 게임 모음 */}

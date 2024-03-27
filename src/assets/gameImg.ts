@@ -56,6 +56,28 @@ export const gameImg = {
   sun2: cdnDefaultURL + "gameImg/sun2.png",
 
   hit_1x3: cdnDefaultURL + "gameImg/hit_1x3.png",
+
+  antimetter_1: cdnDefaultURL + "gameImg/antimetter_1.png",
+  antimetter_2: cdnDefaultURL + "gameImg/antimetter_2.png",
+  antimetter_3: cdnDefaultURL + "gameImg/antimetter_3.png",
+  antimetter_4: cdnDefaultURL + "gameImg/antimetter_4.png",
+  antimetter_5: cdnDefaultURL + "gameImg/antimetter_5.png",
+  antimetter_6: cdnDefaultURL + "gameImg/antimetter_6.png",
+  antimetter_7: cdnDefaultURL + "gameImg/antimetter_7.png",
+  antimetter_8: cdnDefaultURL + "gameImg/antimetter_8.png",
+  antimetter_9: cdnDefaultURL + "gameImg/antimetter_9.png",
+  antimetter_10: cdnDefaultURL + "gameImg/antimetter_10.png",
+
+  bullet_blood: cdnDefaultURL + "gameImg/bullet_blood.png",
+  bullet_explosion: cdnDefaultURL + "gameImg/bullet_explosion.png",
+  bullet_fragment: cdnDefaultURL + "gameImg/bullet_fragment.png",
+  bullet_heal: cdnDefaultURL + "gameImg/bullet_heal.png",
+  bullet_force: cdnDefaultURL + "gameImg/bullet_force.png",
+  bullet_super: cdnDefaultURL + "gameImg/bullet_super.png",
+
+  plate_2: cdnDefaultURL + "gameImg/plate_2.png",
+  plate_3: cdnDefaultURL + "gameImg/plate_3.png",
+  plate_5: cdnDefaultURL + "gameImg/plate_5.png",
 };
 
 // export const gameImg = {

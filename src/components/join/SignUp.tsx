@@ -83,6 +83,7 @@ function SignUp({ step }: { step: string }) {
         nickname: text,
       });
       const resData = res.data;
+      console.log(resData);
       dispatch(setLoginState(true));
       dispatch(
         setInfomation({
@@ -102,7 +103,7 @@ function SignUp({ step }: { step: string }) {
       navigation("/");
     } catch (err: any) {
       console.log(err);
-      alert(err.message);
+      alert(err.response.data.message);
     }
   };
 

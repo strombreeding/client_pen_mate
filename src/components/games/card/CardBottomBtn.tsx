@@ -47,6 +47,7 @@ function CardBottomBtn({
       const canCreateRecord = await checkCost(gameProps.costObj);
       return canCreateRecord;
     } catch (err: any) {
+      console.log(err, "띱때야");
       setEnough(err.message);
     }
   };
@@ -61,12 +62,11 @@ function CardBottomBtn({
         costObj: gameProps.costObj,
       };
       const { record, updateSource } = await recordGame(props);
-
-      updateCostState(updateSource);
+      console.log(updateSource, "###");
 
       const cookieData = { ...record };
-
-      dispatch(setInfomation({ ...infomation, ...updateSource }));
+      const updateCost = updateCostState(updateSource);
+      dispatch(setInfomation({ ...infomation, ...updateCost }));
       setEncryptedCookie("ingame", cookieData);
       console.log(getDecryptedCookie("ingame"));
       navigation(`/games/${gameProps.game_url}`);

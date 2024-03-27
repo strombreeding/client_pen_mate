@@ -12,7 +12,10 @@ export const encrypt = (data: any) => {
 
 export const decrypt = (encryptString: string) => {
   // Decrypt
+  console.log(encryptString);
   const bytes = CryptoJS.AES.decrypt(encryptString, secretKey);
+  console.log(bytes);
   const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  console.log(decryptedData);
   return decryptedData;
 };
