@@ -51,9 +51,7 @@ function CardBottomBtn({
       setEnough(err.message);
     }
   };
-  const infomation = useSelector(
-    (state: RootState) => state.userState.infomation
-  );
+
   const gameCreateReq = async () => {
     try {
       // setLoading(true);
@@ -62,11 +60,9 @@ function CardBottomBtn({
         costObj: gameProps.costObj,
       };
       const { record, updateSource } = await recordGame(props);
-      console.log(updateSource, "###");
-
       const cookieData = { ...record };
-      const updateCost = updateCostState(updateSource);
-      dispatch(setInfomation({ ...infomation, ...updateCost }));
+      updateCostState(updateSource);
+      dispatch(setInfomation({ ...updateSource }));
       setEncryptedCookie("ingame", cookieData);
       console.log(getDecryptedCookie("ingame"));
       navigation(`/games/${gameProps.game_url}`);
@@ -79,10 +75,12 @@ function CardBottomBtn({
   const matchFound = useSelector(
     (state: RootState) => state.bangState.matchFound
   );
-  const bangMatch = () => {
-    const canCreateRecord = checkOutCost();
+  const bangMatch = async () => {
+    setEnough("");
+    const canCreateRecord = await checkOutCost();
+    console.log(canCreateRecord);
     if (!canCreateRecord) return;
-
+    dispatch(setGameState({ costObj: gameProps.costObj }));
     dispatch(setMatchStart(true));
   };
   const bangCancelMatch = () => {

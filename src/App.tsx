@@ -23,6 +23,7 @@ import { setInfomation, setLoginState } from "./store/slices/userState";
 import { jwtApiRequest } from "./apis/jwtApiService";
 
 import Popup from "./components/Popup";
+import Modal from "./components/Modal";
 // const BG = styled.div<{ show: boolean }>`
 //   position: absolute;
 //   width: 100vw;
@@ -125,6 +126,7 @@ function App() {
 
         <Background>
           <Popup />
+          <Modal />
           <AudioComponent />
           <Loading />
 

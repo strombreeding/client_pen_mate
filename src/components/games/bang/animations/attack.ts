@@ -2,14 +2,7 @@ import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { gameImg } from "../../../../assets/gameImg";
 import { SCREEN_WIDTH } from "../../../../configs/device";
 import { emptyVal, getPostionValue } from "../../../../utils/bang";
-
-interface ICharProps {
-  imgSrc: string;
-  width: number;
-  height: number;
-  cols: number;
-  rows: number;
-}
+import { ICharProps } from "../../../../pages/Bang";
 
 export const attack = (
   charRef: MutableRefObject<HTMLDivElement | null>,
@@ -25,24 +18,38 @@ export const attack = (
   let current = 0;
   let timer = new Date().getTime();
   let animation = 0;
-
+  let standImg = "";
+  let actionImg = "";
+  if (isLeftShot && obj.bounti) {
+    standImg = gameImg.bounti_stand_left;
+    actionImg = gameImg.bounti_atk_left_3x2;
+  } else if (isLeftShot && !obj.bounti) {
+    standImg = gameImg.cow_stand_left;
+    actionImg = gameImg.cow_atk_left_1x3;
+  } else if (!isLeftShot && obj.bounti) {
+    standImg = gameImg.bounti_stand_right;
+    actionImg = gameImg.bounti_atk_right_3x2;
+  } else if (!isLeftShot && !obj.bounti) {
+    standImg = gameImg.cow_stand_right;
+    actionImg = gameImg.cow_atk_right_1x3;
+  }
   setObj((prev) => ({
     ...prev,
-    imgSrc: isLeftShot ? gameImg.cow_atk_left_1x3 : gameImg.cow_atk_right_1x3,
+    imgSrc: actionImg,
     rows: 1,
     cols: 3,
   }));
 
   const copyObj = {
     rows: 1,
-    cols: 8,
+    cols: 3,
     width: obj.width,
   };
   const animate = () => {
     const now = new Date().getTime();
 
     if (!charRef.current) return;
-    // charRef.current.style.backgroundImage = gameImg.cow_jump_right_1x8;
+    // charRef.current.style.backgroundImage = gameImg.cow_attack_right_1x8;
     const currentCol = current % copyObj.cols;
     const currentRow = Math.floor(current / copyObj.cols);
     const bgPosition = `
@@ -63,7 +70,7 @@ export const attack = (
         //   : gameImg.cow_stand_right;
         setObj((prev) => ({
           ...prev,
-          imgSrc: isLeftShot ? gameImg.cow_stand_left : gameImg.cow_stand_right,
+          imgSrc: standImg,
           width: SCREEN_WIDTH * 0.2222,
           height: 0,
           cols: 1,

@@ -12,6 +12,7 @@ import { Text } from "../assets/fontStyles";
 import WorkStatus from "../components/reward/WorkStatus";
 import PointData from "../components/reward/PointData";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
+import { gameImg } from "../assets/gameImg";
 
 const GameDataView = styled(View)`
   width: 100%;
@@ -30,27 +31,35 @@ const GameResultView = styled(View)`
   border: 1px solid rgba(255, 255, 255, 0.5);
 `;
 
+export interface IRewardProps {
+  _id: string;
+  cost_obj: { type: string; cost: number }[];
+  game_result: string;
+  game_special_option: string;
+  game_title: string;
+  play_at: Date;
+  play_time: number; //sec
+  player_id: string;
+  rewards: { item_name: string; cnt: number }[];
+}
+
 function Reward() {
   const location = useLocation();
-  const [reward, setReward] = useState({
-    id: location.state.data.id,
-    gameTitle: "고철장",
-    score: "작업끝", // 뱅 승|패 고철장 작업끝 반물질 재단끝
-    point1: 512,
-    point2: "작업량 12  레벨",
-    nickname: "easynee_",
-    prevAp: 1000,
-    currentAP: 0,
-    result: ["운석", "반물질", "AP"],
-  });
-  const gameData = location.state.data;
-  console.log(gameData);
+  const [gameState, setGameState] = useState<IRewardProps>({} as IRewardProps);
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const gameData: IRewardProps = location.state.data;
+    console.log(gameData);
+    setGameState(gameData);
+    setReady(true);
+  }, []);
   const req = async () => {
     // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
   };
   console.log(location);
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {}, []);
+
+  if (!ready) return <></>;
   return (
     <Container style={{ flex: 1, backgroundColor: colors.Background2 }}>
       <View style={{ position: "absolute", top: 0, left: 0, right: 0 }}>
@@ -64,17 +73,18 @@ function Reward() {
       </View>
       <ScrollView style={{ width: "100%", height: SCREEN_HEIGHT - 96.45 }}>
         <GameDataView>
-          <PointData reward={reward} />
+          <PointData reward={gameState} />
 
           <EmptyBox height={15} />
 
-          <WorkStatus reward={reward} />
+          {/* <WorkStatus reward={gameState} /> */}
 
-          <EmptyBox height={40} />
+          <EmptyBox height={15} />
 
+          {/* 리워드 */}
           <View style={{ width: "100%" }}>
             <Text.Regular_20 style={{ alignSelf: "flex-start" }}>
-              Game Result
+              Game Rewards
             </Text.Regular_20>
             <EmptyBox height={10} />
 
@@ -86,7 +96,7 @@ function Reward() {
                   gap: 10,
                 }}
               >
-                {reward.result.map((item, i) => {
+                {gameState.rewards.map((item, i) => {
                   console.log(item);
                   return (
                     <View
@@ -101,7 +111,69 @@ function Reward() {
                         justifyContent: "center",
                       }}
                     >
-                      <Text.Spo_Light_12>{item}</Text.Spo_Light_12>
+                      <img
+                        src={
+                          //@ts-ignore
+                          imgSrc[item.item_name] == null
+                            ? //@ts-ignore
+                              gameImg[item.item_name]
+                            : //@ts-ignore
+                              imgSrc[item.item_name]
+                        }
+                        style={{ width: 20 }}
+                      />
+                      <Text.Spo_Light_12>{item.cnt}</Text.Spo_Light_12>
+                    </View>
+                  );
+                })}
+              </View>
+            </GameResultView>
+          </View>
+          <EmptyBox height={10} />
+
+          {/* 코스트 */}
+          <View style={{ width: "100%" }}>
+            <Text.Regular_20 style={{ alignSelf: "flex-start" }}>
+              Consum
+            </Text.Regular_20>
+            <EmptyBox height={10} />
+            <GameResultView>
+              <View
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: " repeat(auto-fill, minmax(40px, 1fr))",
+                  gap: 10,
+                }}
+              >
+                {gameState.cost_obj.map((item, i) => {
+                  console.log(item);
+
+                  return (
+                    <View
+                      key={i}
+                      style={{
+                        width: 50,
+                        aspectRatio: 1,
+                        border: "1px solid white",
+                        borderRadius: 15,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={
+                          //@ts-ignore
+                          imgSrc[item.type] == null
+                            ? //@ts-ignore
+                              gameImg[item.type]
+                            : //@ts-ignore
+                              imgSrc[item.type]
+                        }
+                        style={{ width: 20 }}
+                      />
+                      <EmptyBox height={5} />
+                      <Text.Spo_Light_12>{item.cost}</Text.Spo_Light_12>
                     </View>
                   );
                 })}

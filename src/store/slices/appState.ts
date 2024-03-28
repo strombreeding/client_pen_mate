@@ -17,17 +17,18 @@ export interface IPopupProps {
   rightSubText?: null | string;
   rightText?: string;
   rightAction?: (data?: any) => void;
+  leftAction?: (data?: any) => void;
 }
 export interface IModalProps {
   show: boolean;
-  title: string;
-  description: string;
-  text: null | string;
+  title?: string;
+  description?: string;
+  btnText?: string;
 }
 
 interface AppState {
   popup: IPopupProps;
-  modal: boolean;
+  modal: IModalProps;
   keyboardHeight: number;
   safeArea: number[];
   navTab: string;
@@ -49,7 +50,12 @@ const initialState: AppState = {
     rightText: "",
     rightAction: undefined,
   },
-  modal: false,
+  modal: {
+    show: false,
+    description: "",
+    title: "",
+    btnText: "",
+  },
   keyboardHeight: 0,
   safeArea: [0, 0],
   navTab: window.location.pathname,
@@ -66,10 +72,10 @@ const appState = createSlice({
   initialState,
   reducers: {
     setPopup: (state, action: PayloadAction<IPopupProps>) => {
-      state.popup = action.payload;
+      state.popup = { ...state.popup, ...action.payload };
     },
-    setModal: (state, action: PayloadAction<boolean>) => {
-      state.modal = action.payload;
+    setModal: (state, action: PayloadAction<IModalProps>) => {
+      state.modal = { ...state.modal, ...action.payload };
     },
     editKeyboardHeight: (state, action: PayloadAction<number>) => {
       state.keyboardHeight = action.payload;

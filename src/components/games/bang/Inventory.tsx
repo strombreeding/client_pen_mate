@@ -14,6 +14,9 @@ import {
 import { gameImg } from "../../../assets/gameImg";
 import { imgSrc } from "../../../assets/img";
 import SoundPressable from "../../designs/SoundPressable";
+import axiosInstance from "../../../apis/axiosInstance";
+import { jwtApiRequest } from "../../../apis/jwtApiService";
+import { IRewardProps } from "../../../pages/Reward";
 
 const InitModal = styled(View)`
   z-index: 2;
@@ -46,15 +49,33 @@ const ItemSlot = styled(Pressable)`
 `;
 
 interface InventoryProps {
-  bag: ItemProps[];
+  bag: IInvetoryProps[];
   ability: Ablilty;
-  setBag: Dispatch<SetStateAction<ItemProps[]>>;
+  setBag: Dispatch<SetStateAction<IInvetoryProps[]>>;
   setAbility: Dispatch<SetStateAction<Ablilty>>;
   setStatus: Dispatch<SetStateAction<IStatusProps>>;
   setTerminel: Dispatch<SetStateAction<TerminelProps>>;
   sendData: (data: IMessageProps) => () => void;
+  setGameDatas: Dispatch<SetStateAction<IRewardProps>>;
 }
-
+type UpdateItemProps = {
+  price: number;
+  _id: string;
+  cnt: number;
+  item_name: string;
+};
+export interface IInvetoryProps {
+  cnt?: number;
+  item?: {
+    cost: number;
+    item_description: string;
+    item_img: string;
+    name: string;
+    item_name: string;
+    type: string;
+    skil: string;
+  };
+}
 function Inventory({
   ability,
   bag,
@@ -63,36 +84,23 @@ function Inventory({
   sendData,
   setStatus,
   setTerminel,
+  setGameDatas,
 }: InventoryProps) {
   const [cnt, setCnt] = useState(16);
   const [checkItem, setCheckItem] = useState<number[]>([]);
-  const [inventory, setInventory] = useState([
+  const [inventory, setInventory] = useState<IInvetoryProps[]>([
     {
       cnt: 0,
-      description: "공격력 1짜리",
-      type: "atk",
-      itemImg: gameImg.action_atk,
-      cost: 1,
-      skil: null,
+      item: {
+        type: "atk",
+        item_img: gameImg.action_atk,
+        cost: 1,
+        skil: "",
+      },
     },
-    {
-      cnt: 12,
-      description: "회복포션",
-      type: "util",
-      itemImg: gameImg.action_btn,
-      cost: 1,
-      skil: null,
-    },
-    {
-      cnt: 1,
-      description: "이속증가",
-      type: "atk",
-      itemImg: gameImg.action_jump,
-      cost: 3,
-      skil: "확산",
-    },
-  ] as ItemProps[]);
-  const clearItem = (item: ItemProps, index: number) => () => {
+  ] as IInvetoryProps[]);
+  const clearItem = (item: IInvetoryProps, index: number) => () => {
+    if (!item.item) return;
     const newBag = [...bag];
     newBag.splice(index, 1);
     newBag.push({});
@@ -100,57 +108,85 @@ function Inventory({
     const newCheckItem = [...checkItem];
     newCheckItem.splice(index, 1);
     const newAbility = { ...ability };
-    if (item.type === "atk") {
-      newAbility.atk = newAbility.atk - item.cost!;
-    } else if (item.type === "util") {
-      newAbility.subHealth = newAbility.subHealth - item.cost!;
+    if (item.item.type === "atk") {
+      newAbility.atk = newAbility.atk - item.item.cost!;
+    } else if (item.item.type === "util") {
+      newAbility.subHealth = newAbility.subHealth - item.item.cost!;
     }
-    if (item.skil != null) {
-      const skilIdx = ability.skil.indexOf(item.skil);
+    if (item.item.skil != "") {
+      const skilIdx = ability.skil.indexOf(item.item.skil);
       newAbility.skil.splice(skilIdx, 1);
-      console.log(item.skil, skilIdx);
+      console.log(item.item.skil, skilIdx);
     }
-    console.log(item.skil);
+    console.log(item.item.skil);
     console.log(item);
 
     setAbility({ ...newAbility });
     setCheckItem([...newCheckItem]);
   };
-  const itemUse = (item: ItemProps, index: number) => () => {
+  const itemUse = (item: IInvetoryProps, index: number) => () => {
+    if (!item.item || !item.cnt) return;
     if (checkItem.includes(index)) return;
-    if (bag[2].itemImg != undefined) return;
+    if (bag[2].item?.item_img != undefined) return;
     const current = bag.filter((item, a) => Object.values(item).length > 1);
     console.log(current.length);
     const newBag = [...bag];
     const newIdx = current.length;
     newBag[newIdx] = {
       cnt: item.cnt,
-      cost: item.cost,
-      description: item.description,
-      itemImg: item.itemImg,
-      type: item.type,
-      skil: item.skil,
+      item: {
+        item_name: item.item.item_name,
+        name: item.item.name,
+        cost: item.item.cost,
+        item_description: item.item.item_description,
+        item_img: item.item.item_img,
+        type: item.item.type,
+        skil: item.item.skil,
+      },
     };
     const newAbility = { ...ability };
-    if (item.type === "atk") {
-      newAbility.atk = newAbility.atk + item.cost!;
-    } else if (item.type === "util") {
-      newAbility.subHealth = newAbility.subHealth + item.cost!;
+    if (item.item.type === "atk") {
+      newAbility.atk = newAbility.atk + item.item.cost!;
+    } else if (item.item.type === "util") {
+      newAbility.subHealth = newAbility.subHealth + item.item.cost!;
     }
-    if (item.skil) {
-      newAbility.skil.push(item.skil!);
+    if (item.item.skil) {
+      newAbility.skil.push(item.item.skil!);
     }
-    console.log(item.skil);
+    console.log(item.item.skil);
     setAbility({ ...newAbility });
     setCheckItem([...checkItem, index]);
     setBag([...newBag]);
   };
 
-  const initDone = () => {
+  const initDone = async () => {
     const dataObj = {
       ...ability,
     };
+    const costObjList = [
+      { type: "atata_stone", cost: 300 },
+      { type: "energy", cost: 1 },
+    ];
+    const consumItemList = bag
+      .filter((item) => item.item && item.item.item_name)
+      .map((item) => {
+        if (!item.item || !item.cnt) return;
+        costObjList.push({ type: item.item.item_name, cost: 1 });
+        return { cnt: item.cnt - 1, item_name: item.item.item_name };
+      });
+    console.log(consumItemList);
+    console.log(costObjList);
+
+    // return;
+    const res = await jwtApiRequest("inventory", "POST", {
+      data: consumItemList,
+    });
+    console.log(res);
     sendData({ type: "상대능력", data: dataObj })();
+    setGameDatas((prev) => ({
+      ...prev,
+      cost_obj: [...costObjList],
+    }));
     setStatus((prev) => ({
       ...prev,
       me: {
@@ -163,27 +199,38 @@ function Inventory({
   };
 
   useEffect(() => {
-    if (cnt !== 0) {
-      const timeout = setTimeout(() => {
-        setCnt(cnt - 1);
-      }, 1000);
-
-      return () => clearTimeout(timeout);
-    } else if (cnt === 0) {
-      initDone();
-    }
+    // if (cnt !== 0) {
+    //   const timeout = setTimeout(() => {
+    //     setCnt(cnt - 1);
+    //   }, 1000);
+    //   return () => clearTimeout(timeout);
+    // } else if (cnt === 0) {
+    //   initDone();
+    // }
   }, [cnt]);
 
-  useEffect(() => {});
+  const reqMyInventory = async () => {
+    try {
+      const res = await jwtApiRequest("inventory/my?" + "type=bang", "GET", {});
+      console.log(res);
+      setInventory(res);
+    } catch (err) {
+      console.log(err, "zz");
+    }
+  };
+  useEffect(() => {
+    reqMyInventory();
+  }, []);
   return (
     <InitModal>
       <Text.SemiBold_32>{cnt}</Text.SemiBold_32>
       <Text.Light_32>장착</Text.Light_32>
       <View style={{ flexDirection: "row", flex: 1 }}>
         {bag.map((item, index) => {
+          if (!item.item) return <></>;
           return (
             <ItemSlot>
-              {item.itemImg == null ? (
+              {item.item.item_img == null ? (
                 <EmptyBox
                   width={SCREEN_WIDTH * 0.137777777777778}
                   height={SCREEN_WIDTH * 0.137777777777778}
@@ -196,7 +243,7 @@ function Inventory({
                   >
                     <img src={imgSrc.close} width={20} />
                   </Pressable>
-                  <ItemImg src={item.itemImg} />
+                  <ItemImg src={item.item.item_img} />
                 </>
               )}
             </ItemSlot>
@@ -208,12 +255,13 @@ function Inventory({
       <ScrollView style={{ height: SCREEN_HEIGHT / 5 }}>
         <GridItemView>
           {inventory.map((item, index) => {
+            if (!item.item) return <></>;
             return (
               <ItemSlot
                 style={checkItem.includes(index) ? { opacity: 0.3 } : {}}
                 onClick={itemUse(item, index)}
               >
-                <ItemImg src={item.itemImg} />
+                <ItemImg src={item.item.item_img} />
                 <Text.Light_12
                   style={{ position: "absolute", bottom: 2, right: 5 }}
                 >

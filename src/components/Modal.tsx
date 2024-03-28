@@ -8,7 +8,7 @@ import { EmptyBox } from "../styles";
 import { colors } from "../assets/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { setPopup } from "../store/slices/appState";
+import { setModal, setPopup } from "../store/slices/appState";
 
 const Wraper = styled(View)`
   position: absolute;
@@ -46,11 +46,10 @@ interface IPopupProps {
   leftText?: string;
   rightSubText?: string;
   rightAction: (data?: any) => void;
-  leftAction: (data?: any) => void;
 }
 
-function Popup() {
-  const popupState = useSelector((state: RootState) => state.appState.popup);
+function Modal() {
+  const modalState = useSelector((state: RootState) => state.appState.modal);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   // popupState.leftText =
@@ -60,15 +59,15 @@ function Popup() {
     if (!boxRef.current) return;
   }, []);
 
-  if (!popupState.show) return <></>;
+  if (!modalState.show) return <></>;
   return (
     <Wraper>
       <Box ref={boxRef}>
         <View style={{ alignItems: "center" }}>
-          <Text.Regular_24>{popupState.title}</Text.Regular_24>
+          <Text.Regular_24>{modalState.title}</Text.Regular_24>
 
           <EmptyBox height={25} />
-          <Text.Regular_16>{popupState.description}</Text.Regular_16>
+          <Text.Regular_16>{modalState.description}</Text.Regular_16>
           <EmptyBox height={35} />
         </View>
 
@@ -78,37 +77,14 @@ function Popup() {
             width: "100%",
           }}
         >
-          {popupState.leftText != null && (
-            <>
-              <PrevBtn
-                onClick={() => {
-                  if (popupState.leftAction) {
-                    popupState.leftAction();
-                  }
-                  dispatch(setPopup({ ...popupState, show: false }));
-                }}
-              >
-                <Text.Light_16>{popupState.leftText}</Text.Light_16>
-              </PrevBtn>
-              <EmptyBox width={5} />
-            </>
-          )}
-          <PrevBtn
-            onClick={() => {
-              if (popupState.rightAction) {
-                popupState.rightAction();
-              }
-              dispatch(setPopup({ ...popupState, show: false }));
-            }}
-            style={{ backgroundColor: colors.Main_Button1 }}
-          >
-            <Text.Light_16>{popupState.rightText}</Text.Light_16>
-            <Text.Light_12>{popupState.rightSubText}</Text.Light_12>
+          <PrevBtn onClick={() => dispatch(setModal({ show: false }))}>
+            <Text.Light_16>{modalState.btnText}</Text.Light_16>
           </PrevBtn>
+          <EmptyBox width={5} />
         </View>
       </Box>
     </Wraper>
   );
 }
 
-export default Popup;
+export default Modal;

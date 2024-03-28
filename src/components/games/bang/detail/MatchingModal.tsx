@@ -28,6 +28,10 @@ import {
 import { SOCKET_URI, iceServers } from "../../../../configs/server";
 import { useNavigate } from "react-router-dom";
 import { setEncryptedCookie } from "../../../../utils/cookies";
+import { colors } from "../../../../assets/colors";
+import { recordGame } from "../../../../apis/recordGame";
+import { updateCostState } from "../../../../utils/localStorage";
+import { setInfomation } from "../../../../store/slices/userState";
 
 const ModalContainer = styled(View)<{ visible: boolean }>`
   display: ${(props) => (props.visible ? "flex" : "none")};
@@ -54,12 +58,17 @@ function MatchingModal({}) {
   const navigation = useNavigate();
   // const [peerConnection, setPeerConnection] =
   //   useState<RTCPeerConnection | null>(null);
+  const infomation = useSelector(
+    (state: RootState) => state.userState.infomation
+  );
   const matchStart = useSelector(
     (state: RootState) => state.bangState.matchStart
   );
   const matchFound = useSelector(
     (state: RootState) => state.bangState.matchFound
   );
+
+  const [targetProp, setTargetProp] = useState({ nickname: "", bounti: false });
   const [socket, setSocket] = useState<Socket | null>(null);
   const [clicked, setClicked] = useState(false);
   const newAudio = useAudio(allSfx.back);
@@ -67,6 +76,7 @@ function MatchingModal({}) {
   const matchTimer = useSelector(
     (state: RootState) => state.bangState.matchTimer
   );
+  const gameState = useSelector((state: RootState) => state.gameState.status);
   const dispatch = useDispatch<AppDispatch>();
   const matchAudio = useAudio(allSfx.match);
   // 소켓연결후 조인큐 보내는 훅
@@ -76,12 +86,20 @@ function MatchingModal({}) {
     //  peerConnection
     if (socket == null) return;
     /* 소켓에서 매칭 되었을때 타이머와 모달을 생성 */
-    const matchFound = (id: string) => {
+    const matchFound = (payload: {
+      roomId: string;
+      targetProps: { nickname: string; bounti: boolean };
+    }) => {
+      console.log(payload.targetProps.nickname);
       matchAudio.play();
+      setTargetProp({
+        nickname: payload.targetProps.nickname,
+        bounti: payload.targetProps.bounti,
+      });
       dispatch(setMatchFound(true));
-      dispatch(setMatchId(id));
+      dispatch(setMatchId(payload.roomId));
       const timeoutId = setTimeout(() => {
-        socket.emit("cancelMatch", id);
+        socket.emit("cancelMatch", payload.roomId);
         dispatch(setMatchFound(false));
         dispatch(setMatchStart(false));
         socket.disconnect();
@@ -91,7 +109,12 @@ function MatchingModal({}) {
 
     /* 상대방에 의해 매칭이 취소된 경우에 새롭게 큐를 잡아줌 */
     const cancelMatch = () => {
-      setTimeout(() => socket.emit("joinQueue"), 2000);
+      setTimeout(() => {
+        socket.emit("joinQueue", {
+          id: infomation.id,
+          nickname: infomation.nickname,
+        });
+      }, 2000);
       clearTimeout(matchTimer!);
       setClicked(false);
       dispatch(setMatchFound(false));
@@ -106,7 +129,10 @@ function MatchingModal({}) {
       dispatch(setMatchFound(false));
     };
 
-    socket.emit("joinQueue");
+    socket.emit("joinQueue", {
+      id: infomation.id,
+      nickname: infomation.nickname,
+    });
 
     socket.on("matchFound", matchFound);
 
@@ -114,10 +140,22 @@ function MatchingModal({}) {
 
     socket.on("closeRoom", closeRoom);
 
-    socket.on("goBang", () => {
-      navigation("/games/bang");
+    socket.on("goBang", async () => {
+      const props = {
+        gameTitle: gameState.gameTitle!,
+        costObj: gameState.costObj!,
+      };
+      const { record, updateSource } = await recordGame(props);
+      updateCostState(updateSource);
+      dispatch(setInfomation({ ...updateSource }));
       dispatch(setMatchStart(false));
-      setEncryptedCookie("bang", { type: "cool" });
+      setEncryptedCookie("bang", {
+        type: "cool",
+        nickname: targetProp.nickname,
+        bounti: targetProp.bounti,
+        _id: record._id,
+      });
+      navigation("/games/bang");
       closeRoom();
     });
 
@@ -147,15 +185,15 @@ function MatchingModal({}) {
       <View style={{ alignItems: "center" }}>
         <Text.Light_32>결투!</Text.Light_32>
         <EmptyBox height={15} />
-        <Text.Light_20>{"상대 이름"}</Text.Light_20>
+        <Text.Light_20 color={colors.Accent_Red}>
+          {targetProp.nickname}
+        </Text.Light_20>
         <EmptyBox height={15} />
-        <Text.Light_16>{"보안관"}</Text.Light_16>
+        <Text.Light_16>
+          {targetProp.bounti ? "현상수배" : "카우보이"}
+        </Text.Light_16>
         <EmptyBox height={15} />
-        <View style={{ flexDirection: "row" }}>
-          <Text.Light_16>{"리워드"}</Text.Light_16>
-          <EmptyBox width={10} />
-          <Text.Light_16>{"패널티"}</Text.Light_16>
-        </View>
+
         <EmptyBox height={30} />
       </View>
       <View

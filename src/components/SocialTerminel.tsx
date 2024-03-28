@@ -29,13 +29,13 @@ const SocialTerminel: React.FC = () => {
         setInfomation({
           id: resData.result.id,
           nickname: resData.result.nickname,
-          atataPoint: resData.result.atataPoint,
-          atataStone: resData.result.atataStone,
+          atata_point: resData.result.atata_point,
+          atata_stone: resData.result.atata_stone,
           energy: resData.result.energy,
         })
       );
-      setStorageCrypto("atataPoint", resData.result.atataPoint);
-      setStorageCrypto("atataStone", resData.result.atataStone);
+      setStorageCrypto("atata_point", resData.result.atata_point);
+      setStorageCrypto("atata_stone", resData.result.atata_stone);
       setStorageCrypto("energy", resData.result.energy);
       window.localStorage.setItem("at", resData.result.at);
       window.localStorage.setItem("rt", resData.result.rt);

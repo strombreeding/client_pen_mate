@@ -2,14 +2,7 @@ import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { gameImg } from "../../../../assets/gameImg";
 import { SCREEN_WIDTH } from "../../../../configs/device";
 import { emptyVal, getPostionValue } from "../../../../utils/bang";
-
-interface ICharProps {
-  imgSrc: string;
-  width: number;
-  height: number;
-  cols: number;
-  rows: number;
-}
+import { ICharProps } from "../../../../pages/Bang";
 
 export const jump = (
   charRef: MutableRefObject<HTMLDivElement | null>,
@@ -35,10 +28,24 @@ export const jump = (
   let current = 0;
   let timer = new Date().getTime();
   let animation = 0;
-
+  let standImg = "";
+  let actionImg = "";
+  if (isLeftMove && obj.bounti) {
+    standImg = gameImg.bounti_stand_left;
+    actionImg = gameImg.bounti_jump_left_1x8;
+  } else if (isLeftMove && !obj.bounti) {
+    standImg = gameImg.cow_stand_left;
+    actionImg = gameImg.cow_jump_left_1x8;
+  } else if (!isLeftMove && obj.bounti) {
+    standImg = gameImg.bounti_stand_right;
+    actionImg = gameImg.bounti_jump_right_1x8;
+  } else if (!isLeftMove && !obj.bounti) {
+    standImg = gameImg.cow_stand_right;
+    actionImg = gameImg.cow_jump_right_1x8;
+  }
   setObj((prev) => ({
     ...prev,
-    imgSrc: isLeftMove ? gameImg.cow_jump_left_1x8 : gameImg.cow_jump_right_1x8,
+    imgSrc: actionImg,
     rows: 1,
     cols: 8,
   }));
@@ -73,7 +80,7 @@ export const jump = (
           : gameImg.cow_stand_right;
         setObj((prev) => ({
           ...prev,
-          imgSrc: isLeftMove ? gameImg.cow_stand_left : gameImg.cow_stand_right,
+          imgSrc: standImg,
           width: SCREEN_WIDTH * 0.2222,
           height: 0,
           cols: 1,

@@ -49,6 +49,8 @@ export const imgSrc = {
   atata_point: cdnDefaultURL + "pngs/atata_point.png",
   atata_stone: cdnDefaultURL + "pngs/atata_stone.png",
   atata_atcive: cdnDefaultURL + "pngs/atata_active.png",
+
+  skul: cdnDefaultURL + "pngs/skul.png",
 };
 
 // export const imgSrc = {

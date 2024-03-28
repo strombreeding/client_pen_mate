@@ -1,5 +1,6 @@
 // gameStateSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CostObjProps } from "../../pages/SelectGames";
 
 export type GameTitle =
   | "Cosmic Junkyard"
@@ -16,6 +17,7 @@ export interface GameStatus {
   matchType?: string;
   aiOption?: string;
   rewards?: any[];
+  costObj?: CostObjProps[];
 }
 interface GameState {
   status: GameStatus;

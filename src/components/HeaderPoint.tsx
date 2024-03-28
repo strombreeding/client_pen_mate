@@ -5,6 +5,7 @@ import { View } from "../nativeView";
 import { EmptyBox } from "../styles";
 import { RootState } from "../store/store";
 import { memo } from "react";
+import { addK } from "../utils/randomCnt";
 
 function HeaderPoint() {
   const infomation = useSelector(
@@ -17,27 +18,27 @@ function HeaderPoint() {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <img
           src={imgSrc.energy}
-          style={{ width: 20, height: 20, marginTop: 0 }}
+          style={{ width: 20, height: 20, marginTop: 0, marginRight: -2 }}
         />
-        <Text.Spo_Medium_16>{infomation.energy}</Text.Spo_Medium_16>
+        <Text.Spo_Medium_16>{addK(infomation.energy)}</Text.Spo_Medium_16>
       </View>
       <EmptyBox width={5} />
 
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <img
           src={imgSrc.atata_stone}
-          style={{ width: 20, height: 20, marginTop: -3 }}
+          style={{ width: 20, height: 20, marginTop: -3, marginRight: -2 }}
         />
-        <Text.Spo_Medium_16>{infomation.atataStone}</Text.Spo_Medium_16>
+        <Text.Spo_Medium_16>{addK(infomation.atata_stone)}</Text.Spo_Medium_16>
       </View>
 
       <EmptyBox width={5} />
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <img
           src={imgSrc.atata_point}
-          style={{ width: 20, height: 20, marginTop: -3 }}
+          style={{ width: 20, height: 20, marginTop: -3, marginRight: -2 }}
         />
-        <Text.Spo_Medium_16>{infomation.atataPoint}</Text.Spo_Medium_16>
+        <Text.Spo_Medium_16>{addK(infomation.atata_point)}</Text.Spo_Medium_16>
       </View>
     </View>
   );

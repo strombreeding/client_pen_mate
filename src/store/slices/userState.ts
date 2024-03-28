@@ -14,29 +14,29 @@ import { getStorageCrypto } from "../../utils/localStorage";
 interface IInfomation {
   nickname: string;
   energy: number | null;
-  atataPoint: number | null;
-  atataStone: number | null;
+  atata_point: number | null;
+  atata_stone: number | null;
   id: string;
 }
 interface UserState {
   logedIn: boolean;
   infomation: IInfomation;
 }
-const atataPoint = Number(getStorageCrypto("atataPoint"));
-const atataStone = Number(getStorageCrypto("atataStone"));
+const atata_point = Number(getStorageCrypto("atata_point"));
+const atata_stone = Number(getStorageCrypto("atata_stone"));
 const energy = Number(getStorageCrypto("energy"));
 
 console.log("으아아아");
-console.log(atataPoint);
-console.log(atataStone);
+console.log(atata_point);
+console.log(atata_stone);
 console.log(energy);
 console.log("####");
 const initialState: UserState = {
   logedIn: false,
   infomation: {
     nickname: "",
-    atataPoint,
-    atataStone,
+    atata_point,
+    atata_stone,
     energy,
     id: "",
   },

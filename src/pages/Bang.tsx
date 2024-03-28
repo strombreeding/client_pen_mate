@@ -1,7 +1,7 @@
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import { SOCKET_URI, iceServers } from "../configs/server";
+import { SERVER_URI, SOCKET_URI, iceServers } from "../configs/server";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import {
@@ -36,10 +36,10 @@ import { imgSrc } from "../assets/img";
 import BottomPrevNext, {
   PrevBtn,
 } from "../components/navigations/BottomPrevNext";
-import { setBgImg, setBgm } from "../store/slices/appState";
+import { setBgImg, setBgm, setModal, setPopup } from "../store/slices/appState";
 import { allBgm, allSfx } from "../assets/sound";
 import SoundPressable from "../components/designs/SoundPressable";
-import Inventory from "../components/games/bang/Inventory";
+import Inventory, { IInvetoryProps } from "../components/games/bang/Inventory";
 import PlayerInterface from "../components/games/bang/PlayerStatus";
 import { colors } from "../assets/colors";
 import { read } from "fs";
@@ -51,10 +51,21 @@ import {
   copyBoard,
   getChangeBoard,
   getTargetPath,
+  isSpreadHit,
+  isValidIndex,
 } from "../utils/bang";
 import Cookies from "js-cookie";
 import { getDecryptedCookie, setEncryptedCookie } from "../utils/cookies";
 import { startAfterMsTime } from "../utils/date";
+import { IRewardProps } from "./Reward";
+import axios from "axios";
+import axiosInstance from "../apis/axiosInstance";
+import { jwtApiRequest } from "../apis/jwtApiService";
+import { updateCostState } from "../utils/localStorage";
+import { setInfomation } from "../store/slices/userState";
+import WinnerPopup, {
+  IBangPopupProps,
+} from "../components/games/bang/detail/WinnerPopup";
 
 export interface IMessageProps {
   type:
@@ -72,6 +83,7 @@ export interface IMessageProps {
     | "done"
     | "secondAction"
     | "secondActionDone"
+    | "winnerGameDone"
     | "";
   data: any;
 }
@@ -93,7 +105,7 @@ export interface IStatusDetail {
 export interface ItemProps {
   itemImg?: string;
   description?: string;
-  type?: "atk" | "util";
+  type?: string;
   cnt?: number;
   cost?: number;
   skil?: string | null;
@@ -114,12 +126,13 @@ export type TerminelValues =
   | "countDown"
   | "done"
   | "";
-interface ICharProps {
+export interface ICharProps {
   imgSrc: string;
   width: number;
   height: number;
   cols: number;
   rows: number;
+  bounti: boolean;
 }
 
 const Out = styled.img`
@@ -140,8 +153,13 @@ function Bang() {
     ""
   );
   const [startTime, setStartTime] = useState(new Date().getTime());
-  const [resultModal, setResultModal] = useState(false);
-  const [modal, setModal] = useState(false);
+  const [popupState, setPopupState] = useState({
+    description: "",
+    leftAction: () => {},
+    rightAction: () => {},
+    show: false,
+    title: "",
+  } as IBangPopupProps);
   const playerRef = useRef<"A" | "B">("A");
   const [text, setText] = useState("");
   const [aChat, setAChat] = useState([] as string[]);
@@ -161,6 +179,7 @@ function Bang() {
     height: 0,
     cols: 1,
     rows: 1,
+    bounti: false,
   });
   const [bObj, setBObj] = useState<ICharProps>({
     imgSrc: gameImg.cow_stand_left,
@@ -168,6 +187,7 @@ function Bang() {
     height: 0,
     cols: 1,
     rows: 1,
+    bounti: false,
   });
   const [ability, setAbility] = useState<Ablilty>({
     atk: 1,
@@ -197,13 +217,85 @@ function Bang() {
     [0, 0, 0, 0, 0, 0],
   ]);
   const [cnt, setCnt] = useState(0);
-  const [bag, setBag] = useState<ItemProps[]>([{}, {}, {}] as ItemProps[]);
+  const [bag, setBag] = useState<IInvetoryProps[]>([
+    {},
+    {},
+    {},
+  ] as IInvetoryProps[]);
   const [terminel, setTerminel] = useState<TerminelProps>({
     me: "init",
     you: "init",
   });
   const [actionClicked, setActionClicked] = useState(true);
   const [playShot, setPlayShot] = useState(false);
+  const [gameDatas, setGameDatas] = useState<IRewardProps>({
+    _id: "",
+    cost_obj: [],
+    game_result: "",
+    game_special_option: "",
+    game_title: "",
+    play_at: new Date(),
+    play_time: (new Date().getTime() - startTime) / 1000,
+    player_id: "",
+    rewards: [
+      { item_name: "atata_stone", cnt: 600 },
+      { item_name: "atata_point", cnt: 1 },
+    ],
+  });
+  const winnerGameDone = async (mercy: boolean) => {
+    // 승자의 left 또는 rightaction 누를때 반응하는 것
+    const rewards = mercy
+      ? [
+          { item_name: "atata_stone", cnt: 600 },
+          { item_name: "atata_point", cnt: 2 },
+        ]
+      : [
+          { item_name: "atata_stone", cnt: 600 },
+          { item_name: "skul", cnt: 1 },
+        ];
+    setGameDatas((prev) => ({
+      ...prev,
+      game_special_option: mercy ? "자비" : "무자비",
+      play_time: (new Date().getTime() - startTime) / 1000,
+      rewards,
+      game_title: "결투!",
+      game_result: "승리!",
+    }));
+    sendData({ type: "winnerGameDone", data: mercy })();
+    dispatch(setReset(resetState));
+  };
+  const loserGameDone = async (mercy: boolean) => {
+    // 승자의 left 또는 rightaction 누를때 반응하는 것
+    const rewards = mercy
+      ? [
+          { item_name: "atata_stone", cnt: 100 },
+          { item_name: "atata_point", cnt: 1 },
+        ]
+      : [];
+    setGameDatas((prev) => ({
+      ...prev,
+      game_special_option: mercy ? "자비" : "무자비",
+      play_time: (new Date().getTime() - startTime) / 1000,
+      rewards,
+      game_title: "결투!",
+      game_result: "패배..",
+    }));
+    dispatch(setReset(resetState));
+  };
+  const reqRecordGame = async (gameData: any) => {
+    // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
+    console.log(gameData, "보내는 겜데이타");
+    const res = await jwtApiRequest(
+      SERVER_URI + "game/record",
+      "PUT",
+      gameData
+    );
+    console.log(res);
+    updateCostState(res);
+    dispatch(setInfomation(res));
+    navigation("/games/reward", { replace: true, state: { data: gameDatas } });
+  };
+
   // const nowAction = useSelector(())
   const actionModal = useSelector(
     (state: RootState) => state.bangState.actionModal
@@ -215,6 +307,9 @@ function Bang() {
   const gunFireAudio = useAudio(allSfx.gun_fire);
   const step = useSelector((state: RootState) => state.bangState.step);
   const matchId = useSelector((state: RootState) => state.bangState.matchId);
+  const infomation = useSelector(
+    (state: RootState) => state.userState.infomation
+  );
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigate();
   const dataChannel = useRef<RTCDataChannel>();
@@ -249,10 +344,13 @@ function Bang() {
       subHealth,
       health
     );
+
     if (playerRef.current === "A") {
       dispatch(setBHit(true));
     } else {
       dispatch(setAHit(true));
+    }
+    if (ability.skil.includes("흡혈")) {
     }
     setStatus((prev) => ({
       ...prev,
@@ -260,6 +358,12 @@ function Bang() {
         ...prev.you,
         subHealth: resultSubHealth,
         health: resultHealth,
+      },
+      me: {
+        ...prev.me,
+        health: ability.skil.includes("흡혈")
+          ? prev.me.health + 1
+          : prev.me.health,
       },
     }));
     sendData({ type: "atk", data: { resultHealth, resultSubHealth } })();
@@ -278,11 +382,13 @@ function Bang() {
       wasJump.current = "avoid";
     }
 
+    isValidIndex(x, y, targetBoard);
     // 액션 수행
     if (action === "공격") {
       const symbol = playerRef.current === "A" ? 3 : 2;
       const prevStay = targetBoard[x][y] === 1;
       const willStay = targetBoard[x][y] === symbol;
+      const spreadHit = isSpreadHit(x, y, targetBoard);
       gunFireAudio.play();
       if (playerRef.current === "A") {
         dispatch(setAAction("atk"));
@@ -327,10 +433,8 @@ function Bang() {
         hitPoint(ability.atk, status.you.subHealth, status.you.health);
       }
 
-      if (playerRef.current === "A") {
-        setAChat(["Miss"]);
-      } else {
-        setBChat(["Miss"]);
+      if (ability.skil.includes("확산") && spreadHit) {
+        hitPoint(1, status.you.subHealth, status.you.health);
       }
     }
     if (action === "회피") {
@@ -554,8 +658,13 @@ function Bang() {
         }, 0);
       }
 
-      if (recieve.type === "secondAction") {
-        setTerminel((prev) => ({ ...prev, you: "secondAction" }));
+      // if (recieve.type === "secondAction") {
+      //   setTerminel((prev) => ({ ...prev, you: "secondAction" }));
+      // }
+      if (recieve.type === "winnerGameDone") {
+        setTimeout(() => {
+          loserGameDone(recieve.data);
+        }, 100);
       }
     };
 
@@ -566,6 +675,7 @@ function Bang() {
       playerRef.current = "A";
       console.log("playerA");
       setPrevFirstAction("공격");
+      setObj((prev) => ({ ...prev, bounti: cookies.bounti }));
       dataChannel.current = peerConnection.createDataChannel("chat");
       // 상대방의 데이터를 수신하여 다른 기능을 하는 함수
       dataChannel.current.addEventListener("message", handleData);
@@ -581,6 +691,7 @@ function Bang() {
       console.log("playerB");
       playerRef.current = "B";
       setPrevFirstAction("회피");
+      setObj((prev) => ({ ...prev, bounti: cookies.bounti }));
 
       peerConnection.addEventListener("datachannel", (event) => {
         dataChannel.current = event.channel;
@@ -626,7 +737,11 @@ function Bang() {
     if (!cookies) {
       navigation("/games", { replace: true });
     }
-
+    setGameDatas((prev) => ({
+      ...prev,
+      _id: cookies._id,
+      player_id: infomation.id,
+    }));
     const giveUp = () => {
       Cookies.remove("bang");
       sendData({ type: "giveup", data: "" })();
@@ -645,6 +760,16 @@ function Bang() {
       window.removeEventListener("pagehide", giveUp);
     };
   }, [peerConnection]);
+
+  // 승패
+  useEffect(() => {
+    if (
+      gameDatas.game_special_option === "자비" ||
+      gameDatas.game_special_option === "무자비"
+    ) {
+      reqRecordGame(gameDatas);
+    }
+  }, [gameDatas.game_special_option]);
 
   // 총 효과음
   useEffect(() => {
@@ -771,35 +896,49 @@ function Bang() {
   // --
 
   useEffect(() => {
-    const result = {
-      targetId: "id",
-      targetNickname: status.you.nickname,
-      reward: 300,
-      cost: 300,
-      win: false,
-      mercy: false,
-      consum: [{}],
-      round,
-      useTime: 0,
-    };
-    if (status.me.health <= 0) {
-      result.useTime = (new Date().getTime() - startTime) / 1000;
-      setEncryptedCookie("gameResult", result);
-      dispatch(setReset(resetState));
-      setResultModal(true);
-    } else if (status.you.health <= 0) {
-      result.reward = 300;
-      result.win = true;
-      result.useTime = (new Date().getTime() - startTime) / 1000;
+    if (status.me.health > 0 && status.you.health > 0) return;
 
-      setEncryptedCookie("gameResult", result);
-      dispatch(setReset(resetState));
-      setResultModal(true);
+    const win = status.me.health <= 0 ? false : true;
+
+    if (!win) {
+      dispatch(
+        setModal({
+          show: true,
+          btnText: "기도",
+          description:
+            "당신은 패자입니다. 상대가 자비를 베풀기를 기도하십시오.",
+          title: "패배",
+        })
+      );
+    } else {
+      setPopupState({
+        show: true,
+        description:
+          "승리했습니다! 자비를 베푸시겠습니까?\n자비를 베풀면 랭킹에 관여하는 AP를 획득합니다. \n\n단, 자비가 없는 사람에게 현상금이 걸릴 수 있습니다.",
+        rightAction: () => {
+          winnerGameDone(true);
+        },
+        leftAction: () => {
+          winnerGameDone(false);
+        },
+        title: "승리!",
+        setPopupState,
+      });
     }
+
+    // navigation("reward", { replace: true, state: { data: gameDatas } });
   }, [status]);
 
   return (
     <Container style={{ flex: 1, position: "relative" }}>
+      <WinnerPopup
+        show={popupState.show}
+        title={popupState.title}
+        description={popupState.description}
+        rightAction={popupState.rightAction}
+        leftAction={popupState.leftAction}
+        setPopupState={setPopupState}
+      />
       <View
         style={{
           width: "100%",
@@ -1035,6 +1174,7 @@ function Bang() {
           setStatus={setStatus}
           setTerminel={setTerminel}
           sendData={sendData}
+          setGameDatas={setGameDatas}
         />
       )}
       <BottomPrevNext
@@ -1075,41 +1215,6 @@ function Bang() {
         }}
         nextText={"준비완료"}
       />
-      {resultModal && (
-        <View
-          style={{
-            position: "absolute",
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT,
-            backgroundColor: "#000000",
-            zIndex: 1000000,
-          }}
-        >
-          <View>
-            <Text.Light_20>
-              {getDecryptedCookie("gameResult").targetNickname}
-            </Text.Light_20>
-            <Text.Light_20>
-              {getDecryptedCookie("gameResult").win === false
-                ? "패배"
-                : "승리!"}
-            </Text.Light_20>
-            <Text.Light_20>
-              {getDecryptedCookie("gameResult").cost}
-            </Text.Light_20>
-            <Text.Light_20>
-              {getDecryptedCookie("gameResult").reward}
-            </Text.Light_20>
-            <Text.Light_20>
-              {getDecryptedCookie("gameResult").useTime}
-            </Text.Light_20>
-            <EmptyBox height={100} />
-            <PrevBtn onClick={() => navigation("/games", { replace: true })}>
-              <Text.Light_24>나가기</Text.Light_24>
-            </PrevBtn>
-          </View>
-        </View>
-      )}
     </Container>
   );
 }

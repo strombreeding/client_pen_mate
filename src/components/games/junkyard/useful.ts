@@ -26,11 +26,12 @@ export const throwDice = (probabilityString: string) => {
 };
 
 export const getAntiMatter = () => {
-  const isGet = throwDice("0.5%");
+  const isGet = throwDice("1%");
+  // const isGet = throwDice("0.5%");
   return isGet;
 };
 
 export const getEnergy = () => {
-  const isGet = throwDice("3%");
+  const isGet = throwDice("2%");
   return isGet;
 };

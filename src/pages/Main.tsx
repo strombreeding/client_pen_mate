@@ -12,9 +12,12 @@ import { usePageState } from "../hooks/getVisitedPage";
 import { useEffect } from "react";
 import { setNavTab } from "../store/slices/appState";
 import Store from "./Store";
+import { useLocation } from "react-router-dom";
+import Ranking from "./Ranking";
 
 function Main() {
   const dispatch = useDispatch<AppDispatch>();
+  // const location = useLocation().state.nav;
   const navType = useSelector((state: RootState) => state.appState.navTab);
   useEffect(() => {
     dispatch(setNavTab(window.location.pathname));
@@ -31,7 +34,7 @@ function Main() {
     >
       <HeaderHome />
       {navType === "/" && <BigGameBtn />}
-      {navType === "/ranking" && <Profile />}
+      {navType === "/ranking" && <Ranking />}
       {navType === "/store" && <Store />}
       {navType === "/profile" && <Profile />}
 

@@ -84,7 +84,9 @@ function BottomPrevNext({
   const pressUp = (type: "prev" | "next") => () => {
     if (type === "next") {
       nextAudio.load();
-      nextAudio.play();
+      setTimeout(() => {
+        nextAudio.play();
+      }, 100);
       setNextBtnClick(false);
     } else {
       setPrevBtnClick(false);

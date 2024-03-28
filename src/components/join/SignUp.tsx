@@ -89,13 +89,13 @@ function SignUp({ step }: { step: string }) {
         setInfomation({
           id: resData.id,
           nickname: resData.nickname,
-          atataPoint: resData.atataPoint,
-          atataStone: resData.atataStone,
+          atata_point: resData.atata_point,
+          atata_stone: resData.atata_stone,
           energy: resData.energy,
         })
       );
-      setStorageCrypto("atataPoint", resData.atataPoint);
-      setStorageCrypto("atataStone", resData.atataStone);
+      setStorageCrypto("atata_point", resData.atata_point);
+      setStorageCrypto("atata_stone", resData.atata_stone);
       setStorageCrypto("energy", resData.energy);
 
       window.localStorage.setItem("at", resData.at);

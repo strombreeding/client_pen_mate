@@ -18,3 +18,15 @@ export const getRandomTime = () => {
     return (Math.random() * 2 + 8) * 1000;
   }
 };
+
+export const addK = (num: number | null) => {
+  if (num == null) return 0;
+  if (num >= 1000) {
+    var k = Math.floor(num / 1000);
+    var remainder = num % 1000;
+    var remainderStr = remainder !== 0 ? " " + remainder : "";
+    return k + "k" + remainderStr;
+  } else {
+    return num.toString();
+  }
+};

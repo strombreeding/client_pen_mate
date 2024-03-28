@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import { View } from "../nativeView";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../configs/device";
 import { Text } from "../assets/fontStyles";
 import { PrevBtn } from "./navigations/BottomPrevNext";
@@ -10,6 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { imgSrc } from "../assets/img";
 import { jwtApiRequest } from "../apis/jwtApiService";
+import Shake from "./animations/Shake";
+import { updateCostState } from "../utils/localStorage";
+import { setInfomation } from "../store/slices/userState";
+import { setModal, setPopup } from "../store/slices/appState";
 
 const Wraper = styled(View)`
   position: absolute;
@@ -40,6 +51,19 @@ const Box = styled(View)`
   border-radius: 15px;
 `;
 
+type ItemProps = {
+  cost: number;
+  get_at: Date;
+  item_description: string;
+  item_img: string;
+  item_name: string;
+  name: string;
+  price: number;
+  skil: string;
+  type: string;
+  usage: string;
+  _id: string;
+};
 export interface IStorePopupProps {
   _id: string;
   item_name: string;
@@ -47,7 +71,11 @@ export interface IStorePopupProps {
   item_price: number;
   item_img: string;
   visible: boolean;
+  name: string;
   setSelectItem?: Dispatch<SetStateAction<IStorePopupProps>>;
+  setInventoryList?: Dispatch<
+    SetStateAction<{ _id: string; item: ItemProps; cnt: number }[]>
+  >;
 }
 
 const Input = styled.input`
@@ -72,24 +100,90 @@ function StorePopup({
   item_name,
   item_price,
   setSelectItem,
+  name,
+  setInventoryList,
 }: IStorePopupProps) {
   const [cnt, setCnt] = useState("1");
+  const [errMsg, setErrMsg] = useState("");
   const boxRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
-  //  =
-  //    == null ? "취소" : ;
+
   const reqPay = async () => {
+    if (Number(cnt) <= 0 || cnt == null || cnt == "") {
+      setErrMsg("수량을 입력해주세요.");
+      return;
+    }
     const at = window.localStorage.getItem("at");
-    const res = await jwtApiRequest("payment", "POST", {
-      at,
-      data: {
-        price: item_price,
-        _id,
-        cnt: Number(cnt),
-      },
-    });
-    console.log(res);
+    try {
+      const res = await jwtApiRequest("payment", "POST", {
+        at,
+        data: {
+          price: item_price,
+          _id,
+          cnt: Number(cnt),
+          item_name,
+        },
+      });
+      reqinventoryList();
+      updateCostState(res.updateSource);
+      dispatch(setInfomation(res.updateSource));
+      dispatch(
+        setModal({
+          show: true,
+          title: "구매 완료",
+          description: `[ ${res.result.item.name} ] 품목 [ ${cnt} ]개를 성공적으로 구입했습니다.`,
+          btnText: "완료",
+        })
+      );
+      reset();
+    } catch (err: any) {
+      console.log(err);
+      console.log(err.response.data.message);
+      if (err.response.data.message.includes("not enough")) {
+        setErrMsg("재화가 부족합니다.");
+      }
+    }
   };
+
+  const reqinventoryList = async () => {
+    try {
+      const res = await jwtApiRequest("inventory/my", "GET", {});
+      console.log(res, "tlqkf");
+      if (setInventoryList) {
+        setInventoryList(res);
+      }
+    } catch (err: any) {
+      console.log("씹새야");
+      console.log(err);
+    }
+  };
+
+  const reset = () => {
+    if (setSelectItem) {
+      setSelectItem((prev) => ({
+        item_description: "",
+        item_img: "",
+        item_name: "",
+        item_price: 0,
+        _id: "",
+        visible: false,
+        name: "",
+      }));
+      setCnt("1");
+      setErrMsg("");
+    }
+  };
+
+  const onChange = (e: any) => {
+    let value = e.currentTarget.value;
+    if (value[0] === "0" || value === "") {
+      value.substring(0, 1);
+      value = "";
+    }
+    setErrMsg("");
+    setCnt(value);
+  };
+
   useEffect(() => {
     if (!boxRef.current) return;
   }, []);
@@ -99,7 +193,7 @@ function StorePopup({
     <Wraper>
       <Box ref={boxRef}>
         <View style={{ alignItems: "center" }}>
-          <Text.Regular_24>{item_name}</Text.Regular_24>
+          <Text.Regular_24>{name}</Text.Regular_24>
 
           <EmptyBox height={5} />
 
@@ -125,15 +219,7 @@ function StorePopup({
               min={1}
               max={15}
               value={cnt}
-              onChange={(e) => {
-                let value = e.currentTarget.value;
-                if (value[0] === "0" || value === "") {
-                  value.substring(0, 1);
-                  value = "";
-                }
-
-                setCnt(value);
-              }}
+              onChange={onChange}
             />
           </View>
           <EmptyBox height={15} />
@@ -158,6 +244,16 @@ function StorePopup({
             />
           </View>
 
+          <EmptyBox height={10} />
+
+          {errMsg.length > 0 && (
+            <Shake>
+              <Text.Regular_16 color={colors.Accent_Red}>
+                {errMsg}
+              </Text.Regular_16>
+            </Shake>
+          )}
+
           <EmptyBox height={35} />
         </View>
 
@@ -168,24 +264,7 @@ function StorePopup({
           }}
         >
           <>
-            <PrevBtn
-              onClick={
-                () => {
-                  if (setSelectItem) {
-                    setSelectItem((prev) => ({
-                      item_description: "",
-                      item_img: "",
-                      item_name: "",
-                      item_price: 0,
-                      _id: "",
-                      visible: false,
-                    }));
-                    setCnt("1");
-                  }
-                }
-                //   dispatch(setStorePopup({ ...popup, show: false }))
-              }
-            >
+            <PrevBtn onClick={reset}>
               <Text.Light_16>취소</Text.Light_16>
             </PrevBtn>
             <EmptyBox width={5} />
@@ -202,4 +281,4 @@ function StorePopup({
   );
 }
 
-export default StorePopup;
+export default memo(StorePopup);

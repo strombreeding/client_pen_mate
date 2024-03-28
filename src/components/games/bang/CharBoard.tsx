@@ -13,13 +13,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import CharacterA from "./animations/Character";
 import CharacterB from "./animations/CharacterB";
-interface ICharProps {
-  imgSrc: string;
-  width: number;
-  height: number;
-  cols: number;
-  rows: number;
-}
+import { ICharProps } from "../../../pages/Bang";
+
 const RightChar = styled.div<{ data: ICharProps; stand: number }>`
   position: relative;
   /* top: 300px; */

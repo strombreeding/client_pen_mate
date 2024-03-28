@@ -11,6 +11,10 @@ import { AppDispatch } from "../../store/store";
 import { setBgImg, setLoading } from "../../store/slices/appState";
 import { getOauthUrl } from "../../apis/login/read";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { setInfomation, setLoginState } from "../../store/slices/userState";
+import { setStorageCrypto } from "../../utils/localStorage";
+import { SERVER_URI } from "../../configs/server";
 
 type SocialPlatform = "kakao" | "apple" | "google";
 function Login({ step }: { step: string }) {
@@ -30,6 +34,33 @@ function Login({ step }: { step: string }) {
     },
     []
   );
+
+  const adminLogin = async () => {
+    const res = await axios.post(SERVER_URI + "user/admin", {
+      id: 1234,
+      email: "admin",
+    });
+    const resData = res.data;
+    console.log(resData);
+    dispatch(setLoginState(true));
+    dispatch(
+      setInfomation({
+        id: resData.id,
+        nickname: resData.nickname,
+        atata_point: resData.atata_point,
+        atata_stone: resData.atata_stone,
+        energy: resData.energy,
+      })
+    );
+    setStorageCrypto("atata_point", resData.atata_point);
+    setStorageCrypto("atata_stone", resData.atata_stone);
+    setStorageCrypto("energy", resData.energy);
+
+    window.localStorage.setItem("at", resData.at);
+    window.localStorage.setItem("rt", resData.rt);
+    navigation("/");
+  };
+
   return (
     <View
       style={{
@@ -37,6 +68,9 @@ function Login({ step }: { step: string }) {
         alignItems: "center",
       }}
     >
+      <View style={{ width: 100, height: 100 }} onClick={adminLogin}>
+        관리자 접속
+      </View>
       <Text.Spo_Medium_20>소셜로그인 후 랭킹에 참여하세요</Text.Spo_Medium_20>
       <EmptyBox height={20} />
       <SocialLoginBtn onClick={onPress("kakao")} bgcolor="#FEE500">

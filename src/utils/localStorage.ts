@@ -12,25 +12,20 @@ export const getStorageCrypto = (name: string) => {
   return decryptValue;
 };
 
-export const updateCostState = (updateSource: any) => {
-  const updateStateList = Object.entries(updateSource[0]);
-  const resultObj: any = {};
-  let realKey: any;
-  let realValue: any;
+export const updateCostState = (
+  updateSource: { cnt: number; item_name: string }[]
+) => {
+  console.log(updateSource);
+  if (Object.keys(updateSource).length === 0) {
+    return {};
+  }
+  const updateStateList = Object.entries(updateSource);
+
   updateStateList.map((item) => {
     const key = item[0]; // cnt 가 들어왔으면
     const value = item[1];
-    if (key === "cnt") {
-      realValue = value;
-    } else if (key === "itemName") {
-      realKey = value;
-    }
-    console.log(realKey, realValue);
-    setStorageCrypto(realKey, realValue);
-    if (realKey && realValue) {
-      resultObj[`${realKey}`] = realValue;
+    if (key === "atata_stone" || key === "atata_point" || key === "energy") {
+      setStorageCrypto(key, value);
     }
   });
-
-  return resultObj;
 };

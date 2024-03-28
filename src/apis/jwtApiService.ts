@@ -39,34 +39,34 @@ export const jwtApiRequest = async (
         // 리프레시 토큰을 가져와서 새로운 액세스 토큰을 발급
         const res = await refreshToken(currentRt);
 
-        setStorageCrypto("atataPoint", res.atataPoint);
-        setStorageCrypto("atataStone", res.atataStone);
+        setStorageCrypto("atata_point", res.atata_point);
+        setStorageCrypto("atata_stone", res.atata_stone);
         setStorageCrypto("energy", res.energy);
         window.localStorage.setItem("at", res.at);
         window.localStorage.setItem("rt", res.rt);
         data = { ...data, at: res.at };
         // 새로운 액세스 토큰을 헤더에 설정
-        axiosInstance.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${res.at}`;
-        // 원래의 API 요청을 다시 시도
+
         console.log("다시 시도", url);
         const retryResponse = await axiosInstance({
           url,
           method,
           data,
+          headers: {
+            Authorization: `Bearer ${res.at}`,
+          },
         });
         console.log(retryResponse.data, "zz");
         return retryResponse.data;
       } catch (err: any) {
         console.log(err);
-        if (err.message.includes("jwt")) {
+        if (err.response.data.message.includes("jwt")) {
           refreshSession(err);
         }
         throw err;
       }
     }
-    console.error("Error making API request:", error);
+    console.error("Error making API request:", errMsg);
     if (errMsg.includes("위조된RT") || errMsg.includes("invalid signature")) {
       refreshSession(error);
     }

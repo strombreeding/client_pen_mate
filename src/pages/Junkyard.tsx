@@ -259,22 +259,7 @@ function Junkyard() {
     };
   }, []);
 
-  // 문제 풀때마다 쿠키에 게임상태를 저장하는 이펙트
-  // + 뒤로가기, 새로고침 등의 페이지전환 처리
   useEffect(() => {
-    // const getCookie = getDecryptedCookie("ingame");
-    // const saveObj: InGameState = {
-    //   ...getCookie,
-    //   ...gameSetting,
-    //   board,
-    //   aiBoard,
-    //   clearList,
-    //   isStarting,
-    //   startTime,
-    //   isContinue: true,
-    // };
-    // setEncryptedCookie("ingame", saveObj);
-    // console.log("쿠키업뎃!", saveObj);
     const unlistenHistoryEvent = history.listen(({ action }) => {
       if (action === "POP") {
         const confirm = window.confirm(
@@ -363,9 +348,10 @@ function Junkyard() {
     const req = async (gameData: any) => {
       // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
       const res = await axios.put(SERVER_URI + "game/record", gameData);
-      console.log(res.data);
-      const updateCost = updateCostState(res.data);
-      dispatch(setInfomation({ ...updateCost }));
+      const updateCost = res.data;
+      console.log(updateCost);
+      updateCostState(updateCost);
+      dispatch(setInfomation(updateCost));
     };
     if (!isStarting) return;
     // if (tictoc > 0) {
@@ -391,7 +377,7 @@ function Junkyard() {
         }
         return prev - 1;
       });
-    }, 1000);
+    }, 100);
     return () => {
       clearTimeout(timer);
     };

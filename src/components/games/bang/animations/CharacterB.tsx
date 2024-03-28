@@ -25,15 +25,9 @@ import { setAAction } from "../../../../store/slices/bangState";
 import { attack } from "./attack";
 import HitBox from "../detail/HitBox";
 import ChatBox from "../detail/Chat";
+import { ICharProps } from "../../../../pages/Bang";
 
 // 스프라이트 이미지 구성품, 및 크기
-interface ICharProps {
-  imgSrc: string;
-  width: number;
-  height: number;
-  cols: number;
-  rows: number;
-}
 
 const Char = styled.div<{ data: ICharProps; player: "A" | "B" }>`
   position: absolute;

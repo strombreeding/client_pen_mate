@@ -27,6 +27,9 @@
 탄 속성
 <a href="https://www.freepik.com/free-vector/magical-game-orbs-with-glowing-neon-effect-cartoon-vector-illustration-set-fantasy-spheres-with-inner-energy-power-magician-fortune-teller-balls-with-power-predict-future-cast-spell_117227443.htm#fromView=search&page=2&position=50&uuid=85f85dbc-3e4c-407e-82de-fdb0a5787b0f">Image by upklyak</a> on Freepik
 
+무법뱃지
+<a href="https://www.freepik.com/free-vector/3d-skulls-shapes-set_31243738.htm#fromView=search&page=2&position=0&uuid=d6a6e6b8-57ec-4de9-a757-81849a4f228c">Image by freepik</a>
+
 그외속성
 <a href="https://www.freepik.com/free-vector/fantasy-alien-planets-ui-space-game-vector_28641103.htm#fromView=search&page=2&position=1&uuid=85f85dbc-3e4c-407e-82de-fdb0a5787b0f">Image by upklyak</a> on Freepik
 

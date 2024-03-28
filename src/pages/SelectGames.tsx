@@ -36,6 +36,7 @@ import MatchingModal from "../components/games/bang/detail/MatchingModal";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { Socket } from "socket.io-client";
 import HeaderPoint from "../components/HeaderPoint";
+import Store from "./Store";
 
 const initOffsetX = SCREEN_WIDTH - SCREEN_WIDTH * 0.2 * 2;
 const caculMoveValue = SCREEN_WIDTH * 0.736111111;
@@ -70,6 +71,7 @@ const SelectGames = () => {
   const matchStart = useSelector(
     (state: RootState) => state.bangState.matchStart
   );
+  const [showStore, setShowStore] = useState(false);
   const [ready, setReady] = useState(false);
   const [games, setGames] = useState<GameProps[]>([{}, {}, {}] as GameProps[]);
   const [idx, setIdx] = useState(2);
@@ -127,6 +129,7 @@ const SelectGames = () => {
     scrollRef.current.style.transform = `translateX(-${scrollSection[idx]}px)`;
     // scrollRef.current.style.transition = "all 0.15s ease-in-out";
     dragRef.current = -1;
+    console.log(games[idx].title);
   }, [idx, ready]);
 
   const moveToNthSlide = (index: number) => {
@@ -246,6 +249,27 @@ const SelectGames = () => {
 
   return (
     <Container style={styles.container}>
+      {showStore && (
+        <>
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.7)",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1,
+            }}
+            onClick={() => setShowStore(false)}
+          ></View>
+          <View style={{ zIndex: 2, position: "absolute", top: "15%" }}>
+            <Store />
+          </View>
+        </>
+      )}
       {/* <EmptyBox height={50} /> */}
       <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
         <View
@@ -285,7 +309,20 @@ const SelectGames = () => {
       <EmptyBox style={{ flex: 1 }} />
       <BottomPrevNext
         style={{ flex: 1 }}
-        prevAction={() => navigation("/", { replace: true })}
+        prevAction={() => {
+          if (showStore) {
+            setShowStore(false);
+          } else {
+            navigation("/", { replace: true });
+          }
+        }}
+        nextAction={() => {
+          if (showStore) {
+            setShowStore(false);
+          } else {
+            setShowStore(true);
+          }
+        }}
         visible={choiceTitle === undefined}
       />
       <MatchingModal />

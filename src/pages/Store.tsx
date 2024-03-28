@@ -10,11 +10,13 @@ import { SERVER_URI } from "../configs/server";
 import { useEffect, useRef, useState } from "react";
 import { jwtApiRequest } from "../apis/jwtApiService";
 import StorePopup, { IStorePopupProps } from "../components/StorePopup";
+import { addK } from "../utils/randomCnt";
 
 const InitModal = styled(View)`
   z-index: 2;
   position: relative;
   padding: 15px;
+  border-radius: 5px 5px 5px 5px;
   width: 100%;
   align-items: center;
   width: 95%;
@@ -86,11 +88,14 @@ function Store() {
     item_description: "",
     item_img: "",
     item_name: "",
+    name: "",
     item_price: 0,
     visible: false,
     _id: "",
   } as IStorePopupProps);
   // 인벤토리 가져와야함
+
+  console.log(inventoryList, "####################");
   const reqItemList = async () => {
     const res = await axios.get(SERVER_URI + "item");
     const filterNameList = res.data.map((item: GroupProps) => {
@@ -103,8 +108,7 @@ function Store() {
 
   const reqinventoryList = async () => {
     try {
-      const at = localStorage.getItem("at");
-      const res = await jwtApiRequest("inventory", "POST", { at });
+      const res = await jwtApiRequest("inventory/my", "GET", {});
       console.log(res);
       setInventoryList(res);
     } catch (err: any) {
@@ -116,14 +120,14 @@ function Store() {
     setSelectItem((prev) => ({
       item_description: item.item_description,
       item_img: item.item_img,
-      item_name: item.name,
+      item_name: item.item_name,
       item_price: item.price,
       visible: true,
       _id: item._id,
+      name: item.name,
     }));
   };
 
-  console.log(selectItem);
   useEffect(() => {
     reqItemList();
     reqinventoryList();
@@ -149,6 +153,8 @@ function Store() {
         visible={selectItem.visible}
         setSelectItem={setSelectItem}
         _id={selectItem._id}
+        name={selectItem.name}
+        setInventoryList={setInventoryList}
       />
       <EmptyBox height={15} />
 
@@ -206,7 +212,18 @@ function Store() {
                       alignItems: "center",
                     }}
                   >
-                    <Text.Light_12>{item.price}</Text.Light_12>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text.Light_12>{addK(item.price)}</Text.Light_12>
+                      <img
+                        src={imgSrc.atata_stone}
+                        style={{
+                          width: 16,
+                          marginTop: -3,
+                          marginRight: -2,
+                        }}
+                        alt=""
+                      />
+                    </View>
                   </View>
                 </ItemSlot>
               );
@@ -231,11 +248,19 @@ function Store() {
               return (
                 <ItemSlot key={i}>
                   <ItemImg src={inventoryItem.item.item_img} />
-                  <Text.Light_12
-                    style={{ position: "absolute", bottom: 2, right: 5 }}
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 0,
+                      paddingTop: 3,
+                      width: "98%",
+                      backgroundColor: "rgba(0,0,0,0.7)",
+                      borderRadius: 5,
+                      alignItems: "center",
+                    }}
                   >
-                    {inventoryItem.cnt}
-                  </Text.Light_12>
+                    <Text.Light_12>{addK(inventoryItem.cnt)}</Text.Light_12>
+                  </View>
                 </ItemSlot>
               );
             })}
@@ -254,20 +279,3 @@ export interface IGroupbyProps {
   group: string;
   list: any[];
 }
-export const getGroupBy = (group: string, list: any[]): IGroupbyProps[] => {
-  const groupByReduce = list.reduce((acc, item) => {
-    // 해당 usage가 이미 accumulator에 존재하는지 확인합니다.
-    if (!acc[item[group]]) {
-      acc[item[group]] = []; // 해당 usage 키로 빈 배열을 생성합니다.
-    }
-    acc[item[group]].push(item); // 해당 usage 배열에 현재 아이템을 추가합니다.
-    return acc;
-  }, {});
-
-  const resultList = Object.keys(groupByReduce).map((key) => ({
-    group: key,
-    list: groupByReduce[key],
-  }));
-
-  return resultList;
-};

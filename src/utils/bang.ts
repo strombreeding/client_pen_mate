@@ -107,3 +107,41 @@ export const getTargetPath = (targetBoard: number[][], player: "A" | "B") => {
   }
   return result;
 };
+
+export const isValidIndex = (x: number, y: number, targetBoard: number[][]) => {
+  const maxX = targetBoard.length;
+  const maxY = targetBoard[0].length;
+  return x >= 0 && x < maxX && y >= 0 && y < maxY;
+};
+
+export const isSpreadHit = (x: number, y: number, targetBoard: number[][]) => {
+  const rtVis = isValidIndex(x + 1, y + 1, targetBoard);
+  const rdVis = isValidIndex(x - 1, y + 1, targetBoard);
+  const ltVis = isValidIndex(x + 1, y - 1, targetBoard);
+  const ldVis = isValidIndex(x - 1, y - 1, targetBoard);
+  let hit = false;
+  if (rtVis) {
+    if (targetBoard[x + 1][y + 1] === 1) {
+      hit = true;
+    }
+  }
+  if (rdVis) {
+    if (targetBoard[x - 1][y + 1] === 1) {
+      hit = true;
+    }
+  }
+  if (ltVis) {
+    if (targetBoard[x + 1][y - 1] === 1) {
+      hit = true;
+    }
+  }
+  if (ldVis) {
+    if (targetBoard[x - 1][y + 1] === 1) {
+      hit = true;
+    }
+  }
+  if (targetBoard[x][y] === 1) {
+    hit = true;
+  }
+  return hit;
+};

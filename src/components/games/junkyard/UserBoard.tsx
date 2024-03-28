@@ -156,24 +156,24 @@ function UserBoard({
     isGetEnergy: boolean
   ) => {
     const wasGetStone = gameData.rewards.filter(
-      (item: any) => item.itemName === "atata_stone"
+      (item: any) => item.item_name === "atata_stone"
     );
     const wasGetEnergy = gameData.rewards.filter(
-      (item: any) => item.itemName === "energy"
+      (item: any) => item.item_name === "energy"
     );
     const wasGetAntimatter = gameData.rewards.filter(
-      (item: any) => item.itemName === "energy"
+      (item: any) => item.item_name === "antimatter"
     );
 
     // 리워드 배열에 없을 경우 배열에 넣음
     if (wasGetStone.length <= 0) {
-      gameData.rewards.push({ itemName: "atata_stone", cnt: 0 });
+      gameData.rewards.push({ item_name: "atata_stone", cnt: 0 });
     }
     if (wasGetAntimatter.length <= 0 && isGetAntimatter) {
-      gameData.rewards.push({ itemName: "antimatter", cnt: 0 });
+      gameData.rewards.push({ item_name: "antimatter", cnt: 0 });
     }
     if (wasGetEnergy.length <= 0 && isGetEnergy) {
-      gameData.rewards.push({ itemName: "energy", cnt: 0 });
+      gameData.rewards.push({ item_name: "energy", cnt: 0 });
     }
     return gameData;
   };
@@ -186,20 +186,20 @@ function UserBoard({
     console.log(gameData.rewards, "바뀌고 난 후");
     // 리워드 배열 변경
     gameData.rewards = gameData.rewards.map((item: any, i: number) => {
-      if (item.itemName === "atata_stone" && stage != null) {
+      if (item.item_name === "atata_stone" && stage != null) {
         item.cnt = item.cnt + stage;
       }
-      if (item.itemName === "energy" && isGetEnergy) {
+      if (item.item_name === "energy" && isGetEnergy) {
         item.cnt = item.cnt + 1;
       }
-      if (item.itemName === "antimatter" && isGetAntimatter) {
+      if (item.item_name === "antimatter" && isGetAntimatter) {
         item.cnt = item.cnt + 1;
       }
-      if (item.itemName === "atata_stone" && stage != null) {
+      if (item.item_name === "atata_stone" && stage != null) {
         item.cnt = item.cnt + stage;
         return item;
       }
-      if (item.itemName === "atata_stone") {
+      if (item.item_name === "atata_stone") {
         item.cnt = item.cnt + 1;
       }
       return item;
@@ -262,7 +262,7 @@ function UserBoard({
                 <img
                   src={
                     //@ts-ignore
-                    imgSrc[item.itemName]
+                    imgSrc[item.item_name]
                   }
                   style={{ width: 23, height: 23, marginTop: -3.5 }}
                 />
