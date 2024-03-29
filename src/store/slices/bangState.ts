@@ -32,6 +32,8 @@ interface BangState {
   round: number;
   aHit: boolean;
   bHit: boolean;
+  canShot: number[][];
+  canMove: number[][];
 }
 
 const initialState: BangState = {
@@ -58,6 +60,8 @@ const initialState: BangState = {
   round: 1,
   aHit: false,
   bHit: false,
+  canShot: [],
+  canMove: [],
 };
 
 const bangSlice = createSlice({
@@ -128,6 +132,12 @@ const bangSlice = createSlice({
     setReset: (state, action: PayloadAction<BangState>) => {
       return (state = { ...action.payload });
     },
+    setCanShot: (state, action: PayloadAction<number[][]>) => {
+      state.canShot = action.payload;
+    },
+    setCanMove: (state, action: PayloadAction<number[][]>) => {
+      state.canMove = action.payload;
+    },
   },
 });
 
@@ -151,6 +161,8 @@ export const {
   setRound,
   setAHit,
   setBHit,
+  setCanShot,
+  setCanMove,
 } = bangSlice.actions;
 
 export default bangSlice.reducer;
@@ -179,4 +191,6 @@ export const resetState: BangState = {
   round: 1,
   aHit: false,
   bHit: false,
+  canShot: [],
+  canMove: [],
 };

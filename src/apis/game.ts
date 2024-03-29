@@ -12,6 +12,7 @@ export const checkCost = async (costObj: CostObjProps[]): Promise<boolean> => {
     return res;
   } catch (err: any) {
     const errMsg = err.response.data.message;
+    console.log(errMsg);
     if (errMsg.includes("not enough")) {
       throw new Error("재화가 부족합니다.");
     } else {

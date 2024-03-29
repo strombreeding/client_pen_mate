@@ -125,6 +125,7 @@ export type TerminelValues =
   | "secondActionDone"
   | "countDown"
   | "done"
+  | "gameSet"
   | "";
 export interface ICharProps {
   imgSrc: string;
@@ -228,19 +229,20 @@ function Bang() {
   });
   const [actionClicked, setActionClicked] = useState(true);
   const [playShot, setPlayShot] = useState(false);
+  const [gameSet, setGameSet] = useState(false);
   const [gameDatas, setGameDatas] = useState<IRewardProps>({
     _id: "",
-    cost_obj: [],
-    game_result: "",
-    game_special_option: "",
-    game_title: "",
+    cost_obj: [
+      { type: "atata_stone", cost: 300 },
+      { type: "energy", cost: 1 },
+    ],
+    game_result: "패배..",
+    game_special_option: "무자비",
+    game_title: "결투!",
     play_at: new Date(),
     play_time: (new Date().getTime() - startTime) / 1000,
     player_id: "",
-    rewards: [
-      { item_name: "atata_stone", cnt: 600 },
-      { item_name: "atata_point", cnt: 1 },
-    ],
+    rewards: [],
   });
   const winnerGameDone = async (mercy: boolean) => {
     // 승자의 left 또는 rightaction 누를때 반응하는 것
@@ -253,18 +255,19 @@ function Bang() {
           { item_name: "atata_stone", cnt: 600 },
           { item_name: "skul", cnt: 1 },
         ];
-    setGameDatas((prev) => ({
-      ...prev,
-      game_special_option: mercy ? "자비" : "무자비",
-      play_time: (new Date().getTime() - startTime) / 1000,
-      rewards,
-      game_title: "결투!",
-      game_result: "승리!",
-    }));
+    console.log(gameDatas);
+    const recordData = { ...gameDatas };
+    recordData.game_special_option = mercy ? "자비" : "무자비";
+    recordData.play_time = (new Date().getTime() - startTime) / 1000;
+    recordData.rewards = [...recordData.rewards, ...rewards];
+    recordData.game_result = "승리!";
+    recordData.player_id = infomation.id;
+    console.log(recordData);
+    reqRecordGame(recordData);
     sendData({ type: "winnerGameDone", data: mercy })();
     dispatch(setReset(resetState));
   };
-  const loserGameDone = async (mercy: boolean) => {
+  const loserGameDone = async (mercy: boolean, cookies: any) => {
     // 승자의 left 또는 rightaction 누를때 반응하는 것
     const rewards = mercy
       ? [
@@ -272,17 +275,25 @@ function Bang() {
           { item_name: "atata_point", cnt: 1 },
         ]
       : [];
-    setGameDatas((prev) => ({
-      ...prev,
-      game_special_option: mercy ? "자비" : "무자비",
-      play_time: (new Date().getTime() - startTime) / 1000,
-      rewards,
-      game_title: "결투!",
-      game_result: "패배..",
-    }));
+    const recordData = { ...gameDatas };
+    recordData.game_special_option = mercy ? "자비" : "무자비";
+    recordData.play_time = (new Date().getTime() - startTime) / 1000;
+    recordData.rewards = [...recordData.rewards, ...rewards];
+    recordData._id = cookies._id;
+    recordData.player_id = infomation.id;
     dispatch(setReset(resetState));
+    console.log(cookies);
+    reqRecordGame(recordData);
   };
   const reqRecordGame = async (gameData: any) => {
+    dispatch(
+      setModal({
+        show: false,
+        btnText: "",
+        description: "",
+        title: "",
+      })
+    );
     // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
     console.log(gameData, "보내는 겜데이타");
     const res = await jwtApiRequest(
@@ -290,10 +301,13 @@ function Bang() {
       "PUT",
       gameData
     );
+    if (cookies.meBounti) {
+      gameData.bounti = true;
+    }
     console.log(res);
     updateCostState(res);
     dispatch(setInfomation(res));
-    navigation("/games/reward", { replace: true, state: { data: gameDatas } });
+    navigation("/games/reward", { replace: true, state: { data: gameData } });
   };
 
   // const nowAction = useSelector(())
@@ -304,6 +318,8 @@ function Bang() {
   // const actionWait = useSelector(
   //   (state: RootState) => state.bangState.actionWait
   // );
+  const cookies = getDecryptedCookie("bang");
+
   const gunFireAudio = useAudio(allSfx.gun_fire);
   const step = useSelector((state: RootState) => state.bangState.step);
   const matchId = useSelector((state: RootState) => state.bangState.matchId);
@@ -326,12 +342,15 @@ function Bang() {
   };
 
   const readyToDie = () => {
-    startAudio.play();
+    setTimeout(() => {
+      startAudio.play();
+    }, 200);
 
     sendData({
       type: "getTargetAction",
       data: { action: nowAction, board },
     })();
+
     setTerminel((prev) => ({ ...prev, me: "countDown", you: "countDown" }));
     dispatch(setStep(0));
     setCnt(3);
@@ -389,7 +408,7 @@ function Bang() {
       const prevStay = targetBoard[x][y] === 1;
       const willStay = targetBoard[x][y] === symbol;
       const spreadHit = isSpreadHit(x, y, targetBoard);
-      gunFireAudio.play();
+      setTimeout(() => gunFireAudio.play(), 200);
       if (playerRef.current === "A") {
         dispatch(setAAction("atk"));
       } else {
@@ -588,15 +607,12 @@ function Bang() {
           dispatch(setTargetAtkPath(targetAtkPath));
           dispatch(setTargetAvoidPath(targetAvoidPath));
           setTargetBoard(JSON.parse(JSON.stringify(recieve.data.board)));
-        }, 0);
+        }, 200);
       }
 
       if (recieve.type === "getTargetAction") {
         setTargetAction((prev) => ({ ...prev, ...recieve.data.action }));
       }
-
-      // isOK? 라는 타입 만들고
-      // 데이터에 type, data 를 그대로 담아놓고
 
       if (recieve.type === "shot") {
         console.log(recieve.data.actionStep);
@@ -616,7 +632,7 @@ function Bang() {
           } else {
             dispatch(setBAction("atk"));
           }
-        }, 0);
+        }, 100);
         // 타겟 애니메이션
       }
 
@@ -636,7 +652,7 @@ function Bang() {
           } else {
             dispatch(setBAction("jump"));
           }
-        }, 0);
+        }, 100);
       }
 
       if (recieve.type === "atk") {
@@ -655,7 +671,7 @@ function Bang() {
               subHealth: recieve.data.resultSubHealth,
             },
           }));
-        }, 0);
+        }, 100);
       }
 
       // if (recieve.type === "secondAction") {
@@ -663,7 +679,7 @@ function Bang() {
       // }
       if (recieve.type === "winnerGameDone") {
         setTimeout(() => {
-          loserGameDone(recieve.data);
+          loserGameDone(recieve.data, cookies);
         }, 100);
       }
     };
@@ -675,7 +691,8 @@ function Bang() {
       playerRef.current = "A";
       console.log("playerA");
       setPrevFirstAction("공격");
-      setObj((prev) => ({ ...prev, bounti: cookies.bounti }));
+      setObj((prev) => ({ ...prev, bounti: cookies.meBounti }));
+      setBObj((prev) => ({ ...prev, bounti: cookies.bounti }));
       dataChannel.current = peerConnection.createDataChannel("chat");
       // 상대방의 데이터를 수신하여 다른 기능을 하는 함수
       dataChannel.current.addEventListener("message", handleData);
@@ -691,6 +708,7 @@ function Bang() {
       console.log("playerB");
       playerRef.current = "B";
       setPrevFirstAction("회피");
+      setBObj((prev) => ({ ...prev, bounti: cookies.meBounti }));
       setObj((prev) => ({ ...prev, bounti: cookies.bounti }));
 
       peerConnection.addEventListener("datachannel", (event) => {
@@ -732,7 +750,6 @@ function Bang() {
     socket.on("ice", ice);
 
     peerConnection.addEventListener("icecandidate", handleIce);
-    const cookies = getDecryptedCookie("bang");
 
     if (!cookies) {
       navigation("/games", { replace: true });
@@ -740,9 +757,13 @@ function Bang() {
     setGameDatas((prev) => ({
       ...prev,
       _id: cookies._id,
-      player_id: infomation.id,
+      player_id: cookies._id,
     }));
     const giveUp = () => {
+      const gameData = { ...gameDatas };
+      gameData._id = cookies._id;
+      gameData.player_id = infomation.id;
+      reqRecordGame(gameData);
       Cookies.remove("bang");
       sendData({ type: "giveup", data: "" })();
     };
@@ -762,19 +783,11 @@ function Bang() {
   }, [peerConnection]);
 
   // 승패
-  useEffect(() => {
-    if (
-      gameDatas.game_special_option === "자비" ||
-      gameDatas.game_special_option === "무자비"
-    ) {
-      reqRecordGame(gameDatas);
-    }
-  }, [gameDatas.game_special_option]);
 
   // 총 효과음
   useEffect(() => {
     if (playShot) {
-      gunFireAudio.play();
+      setTimeout(() => gunFireAudio.play(), 200);
       setPlayShot(false);
     }
   }, [playShot]);
@@ -791,16 +804,18 @@ function Bang() {
   }, []);
   // --
 
-  const secondActionTimer = useRef(0);
   // 카운트 관리 -= 추후 특정 시간대에 시작으로 바꿔야할듯?
+  const secondActionTimer = useRef(0);
   secondActionTimer.current = new Date().getTime() + 1000;
   useEffect(() => {
+    console.log(terminel, cnt);
     if (
       terminel.me === "countDown" &&
       // terminel.you === "countDown" &&
       cnt !== 0
     ) {
-      console.log(startAfterMsTime(actionWait.current - Date.now()));
+      console.log((actionWait.current - Date.now()) / 1000, "초 후에 시작");
+      // console.log(startAfterMsTime(actionWait.current - Date.now()));
       const timer = setInterval(() => {
         setCnt((prevCount) => {
           if (prevCount === 1) {
@@ -846,7 +861,7 @@ function Bang() {
       setTimeout(() => {
         console.log("2번째액션 시작!", new Date());
         action(1);
-      }, secondActionTimer.current - dateNow);
+      }, secondActionTimer.current - dateNow + 1000);
     }
     // console.log(me, you);
     if (me === "secondActionDone" && you === "secondActionDone") {
@@ -897,9 +912,10 @@ function Bang() {
 
   useEffect(() => {
     if (status.me.health > 0 && status.you.health > 0) return;
-
+    setGameSet(true);
+    const cookies = getDecryptedCookie("bang");
+    const imBounti = cookies.meBounti;
     const win = status.me.health <= 0 ? false : true;
-
     if (!win) {
       dispatch(
         setModal({
@@ -911,10 +927,13 @@ function Bang() {
         })
       );
     } else {
+      if (imBounti) {
+      }
       setPopupState({
         show: true,
-        description:
-          "승리했습니다! 자비를 베푸시겠습니까?\n자비를 베풀면 랭킹에 관여하는 AP를 획득합니다. \n\n단, 자비가 없는 사람에게 현상금이 걸릴 수 있습니다.",
+        description: imBounti
+          ? "당신은 또 승리했습니다. 자비는 없습니다."
+          : "승리했습니다! 자비를 베푸시겠습니까?\n자비를 베풀면 랭킹에 관여하는 AP를 획득합니다. \n\n단, 자비가 없는 사람에게 현상금이 걸릴 수 있습니다.",
         rightAction: () => {
           winnerGameDone(true);
         },
@@ -923,9 +942,9 @@ function Bang() {
         },
         title: "승리!",
         setPopupState,
+        imBounti,
       });
     }
-
     // navigation("reward", { replace: true, state: { data: gameDatas } });
   }, [status]);
 
@@ -938,6 +957,7 @@ function Bang() {
         rightAction={popupState.rightAction}
         leftAction={popupState.leftAction}
         setPopupState={setPopupState}
+        imBounti={popupState.imBounti}
       />
       <View
         style={{
@@ -1108,11 +1128,11 @@ function Bang() {
                   ? "Ready!"
                   : ""}
               </Text.SemiBold_24>
-              <ActionState
+              {/* <ActionState
                 nowAction={nowAction}
                 targetAction={targetAction}
                 player={playerRef.current === "A" ? "A" : "B"}
-              />
+              /> */}
             </View>
             {/* B */}
             <View>
@@ -1123,11 +1143,11 @@ function Bang() {
                   ? "Ready!"
                   : ""}
               </Text.SemiBold_24>
-              <ActionState
+              {/* <ActionState
                 nowAction={nowAction}
                 targetAction={targetAction}
                 player={playerRef.current === "A" ? "B" : "A"}
-              />
+              /> */}
             </View>
           </View>
         </View>
@@ -1162,10 +1182,10 @@ function Bang() {
         )}
       </BottomInterface>
 
-      {terminel.me === "initDone" && (
+      {terminel.me === "initDone" && !gameSet && (
         <ActionModal prevFirstAction={prevFirstAction} />
       )}
-      {terminel.me === "init" && (
+      {terminel.me === "init" && !gameSet && (
         <Inventory
           bag={bag}
           ability={ability}
@@ -1179,7 +1199,9 @@ function Bang() {
       )}
       <BottomPrevNext
         rightBtnColor="rgba(145, 255, 0, 0.797)"
-        visible={terminel.me === "initDone" && !actionModal && step === 2}
+        visible={
+          terminel.me === "initDone" && !actionModal && step === 2 && !gameSet
+        }
         prevAction={reset}
         prevText={"초기화"}
         nextAction={() => {
@@ -1195,15 +1217,15 @@ function Bang() {
             playerRef.current,
             nowAction[jumpIdx].path
           );
+          actionWait.current = 2000 + random + Date.now();
           sendData({
             type: "readyForCnt",
             data: {
-              time: random + Date.now(),
+              time: actionWait.current,
               board: exchangeBoard,
               atkPath: nowAction[atkIdx].path,
             },
           })();
-          actionWait.current = random + Date.now();
           console.log(actionWait.current);
           setTerminel((prev) => ({
             ...prev,

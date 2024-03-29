@@ -7,7 +7,7 @@ type AxiosMethod = "GET" | "POST" | "DELETE" | "PUT";
 const refreshSession = (err: any) => {
   localStorage.clear();
   alert("세션이 만료되었습니다.\n다시 로그인해주세요.");
-  window.location.reload();
+  // window.location.reload();
   console.error("Error refreshing token:", err);
   throw err;
 };
@@ -59,17 +59,18 @@ export const jwtApiRequest = async (
         console.log(retryResponse.data, "zz");
         return retryResponse.data;
       } catch (err: any) {
-        console.log(err);
-        if (err.response.data.message.includes("jwt")) {
+        console.log(err, "십탱구리");
+        const errMsg = err.response.data.message;
+
+        if (errMsg.includes("fail refresh rt")) {
           refreshSession(err);
         }
+        alert("에러가 발생했습니다!");
+        window.location.reload();
         throw err;
       }
     }
-    console.error("Error making API request:", errMsg);
-    if (errMsg.includes("위조된RT") || errMsg.includes("invalid signature")) {
-      refreshSession(error);
-    }
+    alert("error발생");
     throw error;
   }
 };

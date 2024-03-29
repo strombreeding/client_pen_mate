@@ -41,6 +41,7 @@ export interface IRewardProps {
   play_time: number; //sec
   player_id: string;
   rewards: { item_name: string; cnt: number }[];
+  bounti?: boolean;
 }
 
 function Reward() {
@@ -53,9 +54,7 @@ function Reward() {
     setGameState(gameData);
     setReady(true);
   }, []);
-  const req = async () => {
-    // 게임데이타를 백엔드에 보내면 게임 ID 별로 맞는 점수환산 가져올거임. 그걸 SetState해야함
-  };
+
   console.log(location);
   const dispatch = useDispatch<AppDispatch>();
 

@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import {
   setActionModal,
+  setCanMove,
+  setCanShot,
   setNowAction,
   setStep,
 } from "../../../store/slices/bangState";
@@ -81,10 +83,9 @@ function ControllBoard({
   );
   const ready = useSelector((state: RootState) => state.bangState.ready);
   const step = useSelector((state: RootState) => state.bangState.step);
-
+  const canMove = useSelector((state: RootState) => state.bangState.canMove);
+  const canShot = useSelector((state: RootState) => state.bangState.canShot);
   const [copyPath] = useState([nowAction[0].path, nowAction[1].path]);
-  const [canMove, setCanMove] = useState([] as number[][]);
-  const [canShot, setCanShot] = useState([] as number[][]);
   const dispatch = useDispatch<AppDispatch>();
   const getPosition = (board: number[][]) => {
     const me = player === "A" ? 2 : 3;
@@ -114,8 +115,8 @@ function ControllBoard({
         }
       });
     });
-    setCanShot(canAtkLegnth);
-    setCanMove(canMoveLength);
+    dispatch(setCanShot(canAtkLegnth));
+    dispatch(setCanMove(canMoveLength));
   };
   useEffect(() => {
     getPosition(board);

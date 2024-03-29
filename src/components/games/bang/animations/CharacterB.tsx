@@ -26,6 +26,7 @@ import { attack } from "./attack";
 import HitBox from "../detail/HitBox";
 import ChatBox from "../detail/Chat";
 import { ICharProps } from "../../../../pages/Bang";
+import { View } from "../../../../nativeView";
 
 // 스프라이트 이미지 구성품, 및 크기
 
@@ -40,7 +41,16 @@ const Char = styled.div<{ data: ICharProps; player: "A" | "B" }>`
   align-items: center;
   justify-content: center;
 `;
-
+const Indicator = styled(View)<{ src: string; width: number }>`
+  background-image: url(${(prev) => prev.src});
+  background-size: cover;
+  background-position: 0px 0px;
+  width: ${(props) => props.width / 1.5}px;
+  height: ${(props) => props.width / 2.8}px;
+  position: absolute;
+  opacity: 0.7;
+  bottom: -${(props) => props.width / 14}px;
+`;
 interface CharacterProps {
   charObj: ICharProps;
   setCharObj: Dispatch<SetStateAction<ICharProps>>;
@@ -120,7 +130,13 @@ function CharacterB({
       player={type}
     >
       <ChatBox chat={bChat} />
-      <HitBox who="B" />
+      <HitBox who="B" charRef={charRef} />
+      {player === type && (
+        <Indicator
+          src={gameImg.char_indicator}
+          width={charObj.width}
+        ></Indicator>
+      )}
     </Char>
   );
 }

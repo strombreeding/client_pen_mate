@@ -78,6 +78,10 @@ export const gameImg = {
   plate_2: cdnDefaultURL + "gameImg/plate_2.png",
   plate_3: cdnDefaultURL + "gameImg/plate_3.png",
   plate_5: cdnDefaultURL + "gameImg/plate_5.png",
+
+  char_indicator: cdnDefaultURL + "gameImg/char_indicator1.png",
+  char_indicator2: cdnDefaultURL + "gameImg/char_indicator2.png",
+  char_indicator3: cdnDefaultURL + "gameImg/char_indicator3.png",
 };
 
 // export const gameImg = {

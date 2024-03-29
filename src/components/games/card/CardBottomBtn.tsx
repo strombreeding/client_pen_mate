@@ -48,6 +48,7 @@ function CardBottomBtn({
       return canCreateRecord;
     } catch (err: any) {
       console.log(err, "띱때야");
+      console.log(err.message);
       setEnough(err.message);
     }
   };
@@ -76,12 +77,16 @@ function CardBottomBtn({
     (state: RootState) => state.bangState.matchFound
   );
   const bangMatch = async () => {
-    setEnough("");
-    const canCreateRecord = await checkOutCost();
-    console.log(canCreateRecord);
-    if (!canCreateRecord) return;
-    dispatch(setGameState({ costObj: gameProps.costObj }));
-    dispatch(setMatchStart(true));
+    try {
+      setEnough("");
+      const canCreateRecord = await checkOutCost();
+      console.log(canCreateRecord);
+      if (!canCreateRecord) return;
+      dispatch(setGameState({ costObj: gameProps.costObj }));
+      dispatch(setMatchStart(true));
+    } catch (err: any) {
+      console.log(err);
+    }
   };
   const bangCancelMatch = () => {
     dispatch(setMatchStart(false));

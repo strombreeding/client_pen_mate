@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { SCREEN_WIDTH } from "../../../../configs/device";
 import { gameImg } from "../../../../assets/gameImg";
-import { memo, useEffect, useRef } from "react";
+import { MutableRefObject, memo, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { hit } from "../animations/hit";
@@ -18,7 +18,13 @@ const Hit = styled.div<{ src: string }>`
   display: none;
 `;
 
-function HitBox({ who }: { who: "A" | "B" }) {
+function HitBox({
+  who,
+  charRef,
+}: {
+  who: "A" | "B";
+  charRef: MutableRefObject<HTMLDivElement | null>;
+}) {
   const aHit = useSelector((state: RootState) => state.bangState.aHit);
   const bHit = useSelector((state: RootState) => state.bangState.bHit);
   const dispatch = useDispatch<AppDispatch>();
@@ -31,16 +37,26 @@ function HitBox({ who }: { who: "A" | "B" }) {
         bhit = ${bHit}
     `);
     if (aHit && who === "A") {
+      if (charRef.current) {
+        charRef.current.style.opacity = "0.3";
+      }
       hit(imgRef);
       setTimeout(() => {
         dispatch(setAHit(false));
+        if (!charRef.current) return;
+        charRef.current.style.opacity = "1";
       }, 1000);
       return;
     }
     if (bHit && who === "B") {
+      if (charRef.current) {
+        charRef.current.style.opacity = "0.3";
+      }
       hit(imgRef);
       setTimeout(() => {
         dispatch(setBHit(false));
+        if (!charRef.current) return;
+        charRef.current.style.opacity = "1";
       }, 1000);
       return;
     }

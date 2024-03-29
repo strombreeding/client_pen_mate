@@ -4,6 +4,7 @@ import {
   DispatchWithoutAction,
   SetStateAction,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { Socket, io } from "socket.io-client";
@@ -32,6 +33,7 @@ import { colors } from "../../../../assets/colors";
 import { recordGame } from "../../../../apis/recordGame";
 import { updateCostState } from "../../../../utils/localStorage";
 import { setInfomation } from "../../../../store/slices/userState";
+import { createConstructSignature } from "typescript";
 
 const ModalContainer = styled(View)<{ visible: boolean }>`
   display: ${(props) => (props.visible ? "flex" : "none")};
@@ -68,7 +70,8 @@ function MatchingModal({}) {
     (state: RootState) => state.bangState.matchFound
   );
 
-  const [targetProp, setTargetProp] = useState({ nickname: "", bounti: false });
+  const myRef = useRef({ nickname: "", bounti: false });
+  const targetPropRef = useRef({ nickname: "", bounti: false });
   const [socket, setSocket] = useState<Socket | null>(null);
   const [clicked, setClicked] = useState(false);
   const newAudio = useAudio(allSfx.back);
@@ -88,14 +91,27 @@ function MatchingModal({}) {
     /* 소켓에서 매칭 되었을때 타이머와 모달을 생성 */
     const matchFound = (payload: {
       roomId: string;
-      targetProps: { nickname: string; bounti: boolean };
+      userList: { nickname: string; bounti: boolean }[];
     }) => {
-      console.log(payload.targetProps.nickname);
+      console.log(payload.userList);
+      const targetUser = payload.userList.find(
+        (user) => user.nickname !== infomation.nickname
+      );
+      const me = payload.userList.find(
+        (user) => user.nickname === infomation.nickname
+      );
+
+      console.log(targetUser);
       matchAudio.play();
-      setTargetProp({
-        nickname: payload.targetProps.nickname,
-        bounti: payload.targetProps.bounti,
-      });
+      if (!targetUser || !me) {
+        socket.emit("cancelMatch", payload.roomId);
+        return;
+      }
+      targetPropRef.current.bounti = targetUser.bounti;
+      targetPropRef.current.nickname = targetUser.nickname;
+      myRef.current.bounti = me.bounti;
+      myRef.current.nickname = me.nickname;
+
       dispatch(setMatchFound(true));
       dispatch(setMatchId(payload.roomId));
       const timeoutId = setTimeout(() => {
@@ -146,14 +162,17 @@ function MatchingModal({}) {
         costObj: gameState.costObj!,
       };
       const { record, updateSource } = await recordGame(props);
+      console.log(record, updateSource);
       updateCostState(updateSource);
       dispatch(setInfomation({ ...updateSource }));
       dispatch(setMatchStart(false));
       setEncryptedCookie("bang", {
         type: "cool",
-        nickname: targetProp.nickname,
-        bounti: targetProp.bounti,
+        nickname: targetPropRef.current.nickname,
+        bounti: targetPropRef.current.bounti,
+        meBounti: myRef.current.bounti,
         _id: record._id,
+        cost_obj: record.cost_obj,
       });
       navigation("/games/bang");
       closeRoom();
@@ -186,11 +205,11 @@ function MatchingModal({}) {
         <Text.Light_32>결투!</Text.Light_32>
         <EmptyBox height={15} />
         <Text.Light_20 color={colors.Accent_Red}>
-          {targetProp.nickname}
+          {targetPropRef.current.nickname}
         </Text.Light_20>
         <EmptyBox height={15} />
         <Text.Light_16>
-          {targetProp.bounti ? "현상수배" : "카우보이"}
+          {targetPropRef.current.bounti ? "현상수배" : "카우보이"}
         </Text.Light_16>
         <EmptyBox height={15} />
 

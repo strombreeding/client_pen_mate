@@ -48,7 +48,9 @@ function PointData({ reward }: { reward: IRewardProps }) {
           style={{ width: 20, height: 20, marginTop: -3.5 }}
           alt=""
         />
-        <Text.Regular_16>{infomation.atata_stone! - asCnt}</Text.Regular_16>
+        <Text.Regular_16>
+          {infomation.atata_stone! - (reward.bounti ? asCnt + 1000 : asCnt)}
+        </Text.Regular_16>
         <img
           src={imgSrc.right_arrow}
           style={{ width: 20, aspectRatio: 1, marginTop: -3.5 }}
@@ -56,7 +58,7 @@ function PointData({ reward }: { reward: IRewardProps }) {
         <Text.Regular_16>{infomation.atata_stone}</Text.Regular_16>
         <Text.Regular_16 color={colors.Accent}>
           (+
-          {asCnt})
+          {reward.bounti ? asCnt + 1000 : asCnt})
         </Text.Regular_16>
       </View>
     </View>

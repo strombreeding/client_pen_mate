@@ -44,6 +44,7 @@ export interface IBangPopupProps {
   rightAction: (data?: any) => void;
   leftAction: (data?: any) => void;
   setPopupState: Dispatch<SetStateAction<IBangPopupProps>>;
+  imBounti: boolean;
 }
 
 function WinnerPopup(popupState: IBangPopupProps) {
@@ -84,10 +85,13 @@ function WinnerPopup(popupState: IBangPopupProps) {
                   setPopupState: () => {},
                   show: false,
                   title: "",
+                  imBounti: popupState.imBounti,
                 });
               }}
             >
-              <Text.Light_16>{"무자비"}</Text.Light_16>
+              <Text.Light_16>
+                {popupState.imBounti ? "처형" : "무자비"}
+              </Text.Light_16>
             </PrevBtn>
             <EmptyBox width={5} />
           </>
@@ -101,11 +105,14 @@ function WinnerPopup(popupState: IBangPopupProps) {
                 setPopupState: () => {},
                 show: false,
                 title: "",
+                imBounti: popupState.imBounti,
               });
             }}
             style={{ backgroundColor: colors.Main_Button1 }}
           >
-            <Text.Light_16>{"자비"}</Text.Light_16>
+            <Text.Light_16>
+              {popupState.imBounti ? "마무리!" : "자비"}
+            </Text.Light_16>
           </PrevBtn>
         </View>
       </Box>

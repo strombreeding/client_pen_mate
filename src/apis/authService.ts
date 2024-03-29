@@ -8,7 +8,15 @@ export const refreshToken = async (rt: string | null) => {
     const result = { ...response.data };
     console.log("토큰 재발급", response.data);
     return result;
-  } catch (error) {
+  } catch (error: any) {
+    const errMsg = error.response.data.message;
+    if (
+      errMsg.includes("jwt") ||
+      errMsg.includes("위조된") ||
+      errMsg.includes("invalid signature")
+    ) {
+      error.response.data.message = "fail refresh rt";
+    }
     console.error("Error refreshing token:", error);
     throw error;
   }

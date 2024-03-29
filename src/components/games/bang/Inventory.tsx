@@ -17,6 +17,7 @@ import SoundPressable from "../../designs/SoundPressable";
 import axiosInstance from "../../../apis/axiosInstance";
 import { jwtApiRequest } from "../../../apis/jwtApiService";
 import { IRewardProps } from "../../../pages/Reward";
+import { getDecryptedCookie } from "../../../utils/cookies";
 
 const InitModal = styled(View)`
   z-index: 2;
@@ -88,17 +89,9 @@ function Inventory({
 }: InventoryProps) {
   const [cnt, setCnt] = useState(16);
   const [checkItem, setCheckItem] = useState<number[]>([]);
-  const [inventory, setInventory] = useState<IInvetoryProps[]>([
-    {
-      cnt: 0,
-      item: {
-        type: "atk",
-        item_img: gameImg.action_atk,
-        cost: 1,
-        skil: "",
-      },
-    },
-  ] as IInvetoryProps[]);
+  const [inventory, setInventory] = useState<IInvetoryProps[]>(
+    [] as IInvetoryProps[]
+  );
   const clearItem = (item: IInvetoryProps, index: number) => () => {
     if (!item.item) return;
     const newBag = [...bag];
@@ -158,15 +151,12 @@ function Inventory({
     setCheckItem([...checkItem, index]);
     setBag([...newBag]);
   };
-
+  const cookies = getDecryptedCookie("bang");
   const initDone = async () => {
     const dataObj = {
       ...ability,
     };
-    const costObjList = [
-      { type: "atata_stone", cost: 300 },
-      { type: "energy", cost: 1 },
-    ];
+    const costObjList: { type: string; cost: number }[] = [];
     const consumItemList = bag
       .filter((item) => item.item && item.item.item_name)
       .map((item) => {
@@ -182,10 +172,12 @@ function Inventory({
       data: consumItemList,
     });
     console.log(res);
+    // 바운티라면 공격력 1.5배
+    dataObj.atk = cookies.meBount ? Math.floor(dataObj.atk * 1.5) : dataObj.atk;
     sendData({ type: "상대능력", data: dataObj })();
     setGameDatas((prev) => ({
       ...prev,
-      cost_obj: [...costObjList],
+      cost_obj: [...prev.cost_obj, ...costObjList],
     }));
     setStatus((prev) => ({
       ...prev,
@@ -199,21 +191,25 @@ function Inventory({
   };
 
   useEffect(() => {
-    // if (cnt !== 0) {
-    //   const timeout = setTimeout(() => {
-    //     setCnt(cnt - 1);
-    //   }, 1000);
-    //   return () => clearTimeout(timeout);
-    // } else if (cnt === 0) {
-    //   initDone();
-    // }
+    if (cnt !== 0) {
+      const timeout = setTimeout(() => {
+        setCnt(cnt - 1);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    } else if (cnt === 0) {
+      initDone();
+    }
   }, [cnt]);
 
   const reqMyInventory = async () => {
     try {
       const res = await jwtApiRequest("inventory/my?" + "type=bang", "GET", {});
       console.log(res);
-      setInventory(res);
+      const removeSkul = res.filter(
+        (item: any) => item.item.item_name !== "skul"
+      );
+      console.log(removeSkul);
+      setInventory(removeSkul);
     } catch (err) {
       console.log(err, "zz");
     }

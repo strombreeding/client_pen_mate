@@ -32,6 +32,7 @@
 
 그외속성
 <a href="https://www.freepik.com/free-vector/fantasy-alien-planets-ui-space-game-vector_28641103.htm#fromView=search&page=2&position=1&uuid=85f85dbc-3e4c-407e-82de-fdb0a5787b0f">Image by upklyak</a> on Freepik
+<a href="https://www.freepik.com/free-vector/realistic-electric-energy-plasma-sphere-set-isolated-round-icons-with-colorful-bolts-sparkles-orbits-vector-illustration_37420890.htm#fromView=search&page=1&position=3&uuid=1918a025-afc7-475c-a8d3-65fa43df47af">Image by macrovector on Freepik</a>
 
 반물질재련
 <a href="https://www.freepik.com/free-vector/magic-light-orb-game-energy-sphere-with-fire-lightnings-realistic-vector-illustration-set-glowing-red-blue-electric-power-balls-with-neon-effect-fantasy-globe-with-luminous-plasma_83317194.htm#page=11&position=29&from_view=author&uuid=f284fe45-e5b0-4900-a20d-f98dd8fe53bb">Image by upklyak</a> on Freepik
