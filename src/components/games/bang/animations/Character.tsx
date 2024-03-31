@@ -69,7 +69,6 @@ function CharacterA({
   aChat,
 }: CharacterProps) {
   const charRef = useRef<HTMLDivElement | null>(null);
-
   //  emptyVal(width) + -emptyVal(width) / 3 + width * 0.75 * y;
   //  emptyVal(width) + -emptyVal(width) / 3 + width * 0.75 * 0;
   const [position, setPosition] = useState({
@@ -92,10 +91,12 @@ function CharacterA({
   );
   const aAction = useSelector((state: RootState) => state.bangState.aAction);
   const dispatch = useDispatch<AppDispatch>();
+  console.log(nowAction);
   useEffect(() => {
     if (aAction === "jump") {
       const jumpIdx = nowAction.findIndex((obj) => obj.action === "회피");
-
+      const isValid = nowAction[jumpIdx] != undefined;
+      if (!isValid) return;
       jump(
         charRef,
         charObj,
@@ -107,6 +108,8 @@ function CharacterA({
       return;
     } else if (aAction === "atk") {
       const atkIdx = nowAction.findIndex((obj) => obj.action === "공격");
+      const isValid = nowAction[atkIdx] != undefined;
+      if (!isValid) return;
       attack(
         charRef,
         charObj,

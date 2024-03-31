@@ -377,7 +377,7 @@ function Junkyard() {
         }
         return prev - 1;
       });
-    }, 100);
+    }, 1000);
     return () => {
       clearTimeout(timer);
     };
@@ -424,7 +424,7 @@ function Junkyard() {
         setAiBoard={setAiBoard}
       /> */}
       <EmptyBox height={60} />
-      <BottomPrevNext style={{ zIndex: 1 }} visible={navVisble} />
+      <BottomPrevNext style={{ zIndex: 1 }} visible={navVisble} nextText="" />
       <View
         onMouseDown={(e) => {
           startY = e.clientY;

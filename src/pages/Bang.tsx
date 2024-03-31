@@ -84,6 +84,7 @@ export interface IMessageProps {
     | "secondAction"
     | "secondActionDone"
     | "winnerGameDone"
+    | "skulCnt"
     | "";
   data: any;
 }
@@ -243,23 +244,38 @@ function Bang() {
     play_time: (new Date().getTime() - startTime) / 1000,
     player_id: "",
     rewards: [],
+    skul: 0,
   });
   const winnerGameDone = async (mercy: boolean) => {
+    const imBounti = cookies.meBounti;
+    let bonusCnt = 0;
+    console.log(
+      playerRef.current,
+      obj.bounti,
+      bObj.bounti,
+      targetSkulRef.current
+    );
+    if (playerRef.current === "A" && bObj.bounti && !obj.bounti) {
+      bonusCnt = targetSkulRef.current * 300;
+    }
+    if (playerRef.current === "B" && obj.bounti && !bObj.bounti) {
+      bonusCnt = targetSkulRef.current * 300;
+    }
     // 승자의 left 또는 rightaction 누를때 반응하는 것
     const rewards = mercy
       ? [
-          { item_name: "atata_stone", cnt: 600 },
+          { item_name: "atata_stone", cnt: 600 + bonusCnt },
           { item_name: "atata_point", cnt: 2 },
         ]
       : [
-          { item_name: "atata_stone", cnt: 600 },
+          { item_name: "atata_stone", cnt: 600 + bonusCnt },
           { item_name: "skul", cnt: 1 },
         ];
     console.log(gameDatas);
     const recordData = { ...gameDatas };
     recordData.game_special_option = mercy ? "자비" : "무자비";
     recordData.play_time = (new Date().getTime() - startTime) / 1000;
-    recordData.rewards = [...recordData.rewards, ...rewards];
+    recordData.rewards = [...rewards];
     recordData.game_result = "승리!";
     recordData.player_id = infomation.id;
     console.log(recordData);
@@ -509,7 +525,7 @@ function Bang() {
       ])
     );
   };
-
+  const targetSkulRef = useRef(0);
   useEffect(() => {
     setPeerConnection(
       new RTCPeerConnection({
@@ -545,6 +561,11 @@ function Bang() {
     const handleData = (event: MessageEvent<string>) => {
       // 선준비 여부 , 상대방의 액션 목록, 상대방의 보드
       const recieve: IMessageProps = JSON.parse(event.data);
+
+      if (recieve.type === "skulCnt") {
+        console.log("스컬카운트", recieve.data);
+        targetSkulRef.current = recieve.data;
+      }
 
       if (recieve.type === "giveup") {
         setStatus((prev) => ({
@@ -690,9 +711,19 @@ function Bang() {
     const welcomeAndDataChannel = async () => {
       playerRef.current = "A";
       console.log("playerA");
+      const meBounti = cookies.meBounti;
+      const bounti = cookies.bounti;
       setPrevFirstAction("공격");
-      setObj((prev) => ({ ...prev, bounti: cookies.meBounti }));
-      setBObj((prev) => ({ ...prev, bounti: cookies.bounti }));
+      setObj((prev) => ({
+        ...prev,
+        bounti: meBounti,
+        imgSrc: meBounti ? gameImg.bounti_stand_right : gameImg.cow_stand_right,
+      }));
+      setBObj((prev) => ({
+        ...prev,
+        bounti,
+        imgSrc: bounti ? gameImg.bounti_stand_left : gameImg.cow_stand_left,
+      }));
       dataChannel.current = peerConnection.createDataChannel("chat");
       // 상대방의 데이터를 수신하여 다른 기능을 하는 함수
       dataChannel.current.addEventListener("message", handleData);
@@ -708,8 +739,18 @@ function Bang() {
       console.log("playerB");
       playerRef.current = "B";
       setPrevFirstAction("회피");
-      setBObj((prev) => ({ ...prev, bounti: cookies.meBounti }));
-      setObj((prev) => ({ ...prev, bounti: cookies.bounti }));
+      const meBounti = cookies.meBounti;
+      const bounti = cookies.bounti;
+      setBObj((prev) => ({
+        ...prev,
+        bounti: meBounti,
+        imgSrc: meBounti ? gameImg.bounti_stand_left : gameImg.cow_stand_left,
+      }));
+      setObj((prev) => ({
+        ...prev,
+        bounti,
+        imgSrc: bounti ? gameImg.bounti_stand_right : gameImg.cow_stand_right,
+      }));
 
       peerConnection.addEventListener("datachannel", (event) => {
         dataChannel.current = event.channel;
@@ -933,9 +974,13 @@ function Bang() {
         show: true,
         description: imBounti
           ? "당신은 또 승리했습니다. 자비는 없습니다."
-          : "승리했습니다! 자비를 베푸시겠습니까?\n자비를 베풀면 랭킹에 관여하는 AP를 획득합니다. \n\n단, 자비가 없는 사람에게 현상금이 걸릴 수 있습니다.",
+          : "승리했습니다! 자비를 베푸시겠습니까?\n자비를 베풀면 랭킹에 관여하는 AP를 획득합니다. \n\n자비가 없는 사람에게는 현상금이 걸릴 수 있습니다.",
         rightAction: () => {
-          winnerGameDone(true);
+          if (imBounti) {
+            winnerGameDone(false);
+          } else {
+            winnerGameDone(true);
+          }
         },
         leftAction: () => {
           winnerGameDone(false);
@@ -948,17 +993,24 @@ function Bang() {
     // navigation("reward", { replace: true, state: { data: gameDatas } });
   }, [status]);
 
+  if (gameSet) {
+    return (
+      <Container style={{ flex: 1, position: "relative" }}>
+        <WinnerPopup
+          show={popupState.show}
+          title={popupState.title}
+          description={popupState.description}
+          rightAction={popupState.rightAction}
+          leftAction={popupState.leftAction}
+          setPopupState={setPopupState}
+          imBounti={popupState.imBounti}
+        />
+      </Container>
+    );
+  }
+
   return (
     <Container style={{ flex: 1, position: "relative" }}>
-      <WinnerPopup
-        show={popupState.show}
-        title={popupState.title}
-        description={popupState.description}
-        rightAction={popupState.rightAction}
-        leftAction={popupState.leftAction}
-        setPopupState={setPopupState}
-        imBounti={popupState.imBounti}
-      />
       <View
         style={{
           width: "100%",

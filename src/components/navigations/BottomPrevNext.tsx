@@ -76,9 +76,13 @@ function BottomPrevNext({
 
   const pressDown = (type: "prev" | "next") => () => {
     if (type === "next") {
-      setNextBtnClick(true);
+      setTimeout(() => {
+        setNextBtnClick(true);
+      }, 100);
     } else {
-      setPrevBtnClick(true);
+      setTimeout(() => {
+        setNextBtnClick(true);
+      }, 100);
     }
   };
   const pressUp = (type: "prev" | "next") => () => {

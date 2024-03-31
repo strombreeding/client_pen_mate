@@ -151,8 +151,9 @@ function Inventory({
     setCheckItem([...checkItem, index]);
     setBag([...newBag]);
   };
-  const cookies = getDecryptedCookie("bang");
   const initDone = async () => {
+    const cookies = getDecryptedCookie("bang");
+
     const dataObj = {
       ...ability,
     };
@@ -173,7 +174,9 @@ function Inventory({
     });
     console.log(res);
     // 바운티라면 공격력 1.5배
-    dataObj.atk = cookies.meBount ? Math.floor(dataObj.atk * 1.5) : dataObj.atk;
+    // dataObj.atk = cookies.meBounti
+    //   ? Math.floor(dataObj.atk * 1.5)
+    //   : dataObj.atk;
     sendData({ type: "상대능력", data: dataObj })();
     setGameDatas((prev) => ({
       ...prev,
@@ -205,9 +208,16 @@ function Inventory({
     try {
       const res = await jwtApiRequest("inventory/my?" + "type=bang", "GET", {});
       console.log(res);
-      const removeSkul = res.filter(
-        (item: any) => item.item.item_name !== "skul"
-      );
+      let skulCnt = 0;
+      const removeSkul = res.filter((item: any) => {
+        if (item.item.item_name === "skul") {
+          console.log(item);
+          skulCnt = item.cnt;
+        }
+        return item.item.item_name !== "skul";
+      });
+      setGameDatas((prev) => ({ ...prev, skul: skulCnt }));
+      sendData({ type: "skulCnt", data: skulCnt })();
       console.log(removeSkul);
       setInventory(removeSkul);
     } catch (err) {
@@ -215,7 +225,9 @@ function Inventory({
     }
   };
   useEffect(() => {
-    reqMyInventory();
+    setTimeout(() => {
+      reqMyInventory();
+    }, 1000);
   }, []);
   return (
     <InitModal>

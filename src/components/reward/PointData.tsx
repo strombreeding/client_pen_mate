@@ -6,6 +6,7 @@ import { View } from "../../nativeView";
 import { IRewardProps } from "../../pages/Reward";
 import { EmptyBox } from "../../styles";
 import { RootState } from "../../store/store";
+import { addK } from "../../utils/randomCnt";
 
 function PointData({ reward }: { reward: IRewardProps }) {
   const infomation = useSelector(
@@ -16,6 +17,7 @@ function PointData({ reward }: { reward: IRewardProps }) {
     null
       ? 0
       : reward.rewards.find((item) => item.item_name === "atata_stone")?.cnt!;
+  console.log(reward.skul);
   return (
     <View style={{ alignItems: "center" }}>
       <img src={imgSrc.star} style={{ width: 60, aspectRatio: 1 }} />
@@ -49,7 +51,8 @@ function PointData({ reward }: { reward: IRewardProps }) {
           alt=""
         />
         <Text.Regular_16>
-          {infomation.atata_stone! - (reward.bounti ? asCnt + 1000 : asCnt)}
+          {infomation.atata_stone! -
+            (reward.bounti ? asCnt + reward.skul * 200 : asCnt)}
         </Text.Regular_16>
         <img
           src={imgSrc.right_arrow}
@@ -58,7 +61,7 @@ function PointData({ reward }: { reward: IRewardProps }) {
         <Text.Regular_16>{infomation.atata_stone}</Text.Regular_16>
         <Text.Regular_16 color={colors.Accent}>
           (+
-          {reward.bounti ? asCnt + 1000 : asCnt})
+          {reward.bounti ? asCnt + reward.skul * 200 : asCnt})
         </Text.Regular_16>
       </View>
     </View>

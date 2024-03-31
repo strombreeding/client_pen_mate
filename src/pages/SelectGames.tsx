@@ -73,7 +73,7 @@ const SelectGames = () => {
   );
   const [showStore, setShowStore] = useState(false);
   const [ready, setReady] = useState(false);
-  const [games, setGames] = useState<GameProps[]>([{}, {}, {}] as GameProps[]);
+  const [games, setGames] = useState<GameProps[]>([] as GameProps[]);
   const [idx, setIdx] = useState(2);
   const [scrollSection, setScrollSection] = useState<number[]>([]);
   const choiceTitle = useSelector(
@@ -129,7 +129,6 @@ const SelectGames = () => {
     scrollRef.current.style.transform = `translateX(-${scrollSection[idx]}px)`;
     // scrollRef.current.style.transition = "all 0.15s ease-in-out";
     dragRef.current = -1;
-    console.log(games[idx].title);
   }, [idx, ready]);
 
   const moveToNthSlide = (index: number) => {

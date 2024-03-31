@@ -60,7 +60,7 @@ function BottomNav() {
             alt=""
           />
         </Pressable>
-        <Pressable id="/profile" onClick={navTab}>
+        {/* <Pressable id="/profile" onClick={navTab}>
           <NavIcon
             src={
               currentTab === "/profile"
@@ -69,7 +69,7 @@ function BottomNav() {
             }
             alt=""
           />
-        </Pressable>
+        </Pressable> */}
       </IconWrapper>
     </BottomLayer>
   );

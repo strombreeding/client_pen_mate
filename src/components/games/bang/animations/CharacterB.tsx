@@ -92,7 +92,8 @@ function CharacterB({
   useEffect(() => {
     if (bAction === "jump") {
       const jumpIdx = nowAction.findIndex((obj) => obj.action === "회피");
-
+      const isValid = nowAction[jumpIdx] != undefined;
+      if (!isValid) return;
       jump(
         charRef,
         charObj,
@@ -104,7 +105,8 @@ function CharacterB({
       return;
     } else if (bAction === "atk") {
       const atkIdx = nowAction.findIndex((obj) => obj.action === "공격");
-
+      const isValid = nowAction[atkIdx] != undefined;
+      if (!isValid) return;
       attack(
         charRef,
         charObj,

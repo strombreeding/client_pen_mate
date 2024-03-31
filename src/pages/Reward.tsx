@@ -13,6 +13,7 @@ import WorkStatus from "../components/reward/WorkStatus";
 import PointData from "../components/reward/PointData";
 import BottomPrevNext from "../components/navigations/BottomPrevNext";
 import { gameImg } from "../assets/gameImg";
+import { addK } from "../utils/randomCnt";
 
 const GameDataView = styled(View)`
   width: 100%;
@@ -42,6 +43,7 @@ export interface IRewardProps {
   player_id: string;
   rewards: { item_name: string; cnt: number }[];
   bounti?: boolean;
+  skul: number;
 }
 
 function Reward() {
@@ -83,7 +85,7 @@ function Reward() {
           {/* 리워드 */}
           <View style={{ width: "100%" }}>
             <Text.Regular_20 style={{ alignSelf: "flex-start" }}>
-              Game Rewards
+              보상
             </Text.Regular_20>
             <EmptyBox height={10} />
 
@@ -101,13 +103,13 @@ function Reward() {
                     <View
                       key={i}
                       style={{
-                        width: 50,
-                        aspectRatio: 1,
+                        padding: 10,
+                        // aspectRatio: 1,
                         border: "1px solid white",
                         borderRadius: 15,
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center",
+                        justifyContent: "space-between",
                       }}
                     >
                       <img
@@ -122,6 +124,13 @@ function Reward() {
                         style={{ width: 20 }}
                       />
                       <Text.Spo_Light_12>{item.cnt}</Text.Spo_Light_12>
+                      <EmptyBox height={5} />
+                      <Text.Spo_Light_12 style={{ fontSize: 12 }}>
+                        {gameState.skul > 0 &&
+                          gameState.game_special_option === "무자비" &&
+                          item.item_name !== "skul" &&
+                          "+" + addK(gameState.skul * 200)}
+                      </Text.Spo_Light_12>
                     </View>
                   );
                 })}

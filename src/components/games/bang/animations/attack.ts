@@ -15,6 +15,7 @@ export const attack = (
   const getPostion = getPostionValue(nextPath, obj.width);
   // const getPostion = getPostionValue([0, 1], obj.width, postion);
   const isLeftShot = postion.left < getPostion[1] ? false : true;
+
   let current = 0;
   let timer = new Date().getTime();
   let animation = 0;
@@ -33,16 +34,19 @@ export const attack = (
     standImg = gameImg.cow_stand_right;
     actionImg = gameImg.cow_atk_right_1x3;
   }
+  const rows = obj.bounti ? 3 : 1;
+  const cols = obj.bounti ? 2 : 3;
+  const maxCurrent = obj.bounti ? 6 : 3;
+  const frameTime = obj.bounti ? 45 : 90;
   setObj((prev) => ({
     ...prev,
     imgSrc: actionImg,
-    rows: 1,
-    cols: 3,
+    rows,
+    cols,
   }));
-
   const copyObj = {
-    rows: 1,
-    cols: 3,
+    rows,
+    cols,
     width: obj.width,
   };
   const animate = () => {
@@ -60,10 +64,10 @@ export const attack = (
     timer++;
 
     if (timer - now <= 0) {
-      timer = new Date().getTime() + 90;
+      timer = new Date().getTime() + frameTime;
 
       charRef.current.style.backgroundPosition = bgPosition;
-      if (current >= 3) {
+      if (current >= maxCurrent) {
         // charRef.current.style.backgroundPosition = "0px 0px";
         // charRef.current.style.backgroundImage = isLeftShot
         //   ? gameImg.cow_stand_left
