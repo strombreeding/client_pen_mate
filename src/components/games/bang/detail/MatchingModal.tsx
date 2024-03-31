@@ -104,7 +104,10 @@ function MatchingModal({}) {
       console.log(targetUser);
       matchAudio.play();
       if (!targetUser || !me) {
-        socket.emit("cancelMatch", payload.roomId);
+        socket.emit("cancelMatch", {
+          id: payload.roomId,
+          nickname: infomation.nickname,
+        });
         return;
       }
       targetPropRef.current.bounti = targetUser.bounti;
@@ -115,7 +118,10 @@ function MatchingModal({}) {
       dispatch(setMatchFound(true));
       dispatch(setMatchId(payload.roomId));
       const timeoutId = setTimeout(() => {
-        socket.emit("cancelMatch", payload.roomId);
+        socket.emit("cancelMatch", {
+          id: payload.roomId,
+          nickname: infomation.nickname,
+        });
         dispatch(setMatchFound(false));
         dispatch(setMatchStart(false));
         socket.disconnect();
@@ -179,7 +185,10 @@ function MatchingModal({}) {
     });
 
     return () => {
-      socket.emit("cancelMatch", matchId);
+      socket.emit("cancelMatch", {
+        id: matchId,
+        nickname: infomation.nickname,
+      });
       socket.disconnect();
       socket.removeAllListeners();
     };
@@ -226,7 +235,10 @@ function MatchingModal({}) {
           style={clicked ? { opacity: 0.5 } : {}}
           onClick={() => {
             if (clicked) return;
-            socket?.emit("cancelMatch", matchId);
+            socket?.emit("cancelMatch", {
+              id: matchId,
+              nickname: infomation.nickname,
+            });
             socket?.disconnect();
             clearTimeout(matchTimer!);
             setClicked(false);
