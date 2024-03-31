@@ -7,7 +7,7 @@ type AxiosMethod = "GET" | "POST" | "DELETE" | "PUT";
 const refreshSession = (err: any) => {
   localStorage.clear();
   alert("세션이 만료되었습니다.\n다시 로그인해주세요.");
-  // window.location.reload();
+  window.location.reload();
   console.error("Error refreshing token:", err);
   throw err;
 };

@@ -185,14 +185,18 @@ function MatchingModal({}) {
     });
 
     return () => {
+      console.log("이게 발생하나?");
       socket.emit("cancelMatch", {
         id: matchId,
         nickname: infomation.nickname,
       });
-      socket.disconnect();
-      socket.removeAllListeners();
+      console.log("이게 발생하나?", socket);
+      setTimeout(() => {
+        socket.disconnect();
+        socket.removeAllListeners();
+      }, 300);
     };
-  }, [socket]);
+  }, [socket, matchStart]);
 
   // 소켓 연결해주는 훅
   useEffect(() => {
@@ -205,7 +209,8 @@ function MatchingModal({}) {
       })
     );
     return () => {
-      setSocket(null);
+      console.log("ㅇㅅㅇ");
+      // setSocket(null);
     };
   }, [matchStart]);
   return (

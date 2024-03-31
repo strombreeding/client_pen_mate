@@ -324,7 +324,7 @@ const SelectGames = () => {
         }}
         visible={choiceTitle === undefined}
       />
-      <MatchingModal />
+      {matchStart && <MatchingModal />}
       {/* <BottomModal visible={choiceTitle !== undefined} /> */}
     </Container>
   );

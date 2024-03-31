@@ -25,6 +25,7 @@ import { IRecordGameProps, recordGame } from "../../../apis/recordGame";
 import { checkCost } from "../../../apis/game";
 import { setInfomation } from "../../../store/slices/userState";
 import { setStorageCrypto, updateCostState } from "../../../utils/localStorage";
+import { asyncSleep, sleep } from "../../../utils/timer";
 
 function CardBottomBtn({
   setSpecial,
@@ -89,6 +90,8 @@ function CardBottomBtn({
     }
   };
   const bangCancelMatch = () => {
+    sleep(500);
+
     dispatch(setMatchStart(false));
   };
   return (
