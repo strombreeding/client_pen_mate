@@ -66,9 +66,13 @@ function Login({ step }: { step: string }) {
       style={{
         width: "100%",
         alignItems: "center",
+        position: "relative",
       }}
     >
-      <View style={{ width: 100, height: 100 }} onClick={adminLogin}>
+      <View
+        style={{ position: "fixed", top: 0, width: 100 }}
+        onClick={adminLogin}
+      >
         관리자 접속
       </View>
       <Text.Spo_Medium_20>소셜로그인 후 랭킹에 참여하세요</Text.Spo_Medium_20>
@@ -77,7 +81,7 @@ function Login({ step }: { step: string }) {
         <BtnIcon src={imgSrc.kakao} />
         <Text.Spo_Medium_12 color="#391B1B">카카오로 로그인</Text.Spo_Medium_12>
       </SocialLoginBtn>
-      <SocialLoginBtn onClick={onPress("google")}>
+      {/* <SocialLoginBtn onClick={onPress("google")}>
         <BtnIcon src={imgSrc.google} />
         <Text.Spo_Medium_12 color="#000000">구글로 로그인</Text.Spo_Medium_12>
       </SocialLoginBtn>
@@ -89,7 +93,7 @@ function Login({ step }: { step: string }) {
       >
         <BtnIcon src={imgSrc.apple} />
         <Text.Spo_Medium_12>애플로 로그인</Text.Spo_Medium_12>
-      </SocialLoginBtn>
+      </SocialLoginBtn> */}
     </View>
   );
 }
